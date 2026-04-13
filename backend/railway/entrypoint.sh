@@ -3,6 +3,10 @@
 # Ensure we're in the app directory
 cd /app
 
+# Ensure all packages are discovered
+echo "Discovering packages..."
+php artisan package:discover --ansi
+
 # Run database migrations
 echo "Running migrations..."
 php artisan migrate --force

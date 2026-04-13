@@ -22,6 +22,12 @@ ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 # Copy application code
 COPY . .
 
+# Copy composer from official image
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
+
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
