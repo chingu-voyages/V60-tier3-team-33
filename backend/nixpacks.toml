@@ -1,10 +1,10 @@
-# Nixpacks Configuration for Laravel 11+
+# Nixpacks Configuration for Laravel 11+ (PHP 8.4)
 [phases.setup]
-nixPkgs = ['php83', 'php83Extensions.bcmath', 'php83Extensions.gd', 'php83Extensions.intl', 'php83Extensions.mbstring', 'php83Extensions.mysqlnd', 'php83Extensions.opcache', 'php83Extensions.pdo', 'php83Extensions.xml', 'php83Extensions.zip']
+nixPkgs = ['php84', 'php84Extensions.bcmath', 'php84Extensions.gd', 'php84Extensions.intl', 'php84Extensions.mbstring', 'php84Extensions.mysqlnd', 'php84Extensions.opcache', 'php84Extensions.pdo', 'php84Extensions.xml', 'php84Extensions.zip']
 
 [phases.install]
 dependsOn = ['setup']
 cmds = ['composer install --optimize-autoloader --no-interaction --no-progress']
 
 [variables]
-NIXPACKS_PHP_VERSION = '8.3'
+NIXPACKS_PHP_VERSION = '8.4'
