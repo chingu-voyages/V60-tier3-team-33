@@ -37,4 +37,4 @@ EXPOSE 80
 
 # The default command runs the FrankenPHP server
 # For Worker/Cron services, you will override this command in the Railway UI
-CMD ["frankenphp", "php-server"]
+CMD ["sh", "-c", "frankenphp php-server --listen 0.0.0.0:${PORT}"]
