@@ -28,6 +28,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
+# Clear any existing bootstrap caches
+RUN rm -f /app/bootstrap/cache/*.php
+
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 

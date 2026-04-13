@@ -29,3 +29,5 @@ backend/.claude/
 backend/CLAUDE.md
 backend/.mcp.json
 backend/boost.json
+backend/bootstrap/cache/*.php
+!backend/bootstrap/cache/.gitignore
