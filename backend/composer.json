@@ -87,7 +87,14 @@
             "php-http/discovery": true
         },
         "platform": {
-            "php": "8.3.0"
+            "php": "8.3.0",
+            "ext-bcmath": "8.3.0",
+            "ext-gd": "8.3.0",
+            "ext-intl": "8.3.0",
+            "ext-mbstring": "8.3.0",
+            "ext-pdo_mysql": "8.3.0",
+            "ext-xml": "8.3.0",
+            "ext-zip": "8.3.0"
         }
     },
     "minimum-stability": "stable",
