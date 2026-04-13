@@ -28,13 +28,8 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 # Ensure the railway scripts are executable
 RUN chmod +x /app/railway/*.sh
 
-# Set SERVER_NAME to use Railway's dynamic port
-# We use :${PORT} so Caddy binds to the correct interface and identifies as HTTP
-ENV SERVER_NAME=":${PORT}"
-
 # Port mapping is handled by Railway internally, but we stay consistent
 EXPOSE 80
 
-# The default command runs the FrankenPHP server
-# For Worker/Cron services, you will override this command in the Railway UI
-CMD ["sh", "-c", "frankenphp php-server --listen 0.0.0.0:${PORT}"]
+# Use our unified entrypoint to handle migrations and port binding
+ENTRYPOINT ["/app/railway/entrypoint.sh"]
