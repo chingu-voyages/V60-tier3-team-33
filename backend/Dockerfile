@@ -17,6 +17,7 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 WORKDIR /app
 
 # Enable FrankenPHP features
+# The PORT env var is provided by Railway at runtime
 ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 
 # Copy application code
