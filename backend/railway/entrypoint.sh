@@ -14,12 +14,11 @@ php artisan migrate --force 2>&1
 
 # Optimize Laravel for production
 echo "Optimizing application..."
-php artisan config:cache 2>&1
-php artisan route:cache 2>&1
-php artisan view:cache 2>&1
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
-# Start Laravel using built-in PHP server
-# Set the PORT if not already set by Railway (defaults to 8000 for local development)
-PORT=${PORT:-8000}
-echo "Starting Laravel on port $PORT..."
-exec php artisan serve --host=0.0.0.0 --port=$PORT
+# Start FrankenPHP on the dynamic port
+# We use --root ./public to tell FrankenPHP to serve your Laravel app's public entry point.
+echo "Starting FrankenPHP on port $PORT..."
+exec frankenphp php-server --listen 0.0.0.0:$PORT --root ./public
