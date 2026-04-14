@@ -18,7 +18,8 @@ WORKDIR /app
 
 # Enable FrankenPHP features
 # The PORT env var is provided by Railway at runtime
-ENV FRANKENPHP_CONFIG="worker ./public/index.php"
+# Note: Don't use worker mode - Laravel's public/index.php is a single-request handler
+ENV FRANKENPHP_CONFIG=""
 
 # Copy application code
 COPY . .
