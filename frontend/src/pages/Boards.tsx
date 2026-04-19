@@ -1,26 +1,7 @@
 import { applicationData } from "../mocks/applicationData";
+import { statusColors } from "../utilities/statusColors";
 
 function Boards() {
-  // color selector based on applicatoin status
-  const appColors = {
-    Applied: {
-      text: "text-blue-500",
-      bg: "bg-blue-500/20",
-      dot: "bg-blue-500",
-    },
-    Interviewed: {
-      text: "text-purple-500",
-      bg: "bg-purple-500/20",
-      dot: "bg-purple-500",
-    },
-    Offer: {
-      text: "text-green-500",
-      bg: "bg-green-500/20",
-      dot: "bg-green-500",
-    },
-    Rejected: { text: "text-red-500", bg: "bg-red-500/20", dot: "bg-red-500" },
-  };
-
   return (
     <div className="bg-gray-900 p-5">
       <div className="flex justify-between items-center">
@@ -32,8 +13,10 @@ function Boards() {
           </div>
         </div>
         <div>
-          <input className="bg-gray-800 rounded-xl text-white h-10 mr-3"
-          placeholder="Search" />
+          <input
+            className="bg-gray-800 rounded-xl text-white h-10 mr-3"
+            placeholder="Search"
+          />
           <button
             type="button"
             className="bg-yellow-300 rounded-xl text-black py-2 px-5 text-sm cursor-pointer"
@@ -67,10 +50,10 @@ function Boards() {
               </td>
               <td className="py-5">{app.role}</td>
               <td className="py-5">{app.dateApplied}</td>
-              <td className={`py-5 ${appColors[app.status].text}`}>
-                <td className={`${appColors[app.status].bg} rounded-3xl px-2`}>
+              <td className={`py-5 ${statusColors[app.status].text}`}>
+                <td className={`${statusColors[app.status].bg} rounded-3xl px-2`}>
                   <span
-                    className={`rounded-full inline-block h-2 w-2 ${appColors[app.status].dot} mr-1`}
+                    className={`rounded-full inline-block h-2 w-2 ${statusColors[app.status].dot} mr-1`}
                   ></span>
                   {app.status}
                 </td>
