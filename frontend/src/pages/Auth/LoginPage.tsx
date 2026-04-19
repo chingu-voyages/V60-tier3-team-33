@@ -41,11 +41,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen md:h-screen w-full flex items-center justify-center p-4 md:p-0 bg-white md:overflow-hidden">
-      <div className="flex flex-col md:flex-row w-full max-w-md md:max-w-none bg-white md:w-full md:h-full overflow-hidden flex-1 md:flex-none"> 
-        {/* Left Panel: Login Form */}
-        <div className="w-full md:w-1/3 flex items-center justify-center p-8 md:p-6 lg:p-10 xl:p-12 md:bg-white h-full relative z-10 md:shadow-[1px_0_10px_rgba(0,0,0,0.02)]">
-          <div className="w-full max-w-md md:max-w-[280px] lg:max-w-[300px] xl:max-w-[320px] mx-auto flex flex-col justify-center h-full">
+    <div className="w-full max-w-md md:max-w-[280px] lg:max-w-[300px] xl:max-w-[320px] mx-auto flex flex-col justify-center h-full">
             <h2 className="text-[32px] md:text-[22px] lg:text-[24px] font-semibold text-[#4F4F4F] text-center mb-[101px] md:mb-8 lg:mb-10">
               Welcome Back
             </h2>
@@ -143,14 +139,6 @@ const LoginPage: React.FC = () => {
                 Create Account
               </Link>
             </div>
-          </div>
-        </div>
-
-        {/* Right Panel: Placeholder for Future Illustration */}
-        <div className="hidden md:flex flex-1 md:w-2/3 bg-white md:border-l md:border-black md:rounded-l-[16px] items-center justify-center h-full">
-          {/* Temporary subtle background while looking for a better illustration */}
-        </div>
-      </div>
     </div>
   );
 };
