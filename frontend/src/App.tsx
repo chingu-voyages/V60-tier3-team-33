@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import AccountCreationPage from './pages/Auth/AccountCreationPage';
+import LoginPage from './pages/Auth/LoginPage';
 // TODO [Anthony: Uncomment these imports when merging the Auth feature
 // import AuthLayout from './layouts/AuthLayout';
-// import LoginPage from './pages/Auth/LoginPage';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -33,8 +33,8 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* AUTH ROUTES (Placeholder for Anthony) */}
-        <Route path="/login" element={<div>Login Page (Waiting for Auth Merge)</div>} />
+        {/* AUTH ROUTES */}
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<AccountCreationPage />} />
 
         {/* PROTECTED ROUTES */}
