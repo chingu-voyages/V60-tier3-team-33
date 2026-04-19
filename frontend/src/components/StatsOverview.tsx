@@ -1,6 +1,6 @@
 import React from "react";
 import { applicationData } from "../mocks/applicationData";
-import { statusColors } from "../utilities/statusColors";
+import { statusColors, type StatusKey } from "../utilities/statusColors";
 
 function StatsOverview() {
   // create an object with the number of each app status
@@ -23,9 +23,9 @@ function StatsOverview() {
   return (
     <div className="flex">
       {Object.entries(stats).map(([key, value]) => (
-        <div className={`${statusColors[key].bg} m-1 rounded-lg p-5 flex-1`}>
+        <div className={`${statusColors[key as StatusKey].bg} m-1 rounded-lg p-5 flex-1`}>
           <div className="text-2xl">{value}</div>
-          <div className={`text-xs ${statusColors[key].text}`}>{key}</div>
+          <div className={`text-xs ${statusColors[key as StatusKey].text}`}>{key}</div>
         </div>
       ))}
     </div>

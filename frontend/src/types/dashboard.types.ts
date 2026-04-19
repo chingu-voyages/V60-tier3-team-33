@@ -1,3 +1,5 @@
+import type { statusColors } from "../utilities/statusColors";
+
 export type Application = {
   company: string;
   role: string;

@@ -19,3 +19,5 @@
     Rejected: { text: "text-red-500", bg: "bg-red-500/20", dot: "bg-red-500" },
     favorites: { text: "text-yellow-500", bg: "bg-yellow-500/20", dot: "bg-yellow-500" },
 };
+
+export type StatusKey = keyof typeof statusColors;
