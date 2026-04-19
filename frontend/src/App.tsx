@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+import AuthLayout from './layouts/AuthLayout';
 import AccountCreationPage from './pages/Auth/AccountCreationPage';
 import LoginPage from './pages/Auth/LoginPage';
-// TODO [Anthony: Uncomment these imports when merging the Auth feature
-// import AuthLayout from './layouts/AuthLayout';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -34,8 +33,10 @@ export default function App() {
     <Router>
       <Routes>
         {/* AUTH ROUTES */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<AccountCreationPage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<AccountCreationPage />} />
+        </Route>
 
         {/* PROTECTED ROUTES */}
         <Route element={<ProtectedRoute />}>
