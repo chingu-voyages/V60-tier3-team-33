@@ -1,6 +1,5 @@
 import { applicationData } from "../mocks/applicationData";
 import { formatDate } from "../utilities/formatDate";
-import { statusColors } from "../utilities/statusColors";
 
 function AppList({ boardsView }: { boardsView: boolean }) {
   // check to see if salary is listed and format it
@@ -11,9 +10,9 @@ function AppList({ boardsView }: { boardsView: boolean }) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-5 text-gray-300 m-5 overflow-x-auto">
-      <table className="min-w-6xl w-full table-fixed">
-        <thead>
+    <div className="bg-[linear-gradient(180deg,#1b1c1d,#151617)] rounded-2xl p-5 text-gray-300 m-5 overflow-x-auto border border-[#222324]">
+      <table className="min-w-4xl w-full table-fixed">
+        <thead className="text-gray-400 uppercase tracking-wide">
           <tr>
             <th className="text-left">Company</th>
             <th className="text-left">Role</th>
@@ -39,11 +38,8 @@ function AppList({ boardsView }: { boardsView: boolean }) {
             </td>
             <td className="py-5">{app.role}</td>
             <td className="py-5">{formatDate(app.dateApplied, "short")}</td>
-            <td className={`py-5 ${statusColors[app.status].text}`}>
-              <td className={`${statusColors[app.status].bg} rounded-3xl px-2`}>
-                <span
-                  className={`rounded-full inline-block h-2 w-2 ${statusColors[app.status].dot} mr-1`}
-                ></span>
+            <td className="py-5">
+              <td className={`rounded-3xl px-3 py-1 bg-[#b4b4b41a] ${app.status === "Offer" && "text-green-500"}`}>
                 {app.status}
               </td>
             </td>

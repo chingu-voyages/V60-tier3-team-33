@@ -1,7 +1,7 @@
 import AppList from "../components/AppList";
 import { applicationData } from "../mocks/applicationData";
 
-function Boards({boardsView}: {boardsView: boolean}) {
+function Boards() {
   
 
   return (
