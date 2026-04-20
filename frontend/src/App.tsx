@@ -3,8 +3,8 @@ import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
-    <div className="h-screen bg-background text-white">
-      <Dashboard/>
+    <div className="bg-background h-screen text-white">
+      <Dashboard />
       {/* <Boards /> */}
     </div>
   );

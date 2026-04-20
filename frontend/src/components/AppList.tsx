@@ -10,15 +10,15 @@ function AppList({ boardsView }: { boardsView: boolean }) {
   };
 
   return (
-    <div className="surface rounded-2xl p-5 text-text-muted m-5 overflow-x-auto">
-      <table className="min-w-4xl w-full table-fixed">
-        <thead className="text-gray-400 uppercase tracking-wide">
-          <tr>
-            <th className="text-left">Company</th>
-            <th className="text-left">Role</th>
-            <th className="text-left">Date Applied</th>
-            <th className="text-left">Status</th>
-            <th className="text-left">Location</th>
+    <div className="surface text-text-muted m-5 overflow-x-auto rounded-2xl">
+      <table className="w-full min-w-4xl table-fixed">
+        <thead className="tracking-wide text-gray-400 uppercase">
+          <tr className="border-b-[.5px] border-[#b4b4b41a]">
+            <th className="text-left p-5">Company</th>
+            <th className="text-left p-5">Role</th>
+            <th className="text-left p-5">Date Applied</th>
+            <th className="text-left p-5">Status</th>
+            <th className="text-left p-5">Location</th>
             {boardsView && (
               <>
                 <th className="text-left">Type</th>
@@ -29,30 +29,32 @@ function AppList({ boardsView }: { boardsView: boolean }) {
           </tr>
         </thead>
         {applicationData.map((app) => (
-          <tr>
+          <tr className="cursor-pointer hover:bg-background-shadow duration-100 ease-in border-b-[.5px] border-[#b4b4b41a]">
             <td className="py-5 text-white">
-              <span className="inline-block w-5 text-xs">
-                {app.favorite ? "⭐️" : ""}
+              <span className="inline-block w-5 text-xs px-5">
+                {app.favorite ? "⭐️ " : ""}
               </span>
               {app.company}
             </td>
-            <td className="py-5 text-gray-400">{app.role}</td>
-            <td className="py-5">{formatDate(app.dateApplied, "short")}</td>
-            <td className="py-5">
-              <td className={`rounded-3xl px-3 py-1 bg-[#b4b4b41a] ${app.status === "Offer" && "text-green-500"}`}>
+            <td className="p-5 text-gray-400">{app.role}</td>
+            <td className="p-5">{formatDate(app.dateApplied, "short")}</td>
+            <td className="p-5">
+              <td
+                className={`rounded-3xl bg-[#b4b4b41a] px-3 py-1 ${app.status === "Offer" && "text-green-500"}`}
+              >
                 {app.status}
               </td>
             </td>
-            <td className="py-5">
-              {app.location} <p className="text-xs pt-1">({app.type})</p>
+            <td className="p-5">
+              {app.location} <p className="pt-1 text-xs">({app.type})</p>
             </td>
             {boardsView && (
               <>
-                <td className="py-5">{app.workType}</td>
-                <td className="py-5">
+                <td className="p-5">{app.workType}</td>
+                <td className="p-5">
                   {formatSalary(app.minSalary)} - {formatSalary(app.maxSalary)}
                 </td>
-                <td className="py-5">{app.notes}</td>
+                <td className="p-5">{app.notes}</td>
               </>
             )}
           </tr>

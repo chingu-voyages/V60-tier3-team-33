@@ -2,6 +2,7 @@
 
 @theme {
   --color-background: rgba(15, 15, 15, 1);
+  --color-background-shadow: rgba(37, 37, 37, 1);
   --color-text: rgba(255, 255, 255, 1);
   --color-text-muted: rgba(107, 114, 128, 1);
   --color-primary: rgba(238, 255, 43, 1);
@@ -10,7 +11,7 @@
 }
 
 .surface {
-  @apply bg-linear-to-b from-[#1b1c1d] to-[#151617] border border-[#222324];
+  @apply border border-[#222324] bg-linear-to-b from-[#1b1c1d] to-[#151617];
 }
 
 body {

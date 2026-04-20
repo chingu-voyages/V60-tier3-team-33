@@ -21,9 +21,14 @@ function StatsOverview() {
   return (
     <div className="flex">
       {Object.entries(stats).map(([key, value]) => (
-        <div className="m-1 rounded-2xl p-5 flex-1 bg-[linear-gradient(180deg,#1b1c1d,#151617)] border-4 border-[#222324] shadow-[0 0 0 1px #383a3e80,0 1px #383a3ecc]">
-          <div className="text-4xl font-bold mb-2">{value}</div>
-          <div className="text-sm text-gray-500">{key}</div>
+        <div className="cursor-pointer group shadow-[0 0 0 1px #383a3e80,0 1px #383a3ecc] m-1 flex flex-1 justify-between rounded-2xl border-4 border-[#222324] bg-[linear-gradient(180deg,#1b1c1d,#151617)] p-5 duration-100 ease-in hover:scale-105">
+          <div>
+            <div className="mb-2 text-4xl font-bold">{value}</div>
+            <div className="text-sm text-gray-500">{key}</div>
+          </div>
+          <div className="hidden duration-100 ease-in group-hover:block text-text-muted">
+            {">"}
+          </div>
         </div>
       ))}
     </div>
