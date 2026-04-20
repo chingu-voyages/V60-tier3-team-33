@@ -1,4 +1,7 @@
 @import "tailwindcss";
 
 :root {}
-body { margin: 0; }
+body { 
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
