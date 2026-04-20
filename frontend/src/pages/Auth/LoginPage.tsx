@@ -34,8 +34,8 @@ const LoginPage: React.FC = () => {
     setApiMessage(null);
     try {
       const response = await authService.login(data);
-      if (response.access_token) {
-        localStorage.setItem("auth_token", response.access_token);
+      if (response.token) {
+        localStorage.setItem("auth_token", response.token);
       }
       setApiMessage({ type: "success", text: "Successfully logged in!" });
       // TODO: Handle routing to Dashboard
