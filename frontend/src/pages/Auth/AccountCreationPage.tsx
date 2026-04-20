@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { AnimatePresence, motion } from "framer-motion";
+import { authService } from "../../api/auth";
+import axios from "axios";
 
 // Define the schema for account creation
 const accountCreationSchema = z
@@ -65,18 +67,45 @@ const AccountCreationPage: React.FC = () => {
 
   const onSubmit = async (data: AccountCreationFormInputs) => {
     setApiMessage(null);
-    console.log("Account creation data:", data);
-    // Simulate backend API delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    if (data.email === "error@test.com") {
-      setApiMessage({
-        type: "error",
-        text: "Account creation failed. Email might already be in use.",
+    try {
+      const response = await authService.register({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        password_confirmation: data.confirmPassword,
       });
-    } else {
+      if (response.access_token) {
+        localStorage.setItem("auth_token", response.access_token);
+      }
       setApiMessage({ type: "success", text: "Account created successfully!" });
       reset();
+      // TODO: Handle routing to Dashboard
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 422) {
+          // Display backend errors as a unified banner message
+          const validationErrors: Record<string, string[]> =
+            error.response.data.errors || {};
+          const firstErrorKey = Object.keys(validationErrors)[0];
+          const errorMessage = firstErrorKey
+            ? validationErrors[firstErrorKey][0]
+            : error.response.data.message || "Account creation failed.";
+
+          setApiMessage({ type: "error", text: errorMessage });
+        } else {
+          setApiMessage({
+            type: "error",
+            text:
+              error.response.data.message ||
+              "Account creation failed. Please try again.",
+          });
+        }
+      } else {
+        setApiMessage({
+          type: "error",
+          text: "An unexpected network error occurred.",
+        });
+      }
     }
   };
 
@@ -280,7 +309,7 @@ const AccountCreationPage: React.FC = () => {
             <Loader2 className="w-[18px] h-[18px] animate-spin" />
           ) : (
             <>
-              <span>Create Account</span>
+              <span>Get Started</span>
               <ArrowRight className="w-[18px] h-[18px]" strokeWidth={2.5} />
             </>
           )}
