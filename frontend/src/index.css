@@ -1,4 +1,18 @@
 @import "tailwindcss";
 
-:root {}
-body { margin: 0; }
+@theme {
+  --color-background: rgba(15, 15, 15, 1);
+  --color-text: rgba(255, 255, 255, 1);
+  --color-text-muted: rgba(107, 114, 128, 1);
+  --color-primary: rgba(238, 255, 43, 1);
+  --color-secondary: rgba(214, 211, 255, 1);
+  --color-secondary-hover: rgba(196, 192, 255);
+}
+
+.surface {
+  @apply bg-linear-to-b from-[#1b1c1d] to-[#151617] border border-[#222324];
+}
+
+body {
+  margin: 0;
+}

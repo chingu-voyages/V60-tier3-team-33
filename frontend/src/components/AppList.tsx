@@ -10,7 +10,7 @@ function AppList({ boardsView }: { boardsView: boolean }) {
   };
 
   return (
-    <div className="bg-[linear-gradient(180deg,#1b1c1d,#151617)] rounded-2xl p-5 text-gray-300 m-5 overflow-x-auto border border-[#222324]">
+    <div className="surface rounded-2xl p-5 text-text-muted m-5 overflow-x-auto">
       <table className="min-w-4xl w-full table-fixed">
         <thead className="text-gray-400 uppercase tracking-wide">
           <tr>
@@ -36,7 +36,7 @@ function AppList({ boardsView }: { boardsView: boolean }) {
               </span>
               {app.company}
             </td>
-            <td className="py-5">{app.role}</td>
+            <td className="py-5 text-gray-400">{app.role}</td>
             <td className="py-5">{formatDate(app.dateApplied, "short")}</td>
             <td className="py-5">
               <td className={`rounded-3xl px-3 py-1 bg-[#b4b4b41a] ${app.status === "Offer" && "text-green-500"}`}>
