@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { applicationData } from "../mocks/applicationData";
 import { statusColors } from "../utilities/statusColors";
+import { formatDate } from "../utilities/formatDate";
 
 function Boards() {
   const [boardsView, setBoardsView] = useState(false);
@@ -56,7 +57,7 @@ function Boards() {
                 {app.company}
               </td>
               <td className="py-5">{app.role}</td>
-              <td className="py-5">{app.dateApplied}</td>
+              <td className="py-5">{formatDate(app.dateApplied, "short")}</td>
               <td className={`py-5 ${statusColors[app.status].text}`}>
                 <td
                   className={`${statusColors[app.status].bg} rounded-3xl px-2`}
