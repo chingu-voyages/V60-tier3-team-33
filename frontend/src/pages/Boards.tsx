@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { applicationData } from "../mocks/applicationData";
 import { statusColors } from "../utilities/statusColors";
 
 function Boards() {
+  const [boardsView, setBoardsView] = useState(false);
+
   return (
     <div className="bg-gray-900 p-5">
       <div className="flex justify-between items-center">
@@ -35,9 +38,13 @@ function Boards() {
               <th className="text-left">Date Applied</th>
               <th className="text-left">Status</th>
               <th className="text-left">Location</th>
-              <th className="text-left">Type</th>
-              <th className="text-left">Salary</th>
-              <th className="text-left">NOTES</th>
+              {boardsView && (
+                <>
+                  <th className="text-left">Type</th>
+                  <th className="text-left">Salary</th>
+                  <th className="text-left">NOTES</th>
+                </>
+              )}
             </tr>
           </thead>
           {applicationData.map((app) => (
@@ -51,7 +58,9 @@ function Boards() {
               <td className="py-5">{app.role}</td>
               <td className="py-5">{app.dateApplied}</td>
               <td className={`py-5 ${statusColors[app.status].text}`}>
-                <td className={`${statusColors[app.status].bg} rounded-3xl px-2`}>
+                <td
+                  className={`${statusColors[app.status].bg} rounded-3xl px-2`}
+                >
                   <span
                     className={`rounded-full inline-block h-2 w-2 ${statusColors[app.status].dot} mr-1`}
                   ></span>
@@ -61,11 +70,15 @@ function Boards() {
               <td className="py-5">
                 {app.location} <p className="text-xs pt-1">({app.type})</p>
               </td>
-              <td className="py-5">{app.workType}</td>
-              <td className="py-5">
-                {app.minSalary} - {app.maxSalary}
-              </td>
-              <td className="py-5">{app.notes}</td>
+              {boardsView && (
+                <>
+                  <td className="py-5">{app.workType}</td>
+                  <td className="py-5">
+                    {app.minSalary} - {app.maxSalary}
+                  </td>
+                  <td className="py-5">{app.notes}</td>
+                </>
+              )}
             </tr>
           ))}
         </table>
