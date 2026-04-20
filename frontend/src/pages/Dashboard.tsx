@@ -3,7 +3,6 @@ import AppList from "../components/AppList";
 import { ConversionDashboard } from "../components/ConversionDashboard";
 import StatsOverview from "../components/StatsOverview";
 import { formatDate } from "../utilities/formatDate";
-import Boards from "./Boards";
 
 function Dashboard() {
 const [boardsView, setBoardsView] = useState(false);
@@ -21,8 +20,7 @@ const [boardsView, setBoardsView] = useState(false);
       </div>
       <StatsOverview />
       <ConversionDashboard />
-      {/* <AppList boardsView={boardsView}/> */}
-      <Boards boardsView={true}/>
+      <AppList boardsView={boardsView}/>
     </div>
   );
 }

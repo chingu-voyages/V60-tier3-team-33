@@ -11,8 +11,8 @@ function AppList({ boardsView }: { boardsView: boolean }) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-2xl p-5 text-gray-300 m-5">
-      <table className="w-full table-fixed">
+    <div className="bg-gray-800 rounded-2xl p-5 text-gray-300 m-5 overflow-x-auto">
+      <table className="min-w-6xl w-full table-fixed">
         <thead>
           <tr>
             <th className="text-left">Company</th>
