@@ -79,18 +79,25 @@ const AuthLayout: React.FC = () => {
         </div>
 
         {/* Right Panel: Glowing background and Feature Grid exactly copying the source screenshot */}
-        <div className="hidden md:flex flex-1 md:w-[60%] xl:w-[65%] items-end justify-start h-full relative z-10 overflow-hidden bg-[#111209]">
-          {/* Abstract Aurora Background Overlays mimicking the Applytics blurry smoke aesthetic */}
-          <div className="absolute inset-0 bg-linear-to-b from-[#13150A] via-[#1F250C] to-[#0A0B05] opacity-90 z-0"></div>
-          <div className="absolute top-[10%] left-[10%] w-[70vw] h-[70vh] bg-[#C1DF3B] opacity-[0.14] blur-[130px] rounded-full mix-blend-screen z-0"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[80vh] bg-[#F1FF89] opacity-[0.16] blur-[150px] rounded-full mix-blend-screen z-0"></div>
+        <div className="hidden md:flex flex-1 md:w-[60%] xl:w-[65%] items-end justify-start h-full relative z-10 overflow-hidden bg-[#0A0A0A]">
+          {/* Applytics Abstract Aurora Background Video */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover z-0 opacity-80 mix-blend-screen pointer-events-none"
+            src="https://applytics-design.vercel.app/assets/gradient-animation-1776606389007-CFcqnpS6.webm"
+          />
+          {/* Subtle gradient overlay to provide contrast for text against bright video areas */}
+          <div className="absolute inset-0 bg-linear-to-t from-[#0A0B05] via-[#0A0B05]/20 to-transparent z-0 pointer-events-none"></div>
 
           {/* Social Proof Overlay Content pinned to the bottom left matching the exact text mapping */}
-          <div className="relative z-10 p-10 lg:p-16 xl:p-20 w-full max-w-4xl">
-            <h3 className="text-[#84848A] text-[11px] lg:text-xs font-bold tracking-[0.2em] uppercase mb-8 ml-1">
-              Why job seekers use Applytics
+          <div className="relative z-10 px-10 pb-8 lg:pb-12 xl:pb-14  lg:px-16 xl:px-8 w-full max-w-4xl">
+            <h3 className="text-[#84848A] text-[11px] lg:text-xs font-bold tracking-[0.2em] uppercase mb-6 ml-1">
+              Everything you need for your job search
             </h3>
-            <div className="grid grid-cols-2 gap-x-12 gap-y-10">
+            <div className="grid grid-cols-2 gap-4">
               {[
                 {
                   title: "Track every application",
@@ -118,10 +125,10 @@ const AuthLayout: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <h4 className="text-white font-medium text-[15px] mb-1.5">
+                    <h4 className="text-white font-medium text-[14px] mb-1.5">
                       {item.title}
                     </h4>
-                    <p className="text-[#9898A1] text-[13px] leading-[1.6]">
+                    <p className="text-[#9898A1] text-[12px] leading-[1.6]">
                       {item.desc}
                     </p>
                   </div>

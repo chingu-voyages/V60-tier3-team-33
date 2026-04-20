@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { authService } from "../../api/auth";
+import axios from "axios";
 
 // Define the schema for login
 const loginSchema = z.object({
@@ -17,7 +19,6 @@ const LoginPage: React.FC = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
@@ -31,18 +32,40 @@ const LoginPage: React.FC = () => {
 
   const onSubmit = async (data: LoginFormInputs) => {
     setApiMessage(null);
-    console.log("Login data:", data);
-    // Simulate backend API delay
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    if (data.email === "error@test.com") {
-      setApiMessage({
-        type: "error",
-        text: "Invalid email or password. Please try again.",
-      });
-    } else {
+    try {
+      const response = await authService.login(data);
+      if (response.token) {
+        localStorage.setItem("auth_token", response.token);
+      }
       setApiMessage({ type: "success", text: "Successfully logged in!" });
-      reset();
+      // TODO: Handle routing to Dashboard
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 422) {
+          // Display backend errors as a unified banner message instead of field-specific text
+          const validationErrors: Record<string, string[]> =
+            error.response.data.errors || {};
+          const firstErrorKey = Object.keys(validationErrors)[0];
+          const errorMessage = firstErrorKey
+            ? validationErrors[firstErrorKey][0]
+            : error.response.data.message || "Invalid credentials provided.";
+
+          setApiMessage({ type: "error", text: errorMessage });
+        } else {
+          // General Backend Failure (e.g. 401 Unauthorized)
+          setApiMessage({
+            type: "error",
+            text:
+              error.response.data.message ||
+              "Invalid email or password. Please try again.",
+          });
+        }
+      } else {
+        setApiMessage({
+          type: "error",
+          text: "An unexpected error occurred. Please check your connection.",
+        });
+      }
     }
   };
 
