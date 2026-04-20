@@ -1,9 +1,12 @@
+import { useState } from "react";
+import AppList from "../components/AppList";
 import { ConversionDashboard } from "../components/ConversionDashboard";
 import StatsOverview from "../components/StatsOverview";
 import { formatDate } from "../utilities/formatDate";
 import Boards from "./Boards";
 
 function Dashboard() {
+const [boardsView, setBoardsView] = useState(false);
 
   return (
     <div className="bg-gray-800 p-5">
@@ -18,7 +21,8 @@ function Dashboard() {
       </div>
       <StatsOverview />
       <ConversionDashboard />
-      <Boards />
+      {/* <AppList boardsView={boardsView}/> */}
+      <Boards boardsView={true}/>
     </div>
   );
 }
