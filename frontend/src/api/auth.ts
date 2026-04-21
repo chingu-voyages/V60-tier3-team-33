@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from "./client";
 
 export interface LoginPayload {
   email: string;
@@ -25,20 +25,20 @@ export interface AuthResponse {
 
 export const authService = {
   login: async (data: LoginPayload): Promise<AuthResponse> => {
-    const response = await apiClient.post<AuthResponse>('/login', data);
+    const response = await apiClient.post<AuthResponse>("/login", data);
     return response.data;
   },
   register: async (data: RegisterPayload): Promise<AuthResponse> => {
-    const response = await apiClient.post<AuthResponse>('/register', data);
+    const response = await apiClient.post<AuthResponse>("/register", data);
     return response.data;
   },
   logout: async () => {
-    const response = await apiClient.post('/logout');
-    localStorage.removeItem('auth_token');
+    const response = await apiClient.post("/logout");
+    localStorage.removeItem("auth_token");
     return response.data;
   },
   getProfile: async () => {
-    const response = await apiClient.get('/profile');
+    const response = await apiClient.get("/profile");
     return response.data;
-  }
+  },
 };
