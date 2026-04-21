@@ -36,7 +36,7 @@ coding!
 
 - Scrum Master Zuzu #1: [GitHub](https://github.com/zuweeali) / [LinkedIn](https://linkedin.com/in/zuwaira-aliyu-mohammed)
 - Greg Minezzi: [GitHub](https://github.com/minezzig) / [LinkedIn](https://linkedin.com/in/gregminezzi)
+- Ivan Brovko: [GitHub](https://github.com/HoneyVanya) / [LinkedIn](https://linkedin.com/in/ivan-brovko)
+- Afuwape Babatunde #4: [GitHub](https://github.com/Afubasic) / [LinkedIn](https://www.linkedin.com/in/afuwape-babatunde/)
 - Anthony Tibamwenda: [GitHub](https://github.com/AskTiba) / [LinkedIn](https://www.linkedin.com/in/tibamwenda-anthony-64144820b/)
-- Teammate name #4: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
-- Teammate name #5: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname) ...
-- Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Olivia Prusinowski: [GitHub](https://github.com/opruz) / [LinkedIn](http://www.linkedin.com/in/olivia-prusinowski-040268160)
