@@ -1,13 +1,11 @@
+import { useState } from "react";
 import { applicationData } from "../mocks/applicationData";
 import { formatDate } from "../utilities/formatDate";
+import AppCard from "./AppCard";
+import { formatSalary } from "../utilities/formatSalary";
 
 function AppList({ boardsView }: { boardsView: boolean }) {
-  // check to see if salary is listed and format it
-  const formatSalary = (salary: number | null) => {
-    if (salary == null) return "Not listed";
-
-    return `${salary / 1000}k`;
-  };
+  const [selectedApp, setSelectedApp] = useState(null);
 
   return (
     <div className="surface text-text-muted m-5 overflow-x-auto rounded-2xl">
@@ -29,7 +27,7 @@ function AppList({ boardsView }: { boardsView: boolean }) {
           </tr>
         </thead>
         {applicationData.map((app) => (
-          <tr className="cursor-pointer hover:bg-background-shadow duration-100 ease-in border-b-[.5px] border-[#b4b4b41a]">
+          <tr key={app.id} className="cursor-pointer hover:bg-background-shadow duration-100 ease-in border-b-[.5px] border-[#b4b4b41a]" onClick={() => setSelectedApp(app)}>
             <td className="py-5 text-white">
               <span className="inline-block w-5 text-xs px-5">
                 {app.favorite ? "⭐️ " : ""}
@@ -60,6 +58,7 @@ function AppList({ boardsView }: { boardsView: boolean }) {
           </tr>
         ))}
       </table>
+      {selectedApp && <AppCard app={selectedApp} setSelectedApp={setSelectedApp}/>}
     </div>
   );
 }

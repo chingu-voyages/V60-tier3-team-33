@@ -2,6 +2,7 @@ import type { Application } from "../types/dashboard.types";
 
 export const applicationData: Application[] = [
   {
+    id: 1,
     company: "Shopify",
     role: "Frontend Engineer",
     dateApplied: "2026-04-15",
@@ -15,6 +16,7 @@ export const applicationData: Application[] = [
     favorite: false,
   },
   {
+    id: 2,
     company: "Notion",
     role: "Full Stack Engineer",
     dateApplied: "2026-04-14",
@@ -26,7 +28,9 @@ export const applicationData: Application[] = [
     maxSalary: 200000,
     notes: "Found on the...",
     favorite: false,
-  },{
+  },
+  {
+    id: 3,
     company: "Airbnb",
     role: "React Developer",
     dateApplied: "2026-04-10",
@@ -40,6 +44,7 @@ export const applicationData: Application[] = [
     favorite: false,
   },
   {
+    id: 4,
     company: "GitHub",
     role: "Senior Software Engineer",
     dateApplied: "2026-04-07",
@@ -53,6 +58,7 @@ export const applicationData: Application[] = [
     favorite: false,
   },
   {
+    id: 5,
     company: "Stripe",
     role: "Senior Frontend Engineer",
     dateApplied: "2026-04-03",
@@ -66,6 +72,7 @@ export const applicationData: Application[] = [
     favorite: true,
   },
   {
+    id: 6,
     company: "Linear",
     role: "Product Designer",
     dateApplied: "2026-03-30",
@@ -79,6 +86,7 @@ export const applicationData: Application[] = [
     favorite: true,
   },
   {
+    id: 7,
     company: "Figma",
     role: "Software Engineer",
     dateApplied: "2026-03-27",
@@ -92,6 +100,7 @@ export const applicationData: Application[] = [
     favorite: true,
   },
   {
+    id: 8,
     company: "Vercel",
     role: "Frontend Engineer",
     dateApplied: "2026-03-20",
