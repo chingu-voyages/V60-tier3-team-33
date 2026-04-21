@@ -22,7 +22,7 @@ const AuthLayout: React.FC = () => {
       transformPerspective: 1500,
       transition: {
         duration: 0.6,
-        ease: [0.16, 1, 0.3, 1], // Custom bouncy ease out
+        ease: "easeInOut" as any, // Custom bouncy ease out
       },
     },
     exit: {
@@ -32,7 +32,7 @@ const AuthLayout: React.FC = () => {
       transformPerspective: 1500,
       transition: {
         duration: 0.6,
-        ease: [0.7, 0, 0.84, 0], // Custom ease in
+        ease: "easeOut" as any, // Custom ease in
       },
     },
   };
