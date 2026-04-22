@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import { applicationData } from "../mocks/applicationData";
 
 function StatsOverview() {
@@ -19,7 +20,7 @@ function StatsOverview() {
     },
   );
   return (
-    <div className="flex">
+    <div className="flex gap-1">
       {Object.entries(stats).map(([key, value]) => (
         <div className="cursor-pointer group shadow-[0 0 0 1px #383a3e80,0 1px #383a3ecc] m-1 flex flex-1 justify-between rounded-2xl border-4 border-[#222324] bg-[linear-gradient(180deg,#1b1c1d,#151617)] p-5 duration-100 ease-in hover:scale-105">
           <div>
@@ -27,7 +28,7 @@ function StatsOverview() {
             <div className="text-sm text-gray-500">{key}</div>
           </div>
           <div className="hidden duration-100 ease-in group-hover:block text-text-muted">
-            {">"}
+            <ChevronRight />
           </div>
         </div>
       ))}

@@ -3,9 +3,11 @@ import { applicationData } from "../mocks/applicationData";
 import { formatDate } from "../utilities/formatDate";
 import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
+import type { Application } from "../types/dashboard.types";
+import { Star } from "lucide-react";
 
 function AppList({ boardsView }: { boardsView: boolean }) {
-  const [selectedApp, setSelectedApp] = useState(null);
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
   return (
     <div className="surface text-text-muted m-5 overflow-x-auto rounded-2xl">
@@ -29,8 +31,8 @@ function AppList({ boardsView }: { boardsView: boolean }) {
         {applicationData.map((app) => (
           <tr key={app.id} className="cursor-pointer hover:bg-background-shadow duration-100 ease-in border-b-[.5px] border-[#b4b4b41a]" onClick={() => setSelectedApp(app)}>
             <td className="py-5 text-white">
-              <span className="inline-block w-5 text-xs px-5">
-                {app.favorite ? "⭐️ " : ""}
+              <span className="inline-block w-5 px-5 mr-1 translate-y-0.5 opacity-50">
+                {app.favorite ? <Star fill="yellow" size={16} strokeWidth="0"/> : ""}
               </span>
               {app.company}
             </td>

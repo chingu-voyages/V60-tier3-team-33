@@ -1,11 +1,28 @@
+import type { Dispatch, SetStateAction } from "react";
 import type { Application } from "../types/dashboard.types";
 import { formatDate } from "../utilities/formatDate";
 import { formatSalary } from "../utilities/formatSalary";
+import {
+  Briefcase,
+  Calendar,
+  DollarSign,
+  MapPin,
+  Pen,
+  Star,
+  StarOff,
+  Trash2,
+  X,
+} from "lucide-react";
 
-function AppCard({ app, setSelectedApp }: { app: Application }) {
+type AppCardType = {
+  app: Application;
+  setSelectedApp: Dispatch<SetStateAction<Application | null>>;
+};
+
+function AppCard({ app, setSelectedApp }: AppCardType) {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-xs">
-      <div className="surface flex-1 max-w-4xl rounded-2xl">
+      <div className="surface max-w-4xl flex-1 rounded-2xl">
         {/* card header */}
         <div className="p-5">
           <div className="flex items-center justify-between">
@@ -15,7 +32,24 @@ function AppCard({ app, setSelectedApp }: { app: Application }) {
               </div>
               {formatDate(app.dateApplied, "short")}
             </div>
-            <div>⭐✏️<span className="cursor-pointer" onClick={() => setSelectedApp(null)}>❌</span></div>
+            {/* icons */}
+            <div className="flex gap-3">
+              <div className="hover:text-primary cursor-pointer">
+                {app.favorite ? <Star /> : <StarOff />}
+              </div>
+              <div className="hover:text-primary cursor-pointer">
+                <Pen />
+              </div>
+              <div className="hover:text-primary cursor-pointer">
+                <Trash2 />
+              </div>
+              <div
+                className="hover:text-primary cursor-pointer"
+                onClick={() => setSelectedApp(null)}
+              >
+                <X />
+              </div>
+            </div>
           </div>
           <div className="mt-5">
             <div className="mb-1 text-2xl text-white">{app.role}</div>
@@ -27,7 +61,9 @@ function AppCard({ app, setSelectedApp }: { app: Application }) {
         <div className="grid grid-cols-2 grid-rows-2 gap-3 p-5">
           {/* location */}
           <div className="flex gap-3">
-            <div>🔽</div>
+            <div className="pt-1">
+              <MapPin size={20} />
+            </div>
             <div>
               <div>Location</div>
               <div className="text-white">{app.location}</div>
@@ -35,7 +71,9 @@ function AppCard({ app, setSelectedApp }: { app: Application }) {
           </div>
           {/* job type */}
           <div className="flex gap-3">
-            <div>🧳</div>
+            <div className="pt-1">
+              <Briefcase size={20} />
+            </div>{" "}
             <div>
               <div>Job Type</div>
               <div className="text-white">{app.type}</div>
@@ -43,7 +81,11 @@ function AppCard({ app, setSelectedApp }: { app: Application }) {
           </div>
           {/* applied */}
           <div className="flex gap-3">
-            <div>📆 </div>
+            <div>
+              <div className="pt-1">
+                <Calendar size={20} />
+              </div>{" "}
+            </div>
             <div>
               <div>Applied</div>
               <div className="text-white">{app.dateApplied}</div>
@@ -51,7 +93,11 @@ function AppCard({ app, setSelectedApp }: { app: Application }) {
           </div>
           {/* salary */}
           <div className="flex gap-3">
-            <div>💰</div>
+            <div>
+              <div className="pt-1">
+                <DollarSign size={20} />
+              </div>{" "}
+            </div>
             <div>
               <div>Salary</div>
               <div className="text-white">
