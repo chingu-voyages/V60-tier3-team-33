@@ -8,7 +8,7 @@ const AuthLayout: React.FC = () => {
   const outlet = useOutlet();
 
   // 3D Flip Page Turn Variants
-  const pageFlipVariants = {
+  const pageFlipVariants: any = {
     initial: {
       rotateY: -90,
       opacity: 0,
@@ -36,7 +36,6 @@ const AuthLayout: React.FC = () => {
       },
     },
   };
-
   return (
     <div className="min-h-screen md:h-screen w-full flex items-center justify-center bg-[#000000] md:overflow-hidden text-white font-sans selection:bg-[#E3F05B] selection:text-black">
       <div className="flex flex-col md:flex-row w-full bg-[#0E0E0E] md:w-full md:h-full overflow-hidden">
@@ -48,7 +47,7 @@ const AuthLayout: React.FC = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              variants={pageFlipVariants}
+              variants={pageFlipVariants as any}
               className="w-full min-h-full flex flex-col items-center px-6 md:px-8 lg:px-10 pt-10 md:pt-14 pb-10 origin-right transition-all"
               style={{
                 backfaceVisibility: "hidden",
@@ -64,8 +63,8 @@ const AuthLayout: React.FC = () => {
                     <div className="w-[8px] h-[8px] bg-white opacity-40 rounded-[1.5px]"></div>
                     <div className="w-[8px] h-[8px] border-[1.5px] border-white rounded-[1.5px]"></div>
                   </div>
-                  <span className="font-semibold text-lg text-white tracking-tight">
-                    Applytics
+                  <span className="text-lg text-white tracking-tight">
+                    <span className="font-bold">Apply</span><span className="font-normal">tics</span>
                   </span>
                 </div>
               </div>
