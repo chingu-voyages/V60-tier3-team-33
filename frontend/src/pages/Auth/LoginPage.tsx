@@ -83,7 +83,7 @@ const LoginPage: React.FC = () => {
         <div className="flex flex-col">
           <label
             htmlFor="email"
-            className="mb-1.5 text-[13px] text-[#D4D4D8] font-medium"
+            className="mb-1.5 text-[13px] text-[#84848A] font-medium"
           >
             Email address
           </label>
@@ -106,13 +106,13 @@ const LoginPage: React.FC = () => {
           <div className="flex justify-between items-center mb-1.5">
             <label
               htmlFor="password"
-              className="text-[13px] text-[#D4D4D8] font-medium"
+              className="text-[13px] text-[#84848A] font-medium"
             >
               Password
             </label>
             <Link
               to="/forgot-password"
-              className="text-[13px] text-[#E3F05B] hover:text-[#f4ffa3] font-medium transition-colors"
+              className="text-[13px] text-[#E3F05B] hover:text-[#f4ffa3] font-medium transition-colors cursor-pointer"
             >
               Forgot password?
             </Link>
@@ -129,7 +129,7 @@ const LoginPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#52525B] hover:text-white transition-colors"
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#52525B] hover:text-white transition-colors cursor-pointer"
             >
               {showPassword ? (
                 <EyeOff className="w-[18px] h-[18px]" strokeWidth={2} />
@@ -160,7 +160,7 @@ const LoginPage: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-[#E3F05B] text-black text-[15px] font-semibold rounded-[8px] h-[44px] w-full hover:bg-[#D3E04F] disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-1 flex flex-row items-center justify-center gap-2"
+          className="bg-[#E3F05B] text-black text-[15px] font-semibold rounded-[8px] h-[44px] w-full hover:bg-[#D3E04F] disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-1 flex flex-row items-center justify-center gap-2 cursor-pointer"
         >
           {isSubmitting ? (
             <Loader2 className="w-[18px] h-[18px] animate-spin" />
@@ -177,7 +177,7 @@ const LoginPage: React.FC = () => {
         Don't have an account?&nbsp;
         <Link
           to="/register"
-          className="text-[#E3F05B] hover:text-[#f4ffa3] font-semibold transition-colors"
+          className="text-[#E3F05B] hover:text-[#f4ffa3] font-semibold transition-colors cursor-pointer"
         >
           Create one
         </Link>

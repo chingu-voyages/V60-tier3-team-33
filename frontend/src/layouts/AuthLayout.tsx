@@ -20,8 +20,8 @@ const AuthLayout: React.FC = () => {
                     <div className="w-[8px] h-[8px] bg-white opacity-40 rounded-[1.5px]"></div>
                     <div className="w-[8px] h-[8px] border-[1.5px] border-white rounded-[1.5px]"></div>
                   </div>
-                  <span className="font-semibold text-lg text-white tracking-tight">
-                    Applytics
+                  <span className="text-lg text-white tracking-tight">
+                    <span className="font-bold">Apply</span><span className="font-normal">tics</span>
                   </span>
                 </div>
               </div>
