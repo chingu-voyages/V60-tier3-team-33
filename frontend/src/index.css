@@ -1,4 +1,43 @@
 @import "tailwindcss";
 
-:root {}
-body { margin: 0; }
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --chart-axis: #E5E7EB;         
+  --chart-tick: #6B7280;         
+  --chart-tooltip-bg: #FFFFFF;   
+  --chart-tooltip-border: #E5E7EB; 
+  --chart-tooltip-text: #111827; 
+  --chart-cursor: #F3F4F6;       
+
+  --color-primary: #4F46E5;
+  --color-secondary: #A5B4FC;
+  
+  --pie-1: #D6D3FF;
+  --pie-2: #A9A6D2;
+  --pie-3: #7F7CA4;
+  --pie-4: #585677;
+  --pie-5: #34324A;
+}
+
+.dark {
+  --chart-axis: #52525B;         
+  --chart-tick: #71717A;         
+  --chart-tooltip-bg: #2A2A2A;   
+  --chart-tooltip-border: #3F3F46; 
+  --chart-tooltip-text: #FFFFFF; 
+  --chart-cursor: #27272A;       
+
+  --color-primary: #D4FA31;
+  --color-secondary: #C4B5FD;
+
+  --pie-1: #FDFFEE;
+  --pie-2: #F8FFA0;
+  --pie-3: #F2FF53;
+  --pie-4: #B0BB2C;
+  --pie-5: #6B7218;
+}
+
+body { 
+  margin: 0; 
+}
