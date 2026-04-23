@@ -116,11 +116,11 @@ export const ApplicationCardModal = ({ isOpen, application, onClose, onEdit, onD
                     <div className="flex items-center gap-3 bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg p-3">
                         <span className="text-gray-900 dark:text-white">+</span>
                         <div className="flex-1 text-gray-900 dark:text-white text-sm">Follow up with {application.company_name}</div>
-                        <div className="flex gap-3">
-                            <button className="text-indigo-600 dark:text-white text-sm font-medium hover:text-indigo-500 dark:hover:text-[#D4FA31] transition-colors">Accept</button>
-                            <button className="text-gray-500 dark:text-[#A1A1AA] text-sm hover:text-gray-900 dark:hover:text-white transition-colors">Ignore</button>
+                            <div className="flex gap-3">
+                                <button className="text-indigo-600 dark:text-[#D4FA31] text-sm font-medium hover:text-indigo-500 dark:hover:text-[#e1f961] transition-colors active:scale-95">Accept</button>
+                                <button className="text-gray-500 dark:text-[#A1A1AA] text-sm hover:text-gray-900 dark:hover:text-white transition-colors active:scale-95">Ignore</button>
+                            </div>
                         </div>
-                    </div>
                 </div>
 
             </div>

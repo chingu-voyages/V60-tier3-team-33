@@ -115,7 +115,7 @@ export const ConversionDashboard: FC = () => {
 
                         <button 
                             onClick={() => { setSelectedApp(null); setIsAddModalOpen(true); }}
-                            className="bg-indigo-600 dark:bg-[#D4FA31] text-white dark:text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 dark:hover:bg-[#e1f961] transition-colors"
+                            className="bg-indigo-600 dark:bg-[#D4FA31] text-white dark:text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 dark:hover:bg-[#e1f961] transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-[#D4FA31]/50 focus:ring-offset-2 dark:focus:ring-offset-[#09090B]"
                         >
                             + Add
                         </button>
@@ -190,7 +190,7 @@ export const ConversionDashboard: FC = () => {
                                 ))}
                                 {applications.length === 0 && (
                                     <tr>
-                                        <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
+                                        <td colSpan={3} className="px-6 py-8 text-center text-gray-500 dark:text-[#A1A1AA]">
                                             No recent applications found.
                                         </td>
                                     </tr>

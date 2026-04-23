@@ -5,16 +5,14 @@ import { StatusDistributionChart } from '../components/charts/StatusDistribution
 import { TopJobsChart } from '../components/charts/TopJobsChart';
 import { AvgResponseTimeChart } from '../components/charts/AvgResponseTimeChart';
 import { api } from '../services/api';
-import type { AnalyticsResponse, OverviewResponse } from '../types/metrics';
-import type { Application } from '../types/application';
-import { processTopJobs, processWeeklyApplications, processAvgResponseTime } from '../utils/insights';
+import type { AnalyticsResponse, OverviewResponse, InsightsResponse } from '../types/metrics';
 
 export const InsightsPage = () => {
     const [timeframe, setTimeframe] = useState<'thisMonth' | 'allTime'>('thisMonth');
-
+    
     const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
     const [overview, setOverview] = useState<OverviewResponse | null>(null);
-    const [applications, setApplications] = useState<Application[]>([]);
+    const [insights, setInsights] = useState<InsightsResponse | null>(null);
     
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -23,15 +21,15 @@ export const InsightsPage = () => {
         const fetchInsightsData = async () => {
             try {
                 setIsLoading(true);
-                const [analyticsData, overviewData, appsData] = await Promise.all([
+                const [analyticsData, overviewData, insightsData] = await Promise.all([
                     api.getAnalytics(),
-                    api.getOverview(),
-                    api.getApplications(1, 1000) 
+                    api.getOverview(timeframe),
+                    api.getInsights(timeframe)
                 ]);
                 
                 setAnalytics(analyticsData);
                 setOverview(overviewData);
-                setApplications(appsData.data);
+                setInsights(insightsData);
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred fetching insights.');
             } finally {
@@ -40,9 +38,9 @@ export const InsightsPage = () => {
         };
 
         fetchInsightsData();
-    }, []);
+    }, [timeframe]);
 
-    if (isLoading || !analytics || !overview) {
+    if (isLoading || !analytics || !overview || !insights) {
         return (
              <div className="p-8 font-sans min-h-screen transition-colors">
                 <div className="max-w-7xl mx-auto animate-pulse">
@@ -52,6 +50,10 @@ export const InsightsPage = () => {
                             <div key={i} className="h-32 bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
                         ))}
                     </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                        <div className="h-[300px] bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
+                        <div className="h-[300px] bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
+                    </div>
                 </div>
             </div>
         );
@@ -59,23 +61,21 @@ export const InsightsPage = () => {
 
     if (error) return <div className="text-red-500 p-8">Error: {error}</div>;
 
-    const topJobsData = processTopJobs(applications);
-    const weeklyData = processWeeklyApplications(applications);
-    const avgResponseData = processAvgResponseTime(applications);
-
-    const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+    const subtitleText = timeframe === 'thisMonth' 
+        ? new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
+        : 'Lifetime Overview';
 
     return (
         <div className="p-8 font-sans transition-colors">
             <div className="max-w-7xl mx-auto">
                 
                 <div className="flex justify-between items-end mb-8">
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
-                            <p className="text-gray-500 dark:text-[#71717A] mt-1">{currentMonth}</p>
-                        </div>
-                        
-                        <div className="flex bg-gray-100 dark:bg-[#18181B] border border-gray-200 dark:border-[#27272A] rounded-lg p-1">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Insights</h1>
+                        <p className="text-gray-500 dark:text-[#71717A] mt-1">{subtitleText}</p>
+                    </div>
+                    
+                    <div className="flex bg-gray-100 dark:bg-[#18181B] border border-gray-200 dark:border-[#27272A] rounded-lg p-1">
                         <button 
                             onClick={() => setTimeframe('thisMonth')}
                             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
@@ -123,7 +123,8 @@ export const InsightsPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                    <WeeklyApplicationsChart data={weeklyData} />
+                    <WeeklyApplicationsChart data={insights.weekly_applications} />
+                    
                     <StatusDistributionChart 
                         appliedCount={overview.total_count} 
                         interviewCount={
@@ -136,8 +137,8 @@ export const InsightsPage = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <TopJobsChart data={topJobsData} />
-                    <AvgResponseTimeChart data={avgResponseData} />
+                    <TopJobsChart data={insights.top_job_titles} />
+                    <AvgResponseTimeChart data={insights.avg_response_time} />
                 </div>
 
             </div>

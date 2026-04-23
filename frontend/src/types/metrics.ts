@@ -38,3 +38,9 @@ export interface MetricCardProps {
     value: string | number;
     subtext?: string;
 }
+
+export interface InsightsResponse {
+    weekly_applications: Array<{ week: string; total: number; interviewed: number }>;
+    top_job_titles: Array<{ name: string; count: number }>;
+    avg_response_time: Array<{ month: string; days: number }>;
+}

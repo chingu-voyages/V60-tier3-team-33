@@ -25,36 +25,35 @@ interface FormDataState {
     [key: string]: string | number | boolean | undefined;
 }
 
+const mapInitialData = (mode: 'add' | 'edit', data?: Application | null): FormDataState => {
+    if (mode === 'edit' && data) {
+        return {
+            company_name: data.company_name || '',
+            role: data.role || '',
+            applied_at: data.applied_at || '',
+            status: data.status || 'applied',
+            location: data.location || '',
+            salary_min: data.salary_min || '',
+            salary_max: data.salary_max || '',
+            notes: data.notes || '',
+            url: typeof data.extras?.url === 'string' ? data.extras.url : '',
+            jobNature: typeof data.extras?.jobNature === 'string' ? data.extras.jobNature : 'Full-time',
+            workType: typeof data.extras?.workType === 'string' ? data.extras.workType : 'On-site',
+            noSalaryRange: typeof data.extras?.noSalaryRange === 'boolean' ? data.extras.noSalaryRange : false,
+        };
+    }
+    return {
+        status: 'applied',
+        jobNature: 'Full-time',
+        workType: 'On-site',
+        noSalaryRange: false,
+        applied_at: new Date().toISOString().split('T')[0]
+    };
+};
+
 export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialData }: ApplicationFormModalProps) => {
     
-    const mapInitialData = (data?: Application | null): FormDataState => {
-        if (mode === 'edit' && data) {
-            return {
-                company_name: data.company_name || '',
-                role: data.role || '',
-                applied_at: data.applied_at || '',
-                status: data.status || 'applied',
-                location: data.location || '',
-                salary_min: data.salary_min || '',
-                salary_max: data.salary_max || '',
-                notes: data.notes || '',
-                url: typeof data.extras?.url === 'string' ? data.extras.url : '',
-                jobNature: typeof data.extras?.jobNature === 'string' ? data.extras.jobNature : 'Full-time',
-                workType: typeof data.extras?.workType === 'string' ? data.extras.workType : 'On-site',
-                noSalaryRange: typeof data.extras?.noSalaryRange === 'boolean' ? data.extras.noSalaryRange : false,
-            };
-        }
-        return {
-            status: 'applied',
-            jobNature: 'Full-time',
-            workType: 'On-site',
-            noSalaryRange: false,
-            applied_at: new Date().toISOString().split('T')[0]
-        };
-    };
-
-    const [formData, setFormData] = useState<FormDataState>(() => mapInitialData(initialData));
-    
+    const [formData, setFormData] = useState<FormDataState>(() => mapInitialData(mode, initialData));
     const [prevInitialData, setPrevInitialData] = useState(initialData);
     const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
 
@@ -62,7 +61,7 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
         setPrevInitialData(initialData);
         setPrevIsOpen(isOpen);
         if (isOpen) {
-            setFormData(mapInitialData(initialData));
+            setFormData(mapInitialData(mode, initialData));
         }
     }
 
@@ -222,10 +221,10 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                 </div>
 
                 <div className="p-6 border-t border-gray-200 dark:border-[#27272A] flex justify-end items-center gap-4 bg-gray-50 dark:bg-[#18181B] mt-auto">
-                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white text-sm font-medium transition-colors">
+                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:bg-gray-200 dark:hover:bg-[#27272A] hover:text-gray-900 dark:hover:text-white text-sm font-medium py-2.5 px-4 rounded-lg transition-all active:scale-95">
                         Cancel
                     </button>
-                    <button type="submit" form="app-form" className="bg-indigo-600 hover:bg-indigo-700 dark:bg-[#D4FA31] dark:hover:bg-[#e1f961] text-white dark:text-black text-sm font-semibold py-2.5 px-8 rounded-lg transition-colors">
+                    <button type="submit" form="app-form" className="bg-indigo-600 hover:bg-indigo-700 dark:bg-[#D4FA31] dark:hover:bg-[#e1f961] text-white dark:text-black text-sm font-semibold py-2.5 px-8 rounded-lg transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-[#D4FA31]/50 focus:ring-offset-2 dark:focus:ring-offset-[#18181B]">
                         {mode === 'add' ? 'Add Application' : 'Save Changes'}
                     </button>
                 </div>

@@ -1,4 +1,4 @@
-import type { AnalyticsResponse, OverviewResponse } from '../types/metrics';
+import type { AnalyticsResponse, OverviewResponse, InsightsResponse } from '../types/metrics';
 import type { Application, PaginatedApplications } from '../types/application';
 
 const BASE_URL = 'https://jobtracker-api.afuwapetunde.com/api';
@@ -64,11 +64,21 @@ export const api = {
         if (!response.ok) throw new Error('Failed to delete application');
     },
 
-    getOverview: async (): Promise<OverviewResponse> => {
-        const response = await fetch(`${BASE_URL}/overview`, {
+    getOverview: async (timeframe: 'thisMonth' | 'allTime' = 'thisMonth'): Promise<OverviewResponse> => {
+        const params = new URLSearchParams({ timeframe });
+        const response = await fetch(`${BASE_URL}/overview?${params}`, {
             headers: getHeaders()
         });
         if (!response.ok) throw new Error('Failed to fetch overview');
+        return response.json();
+    },
+
+    getInsights: async (timeframe: 'thisMonth' | 'allTime' = 'thisMonth'): Promise<InsightsResponse> => {
+        const params = new URLSearchParams({ timeframe });
+        const response = await fetch(`${BASE_URL}/insights?${params}`, {
+            headers: getHeaders()
+        });
+        if (!response.ok) throw new Error('Failed to fetch insights');
         return response.json();
     },
 };

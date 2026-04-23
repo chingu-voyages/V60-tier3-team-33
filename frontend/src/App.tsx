@@ -28,7 +28,7 @@ function App() {
         
         <button 
             onClick={() => setIsDark(!isDark)}
-            className="fixed bottom-4 right-4 z-50 p-3 rounded-full bg-white dark:bg-[#18181B] border border-gray-200 dark:border-[#27272A] shadow-lg text-gray-800 dark:text-white"
+            className="fixed bottom-4 right-4 z-50 p-3 rounded-full bg-white dark:bg-[#18181B] border border-gray-200 dark:border-[#3F3F46] shadow-lg text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-[#27272A] transition-all active:scale-95 hover:shadow-xl"
         >
             {isDark ? '☀️ Light' : '🌙 Dark'}
         </button>
