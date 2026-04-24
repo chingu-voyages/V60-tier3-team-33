@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import AppList from "../components/AppList";
 import { applicationData } from "../mocks/applicationData";
 
@@ -14,11 +15,16 @@ function Boards() {
             <span className="text-gray-500">{applicationData.length}</span>
           </div>
         </div>
-        <div>
+        <div className="flex">
+          <div className="flex items-center">
+          <div className="absolute pl-3">
+            <Search size={18}/>
+          </div>
           <input
-            className="surface text-text-muted mr-3 h-10 rounded-xl"
+            className="pl-10 surface mr-3 h-10 rounded-xl text-gray-400"
             placeholder="Search..."
           />
+        </div>
           <button
             type="button"
             className="bg-primary cursor-pointer rounded-xl px-5 py-2 text-sm text-black"

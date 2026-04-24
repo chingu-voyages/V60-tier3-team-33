@@ -1,6 +1,16 @@
 export const getApplications = async () => {
-    const res = await fetch("https://jobtracker-api.afuwapetunde.com/api/applications");
-    const data = await res.json();
+  const token = localStorage.getItem("token");
 
-    return data;
-}
+  const res = await fetch(
+    "https://jobtracker-api.afuwapetunde.com/api/applications",
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  const { data } = await res.json();
+
+  return data;
+};

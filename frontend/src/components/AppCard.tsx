@@ -26,14 +26,14 @@ function AppCard({ app, setSelectedApp }: AppCardType) {
         {/* card header */}
         <div className="p-5">
           <div className="flex items-center justify-between">
-            <div className="flex gap-5">
+            <div className="flex gap-5 items-center">
               <div className="rounded-3xl bg-[#b4b4b41a] px-3 py-1">
                 {app.status}
               </div>
               {formatDate(app.dateApplied, "short")}
             </div>
             {/* icons */}
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <div className="hover:text-primary cursor-pointer">
                 {app.favorite ? <Star /> : <StarOff />}
               </div>

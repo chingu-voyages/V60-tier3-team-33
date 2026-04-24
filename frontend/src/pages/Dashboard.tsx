@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import AppList from "../components/AppList";
 import StatsOverview from "../components/StatsOverview";
 import { formatDate } from "../utilities/formatDate";
@@ -25,6 +26,18 @@ function Dashboard() {
       <StatsOverview />
       {/* // insights placeholder */}
       <div className="surface my-10 w-full rounded-3xl py-10">INSIGHTS</div>
+      <div className="flex items-center justify-between">
+        <div>All Applications</div>
+        <div className="flex items-center">
+          <div className="absolute pl-3">
+            <Search size={18}/>
+          </div>
+          <input
+            className="pl-10 surface mr-3 h-10 rounded-xl text-gray-400"
+            placeholder="Search..."
+          />
+        </div>
+      </div>
       <AppList boardsView={false} />
     </div>
   );

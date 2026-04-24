@@ -1,14 +1,14 @@
 export type Application = {
   id: number;
-  company: string;
+  company_name: string;
   role: string;
-  dateApplied: string;
+  applied_at: string;
   status: "Applied" | "Interviewed" | "Offer" | "Rejected";
   location: string;
   type: "Full-Time" | "Part-Time" | "Contract" | "Intern";
   workType: "Remote" | "Hybrid" | "Onsite";
-  minSalary: number | null;
-  maxSalary: number | null;
+  salary_min: number | null;
+  salary_max: number | null;
   notes: string;
   favorite: boolean;
 };
