@@ -5,7 +5,7 @@ import { formatDate } from "../utilities/formatDate";
 
 function Dashboard() {
   return (
-    <div className="bg-background p-5">
+    <div className="p-5">
       <div className="flex items-center justify-between">
         <div className="py-5">
           <h1 className="mb-3 text-3xl font-bold">Dashboard</h1>
@@ -24,9 +24,7 @@ function Dashboard() {
         </div>
       </div>
       <StatsOverview />
-      {/* // insights placeholder */}
-      <div className="surface my-10 w-full rounded-3xl py-10">INSIGHTS</div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-5">
         <div>All Applications</div>
         <div className="flex items-center">
           <div className="absolute pl-3">

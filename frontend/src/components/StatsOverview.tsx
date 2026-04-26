@@ -22,12 +22,15 @@ function StatsOverview() {
   return (
     <div className="flex gap-1">
       {Object.entries(stats).map(([key, value]) => (
-        <div key={key} className="cursor-pointer group shadow-[0 0 0 1px #383a3e80,0 1px #383a3ecc] m-1 flex flex-1 justify-between rounded-2xl border-4 border-[#222324] bg-[linear-gradient(180deg,#1b1c1d,#151617)] p-5 duration-100 ease-in hover:scale-105">
+        <div
+          key={key}
+          className="group dark:shadow-[0 0 0 1px #383a3e80,0 1px #383a3ecc] m-1 flex flex-1 cursor-pointer justify-between rounded-2xl border border-gray-300 bg-white p-5 duration-100 ease-in hover:scale-105 dark:border-4 dark:border-[#222324] dark:bg-[linear-gradient(180deg,#1b1c1d,#151617)]"
+        >
           <div>
-            <div className="mb-2 text-4xl font-bold">{value}</div>
+            <div className="mb-1 text-2xl font-bold">{value}</div>
             <div className="text-sm text-gray-500">{key}</div>
           </div>
-          <div className="hidden duration-100 ease-in group-hover:block text-text-muted">
+          <div className="text-text-muted hidden duration-100 ease-in group-hover:block">
             <ChevronRight />
           </div>
         </div>
