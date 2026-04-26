@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import AppList from "../components/AppList";
 import StatsOverview from "../components/StatsOverview";
 import { formatDate } from "../utilities/formatDate";
+import { ConversionDashboard } from "../components/ConversionDashboard";
 
 function Dashboard() {
   return (
@@ -24,6 +25,7 @@ function Dashboard() {
         </div>
       </div>
       <StatsOverview />
+      <ConversionDashboard />
       <div className="flex items-center justify-between mt-5">
         <div>All Applications</div>
         <div className="flex items-center">

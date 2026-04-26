@@ -161,7 +161,7 @@ export const ConversionDashboard: FC = () => {
                     onDelete={() => selectedApp && handleDelete(selectedApp.id)}
                 />
                 
-                <div className="mt-8">
+                {/* <div className="mt-8">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
                     <div className="bg-white dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-2xl overflow-hidden transition-colors">
                         <table className="w-full text-left text-sm text-gray-600 dark:text-[#A1A1AA]">
@@ -198,7 +198,7 @@ export const ConversionDashboard: FC = () => {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );
