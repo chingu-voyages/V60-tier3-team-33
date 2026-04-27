@@ -28,7 +28,7 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
   return (
     <div className="flex h-screen flex-col bg-[#141414]">
       <div className="mb-5 text-xl font-bold">APPLYTICS</div>
-      <nav className="flex flex-col justify-between border-t border-t-gray-400 px-3">
+      <nav className="flex flex-col justify-between border-t border-t-gray-400 px-3 overflow-auto">
         {/* main */}
         <p className="my-2 pt-3 text-xs tracking-widest uppercase">Main</p>
         <ul className="space-y-2">

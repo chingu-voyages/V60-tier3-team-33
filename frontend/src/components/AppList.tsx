@@ -22,7 +22,7 @@ function AppList({ boardsView }: { boardsView: boolean }) {
       }
     };
     fetchApplications();
-  }, []);
+  }, [setApplications]);
 
   const handleDelete = (id: number) => {
     console.log(id);

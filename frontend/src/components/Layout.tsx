@@ -22,13 +22,13 @@ function Layout() {
   }, [isDark]);
 
   return (
-    <div className="dark:bg-background flex h-screen min-h-screen bg-gray-50 text-sm text-black transition-colors duration-200 dark:text-white">
+    <div className="dark:bg-background flex h-screen overflow-hidden bg-gray-50 text-sm text-black transition-colors duration-200 dark:text-white">
       {/* this is sidebar component */}
-      <aside className="bg-background w-56 text-gray-400 h-full">
+      <aside className="bg-background w-56 shrink-0 text-gray-400 h-full">
         <Sidebar isDark={isDark} setIsDark={setIsDark} />
       </aside>
       {/* main window wil be here */}
-      <main className="flex-1">
+      <main className="flex-1= overflow-y-auto">
         <Outlet />
       </main>
     </div>
