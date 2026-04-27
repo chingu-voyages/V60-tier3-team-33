@@ -27,7 +27,7 @@ function Boards() {
       }
     };
     fetchApplications();
-  }, [search, status]);
+  }, [status, search]);
 
   return (
     <div className="p-5">
