@@ -5,7 +5,12 @@ import { formatSalary } from "../utilities/formatSalary";
 import type { Application } from "../types/application";
 import { Star } from "lucide-react";
 
-function AppList({ boardsView, applications}: { boardsView: boolean, status: string}) {
+interface AppListTypes {
+  boardsView: boolean;
+  applications: Application[];
+}
+
+function AppList({ boardsView, applications}: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
