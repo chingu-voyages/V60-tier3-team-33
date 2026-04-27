@@ -10,7 +10,7 @@ import type { Application } from "../types/application";
 function Dashboard() {
   const [applications, setApplications] = useState<Application[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchApplications = async () => {
       try {
         const { data } = await api.getApplications();
@@ -41,21 +41,21 @@ function Dashboard() {
           </button>
         </div>
       </div>
-      <StatsOverview />
+      <StatsOverview applications={applications}/>
       <ConversionDashboard />
-      <div className="flex items-center justify-between mt-5">
+      <div className="mt-5 flex items-center justify-between">
         <div>All Applications</div>
         <div className="flex items-center">
           <div className="absolute pl-3">
-            <Search size={18}/>
+            <Search size={18} />
           </div>
           <input
-            className="pl-10 surface mr-3 h-10 rounded-xl text-gray-400"
+            className="surface mr-3 h-10 rounded-xl pl-10 text-gray-400"
             placeholder="Search..."
           />
         </div>
       </div>
-      <AppList boardsView={false} applications={applications}/>
+      <AppList boardsView={false} applications={applications} />
     </div>
   );
 }

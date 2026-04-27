@@ -4,6 +4,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import type { Application } from "../types/application";
 import { api } from "../services/api";
+import { cap } from "../utilities/capitalize";
 
 function Boards() {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -27,9 +28,6 @@ function Boards() {
     };
     fetchApplications();
   }, [search, status]);
-
-  // capitalize first letter of word
-  const cap = (word: string) => word[0].toUpperCase() + word.slice(1);
 
   return (
     <div className="p-5">

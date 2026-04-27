@@ -1,24 +1,55 @@
 import { ChevronRight } from "lucide-react";
 import { applicationData } from "../mocks/applicationData";
+import { useEffect, useState } from "react";
+import { api } from "../services/api";
+import type { AnalyticsResponse } from "../types/metrics";
+import type { Application } from "../types/application";
 
-function StatsOverview() {
+function StatsOverview({ applications }: { applications: Application[] }) {
+  // const [analytics, setAnalytics] = useState<AnalyticsResponse>();
+
   // create an object with the number of each app status
-  const stats = applicationData.reduce(
+  const stats = applications.reduce(
     (tally, app) => {
       tally.all += 1;
-      tally[app.status] = (tally[app.status] || 0) + 1;
+      tally[app.status as keyof typeof tally] = (tally[app.status as keyof typeof tally] || 0) + 1;
       if (app.favorite) tally.favorites += 1;
       return tally;
     },
     {
       all: 0,
-      Applied: 0,
-      Interviewed: 0,
-      Offer: 0,
-      Rejected: 0,
+      applied: 0,
+      interviewed: 0,
+      offer_received: 0,
+      accepted: 0,
+      rejected: 0,
       favorites: 0,
     },
   );
+
+  const statusLabels = {
+    all: "All",
+    applied: "Applied",
+    interviewed: "Interviewed",
+    offer_received: "Offer",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    favorites: "Favorites",
+  };
+
+  // fetch applications counts
+  // useEffect(() => {
+  //   const fetchAnalytics = async () => {
+  //     try {
+  //       const  data  = await api.getAnalytics();
+  //       setAnalytics(data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchAnalytics();
+  // }, []);
+
   return (
     <div className="flex gap-1">
       {Object.entries(stats).map(([key, value]) => (
@@ -28,7 +59,7 @@ function StatsOverview() {
         >
           <div>
             <div className="mb-1 text-2xl font-bold">{value}</div>
-            <div className="text-sm text-gray-500">{key}</div>
+            <div className="text-sm text-gray-500">{statusLabels[key as keyof typeof statusLabels] || key}</div>
           </div>
           <div className="text-text-muted hidden duration-100 ease-in group-hover:block">
             <ChevronRight />
