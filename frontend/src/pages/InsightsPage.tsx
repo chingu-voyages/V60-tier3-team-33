@@ -51,8 +51,8 @@ export const InsightsPage = () => {
                         ))}
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                        <div className="h-[300px] bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
-                        <div className="h-[300px] bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
+                        <div className="h-75 bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
+                        <div className="h-75 bg-gray-200 dark:bg-[#18181B] rounded-2xl"></div>
                     </div>
                 </div>
             </div>
@@ -60,6 +60,10 @@ export const InsightsPage = () => {
     }
 
     if (error) return <div className="text-red-500 p-8">Error: {error}</div>;
+
+    const avgResponseDays = insights.avg_response_time && insights.avg_response_time.length > 0
+        ? Math.round(insights.avg_response_time.reduce((acc, curr) => acc + curr.days, 0) / insights.avg_response_time.length)
+        : 12;
 
     const subtitleText = timeframe === 'thisMonth' 
         ? new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
@@ -75,29 +79,33 @@ export const InsightsPage = () => {
                         <p className="text-gray-500 dark:text-[#71717A] mt-1">{subtitleText}</p>
                     </div>
                     
-                    <div className="flex bg-gray-100 dark:bg-[#18181B] border border-gray-200 dark:border-[#27272A] rounded-lg p-1">
-                        <button 
-                            onClick={() => setTimeframe('thisMonth')}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                                timeframe === 'thisMonth' 
-                                ? 'bg-white dark:bg-[#27272A] text-gray-900 dark:text-white shadow-sm dark:shadow-none' 
-                                : 'text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white'
-                            }`}
-                        >
-                            This Month
-                        </button>
-                        <button 
-                            onClick={() => setTimeframe('allTime')}
-                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                                timeframe === 'allTime' 
-                                ? 'bg-white dark:bg-[#27272A] text-gray-900 dark:text-white shadow-sm dark:shadow-none' 
-                                : 'text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white'
-                            }`}
-                        >
-                            All Time
-                        </button>
+                    <div className="flex justify-between items-end mb-8">
+                        
+                        <div className="flex bg-surface border border-border rounded-lg p-1">
+                            <button 
+                                onClick={() => setTimeframe('thisMonth')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                    timeframe === 'thisMonth' 
+                                    ? 'bg-background text-text-main shadow-sm' 
+                                    : 'text-text-muted hover:text-text-main'
+                                }`}
+                            >
+                                This Month
+                            </button>
+                            <button 
+                                onClick={() => setTimeframe('allTime')}
+                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                    timeframe === 'allTime' 
+                                    ? 'bg-background text-text-main shadow-sm' 
+                                    : 'text-text-muted hover:text-text-main'
+                                }`}
+                            >
+                                All Time
+                            </button>
+                        </div>
                     </div>
                 </div>
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <MetricCard 
@@ -113,32 +121,31 @@ export const InsightsPage = () => {
                     <MetricCard 
                         title="Response Rate" 
                         value={`${analytics.conversions.response_rate_percent}%`} 
-                        subtext="of total applied" 
+                        subtext="of applications" 
                     />
                     <MetricCard 
-                        title="Velocity (This Month)" 
-                        value={`${overview.velocity.this_month}`} 
-                        subtext={`${overview.velocity.this_week} this week`} 
+                        title="Avg Response Time" 
+                        value={`${avgResponseDays}d`} 
+                        subtext="to first response" 
                     />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                    <WeeklyApplicationsChart data={insights.weekly_applications} />
-                    
-                    <StatusDistributionChart 
-                        appliedCount={overview.total_count} 
-                        interviewCount={
-                            overview.by_status.screening + 
-                            overview.by_status.interviewing + 
-                            overview.by_status.offer_received + 
-                            overview.by_status.accepted
-                        } 
+                    <WeeklyApplicationsChart 
+                        data={insights.applications_trend} 
+                        timeframe={timeframe} 
                     />
+                    
+                    <StatusDistributionChart byStatus={overview.by_status} />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <TopJobsChart data={insights.top_job_titles} />
-                    <AvgResponseTimeChart data={insights.avg_response_time} />
+                    
+                    <AvgResponseTimeChart 
+                        data={insights.avg_response_time} 
+                        timeframe={timeframe} 
+                    />
                 </div>
 
             </div>

@@ -40,7 +40,7 @@ export interface MetricCardProps {
 }
 
 export interface InsightsResponse {
-    weekly_applications: Array<{ week: string; total: number; interviewed: number }>;
+    applications_trend: Array<{ label: string; total: number; interviewed: number }>;
     top_job_titles: Array<{ name: string; count: number }>;
-    avg_response_time: Array<{ month: string; days: number }>;
+    avg_response_time: Array<{ label: string; days: number }>;
 }

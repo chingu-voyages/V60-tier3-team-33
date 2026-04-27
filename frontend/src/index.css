@@ -1,43 +1,67 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: var(--bg-app);
+  --color-surface: var(--bg-surface);
+  --color-border: var(--border-color);
+  --color-accent: var(--accent-primary);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+}
 
 :root {
-  --chart-axis: #E5E7EB;         
-  --chart-tick: #6B7280;         
-  --chart-tooltip-bg: #FFFFFF;   
-  --chart-tooltip-border: #E5E7EB; 
-  --chart-tooltip-text: #111827; 
-  --chart-cursor: #F3F4F6;       
-
-  --color-primary: #4F46E5;
-  --color-secondary: #A5B4FC;
+  --bg-app: #F9FAFB;
+  --bg-surface: #FFFFFF;
+  --border-color: #E5E7EB;
+  --text-main: #111827;
+  --text-muted: #6B7280;
   
-  --pie-1: #D6D3FF;
-  --pie-2: #A9A6D2;
-  --pie-3: #7F7CA4;
-  --pie-4: #585677;
-  --pie-5: #34324A;
+  --accent-primary: #A5A3D1; 
+  
+  --color-primary: #A5A3D1;
+  --color-secondary: #D5D5FA;
+  
+  --chart-axis: #D1D5DB;
+  --chart-tick: #6B7280;
+  --chart-cursor: #E5E7EB;
+  --chart-tooltip-bg: #FFFFFF;
+  --chart-tooltip-border: #E5E7EB;
+  --chart-tooltip-text: #111827;
+  
+  --pie-1: #D5D5FA;
+  --pie-2: #A5A3D1;
+  --pie-3: #7A78AC;
+  --pie-4: #E2E0EC;
 }
 
 .dark {
-  --chart-axis: #52525B;         
-  --chart-tick: #71717A;         
-  --chart-tooltip-bg: #2A2A2A;   
-  --chart-tooltip-border: #3F3F46; 
-  --chart-tooltip-text: #FFFFFF; 
-  --chart-cursor: #27272A;       
-
-  --color-primary: #D4FA31;
-  --color-secondary: #C4B5FD;
-
-  --pie-1: #FDFFEE;
-  --pie-2: #F8FFA0;
-  --pie-3: #F2FF53;
-  --pie-4: #B0BB2C;
-  --pie-5: #6B7218;
+  --bg-app: #09090B; 
+  --bg-surface: #121212; 
+  --border-color: #27272A;
+  --text-main: #FFFFFF;
+  --text-muted: #A1A1AA;
+  
+  --accent-primary: #C1D536;
+  
+  --color-primary: #C1D536;
+  --color-secondary: #657124;
+  
+  --chart-axis: #3F3F46;
+  --chart-tick: #A1A1AA;
+  --chart-cursor: #27272A;
+  --chart-tooltip-bg: #18181B;
+  --chart-tooltip-border: #27272A;
+  --chart-tooltip-text: #FFFFFF;
+  
+  --pie-1: #657124;
+  --pie-2: #C1D536;
+  --pie-3: #E2FA63;
+  --pie-4: #475217;
 }
 
-body { 
-  margin: 0; 
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
 }

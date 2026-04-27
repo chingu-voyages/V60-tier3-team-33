@@ -1,7 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ConversionDashboard } from './components/ConversionDashboard';
-import { InsightsPage } from './pages/InsightsPage';
+import AppLayout from './components/AppLayout';
+
+const ConversionDashboard = lazy(() => 
+  import('./components/ConversionDashboard').then(module => ({ default: module.ConversionDashboard }))
+);
+const InsightsPage = lazy(() => 
+  import('./pages/InsightsPage').then(module => ({ default: module.InsightsPage }))
+);
 
 function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -24,21 +30,15 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 dark:bg-[#09090B] transition-colors duration-200">
-        
-        <button 
-            onClick={() => setIsDark(!isDark)}
-            className="fixed bottom-4 right-4 z-50 p-3 rounded-full bg-white dark:bg-[#18181B] border border-gray-200 dark:border-[#3F3F46] shadow-lg text-gray-800 dark:text-white hover:bg-gray-50 dark:hover:bg-[#27272A] transition-all active:scale-95 hover:shadow-xl"
-        >
-            {isDark ? '☀️ Light' : '🌙 Dark'}
-        </button>
-
+      <Suspense fallback={<div className="flex h-screen items-center justify-center text-gray-500">Loading...</div>}>
         <Routes>
-          <Route path="/" element={<ConversionDashboard />} />
-          <Route path="/insights" element={<InsightsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route element={<AppLayout isDark={isDark} toggleTheme={() => setIsDark(!isDark)} />}>
+            <Route path="/" element={<ConversionDashboard />} />
+            <Route path="/insights" element={<InsightsPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
         </Routes>
-      </div>
+      </Suspense>
     </BrowserRouter>
   );
 }

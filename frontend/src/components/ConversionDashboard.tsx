@@ -2,14 +2,16 @@ import { type FC, useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { MetricCard } from './MetricCard';
 import { ApplicationFormModal } from './ApplicationFormModal';
-import { ApplicationCardModal } from './ApplicationCardModal';
-import type { AnalyticsResponse } from '../types/metrics';
+import AppCard from './AppCard';
+import type { AnalyticsResponse, InsightsResponse } from '../types/metrics';
 import type { Application } from '../types/application';
 import { api } from '../services/api';
+import { getStatusStyles } from '../utilities/themeUtils';
 
 export const ConversionDashboard: FC = () => {
     const [applications, setApplications] = useState<Application[]>([]);
     const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
+    const [insights, setInsights] = useState<InsightsResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,13 +22,15 @@ export const ConversionDashboard: FC = () => {
     const fetchData = useCallback(async () => {
         try {
             setIsLoading(true);
-            const [analyticsData, appsData] = await Promise.all([
+            const [analyticsData, appsData, insightsData] = await Promise.all([
                 api.getAnalytics(),
-                api.getApplications(1, 5)
+                api.getApplications(1, 5),
+                api.getInsights('allTime')
             ]);
             
             setAnalytics(analyticsData);
             setApplications(appsData.data);
+            setInsights(insightsData);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
         } finally {
@@ -65,7 +69,7 @@ export const ConversionDashboard: FC = () => {
         }
     };
 
-    if (isLoading || !analytics) {
+    if (isLoading || !analytics || !insights) {
         return (
              <div className="w-full p-8 font-sans min-h-screen">
                 <div className="max-w-7xl mx-auto animate-pulse">
@@ -84,17 +88,9 @@ export const ConversionDashboard: FC = () => {
         return <div className="text-red-500 p-8">Error: {error}</div>;
     }
 
-    const getStatusStyles = (status: string) => {
-        switch (status) {
-            case 'interviewing':
-            case 'screening': return 'bg-[#D4FA31]/10 text-gray-800 dark:text-[#D4FA31] border-gray-300 dark:border-[#D4FA31]/20';
-            case 'offer_received':
-            case 'accepted': return 'bg-green-100 dark:bg-emerald-500/10 text-green-800 dark:text-emerald-400 border-green-200 dark:border-emerald-500/20';
-            case 'rejected':
-            case 'withdrawn': return 'bg-red-100 dark:bg-red-500/10 text-red-800 dark:text-red-400 border-red-200 dark:border-red-500/20';
-            default: return 'bg-gray-100 dark:bg-zinc-800 text-gray-800 dark:text-zinc-300 border-gray-200 dark:border-zinc-700';
-        }
-    };
+    const avgResponseDays = insights.avg_response_time && insights.avg_response_time.length > 0
+        ? Math.round(insights.avg_response_time.reduce((acc, curr) => acc + curr.days, 0) / insights.avg_response_time.length)
+        : 12;
 
     return (
         <div className="w-full p-8 font-sans">
@@ -115,9 +111,9 @@ export const ConversionDashboard: FC = () => {
 
                         <button 
                             onClick={() => { setSelectedApp(null); setIsAddModalOpen(true); }}
-                            className="bg-indigo-600 dark:bg-[#D4FA31] text-white dark:text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 dark:hover:bg-[#e1f961] transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-[#D4FA31]/50 focus:ring-offset-2 dark:focus:ring-offset-[#09090B]"
+                            className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-[#EEFF2B] dark:text-black dark:hover:bg-[#D4FA31] px-5 py-2.5 rounded-xl text-sm font-semibold transition-all active:scale-95 focus:outline-none"
                         >
-                            + Add
+                            + Add Application
                         </button>
                     </div>
                 </div>
@@ -136,16 +132,17 @@ export const ConversionDashboard: FC = () => {
                     <MetricCard 
                         title="Response Rate" 
                         value={`${analytics.conversions.response_rate_percent}%`} 
-                        subtext="of total applied" 
+                        subtext="of applications" 
                     />
                     <MetricCard 
-                        title="Total Applications" 
-                        value={analytics.counts.total_applications.toString()}
-                        subtext="active tracking" 
+                        title="Avg Response Time" 
+                        value={`${avgResponseDays}d`} 
+                        subtext="to first response" 
                     />
                 </div>
 
                 <ApplicationFormModal 
+                    key={isAddModalOpen ? (selectedApp ? `edit-${selectedApp.id}` : 'add') : 'closed'}
                     isOpen={isAddModalOpen}
                     mode={selectedApp ? 'edit' : 'add'}
                     initialData={selectedApp}
@@ -153,13 +150,21 @@ export const ConversionDashboard: FC = () => {
                     onSave={handleSave}
                 />
 
-                <ApplicationCardModal 
-                    isOpen={isCardModalOpen}
-                    application={selectedApp}
-                    onClose={() => setIsCardModalOpen(false)}
-                    onEdit={() => { setIsCardModalOpen(false); setIsAddModalOpen(true); }}
-                    onDelete={() => selectedApp && handleDelete(selectedApp.id)}
-                />
+                {isCardModalOpen && selectedApp && (
+                    <AppCard 
+                        app={selectedApp}
+                        onClose={() => setIsCardModalOpen(false)}
+                        onEdit={() => { 
+                            setIsCardModalOpen(false); 
+                            setIsAddModalOpen(true); 
+                        }}
+                        onDelete={() => {
+                            if (selectedApp) {
+                                handleDelete(selectedApp.id);
+                            }
+                        }}
+                    />
+                )}
                 
                 <div className="mt-8">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
