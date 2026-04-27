@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
-          <Route path="/boards" element={<Boards />} />
+          <Route path="/boards/:status" element={<Boards />} />
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/account" element={<Dashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />

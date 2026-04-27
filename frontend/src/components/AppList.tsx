@@ -1,28 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatDate } from "../utilities/formatDate";
 import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
 import type { Application } from "../types/application";
 import { Star } from "lucide-react";
-import { api } from "../services/api";
 
-function AppList({ boardsView }: { boardsView: boolean }) {
-  const [applications, setApplications] = useState<Application[]>([]);
+function AppList({ boardsView, applications}: { boardsView: boolean, status: string}) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const { data } = await api.getApplications();
-        console.log(data);
-        setApplications(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchApplications();
-  }, [setApplications]);
+
 
   const handleDelete = (id: number) => {
     console.log(id);

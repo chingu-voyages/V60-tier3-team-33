@@ -3,8 +3,25 @@ import AppList from "../components/AppList";
 import StatsOverview from "../components/StatsOverview";
 import { formatDate } from "../utilities/formatDate";
 import { ConversionDashboard } from "../components/ConversionDashboard";
+import { useEffect, useState } from "react";
+import { api } from "../services/api";
+import type { Application } from "../types/application";
 
 function Dashboard() {
+  const [applications, setApplications] = useState<Application[]>([]);
+
+    useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const { data } = await api.getApplications();
+        setApplications(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchApplications();
+  }, []);
+
   return (
     <div className="p-5">
       <div className="flex items-center justify-between">
@@ -38,7 +55,7 @@ function Dashboard() {
           />
         </div>
       </div>
-      <AppList boardsView={false} />
+      <AppList boardsView={false} applications={applications}/>
     </div>
   );
 }

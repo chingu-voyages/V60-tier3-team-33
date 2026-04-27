@@ -58,7 +58,7 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
             </button>
             {isBoardsOpen && (
               <ul className="mt-2 ml-4 space-y-1 border-l border-l-gray-400 pl-4 text-xs">
-                <NavLink to="/boards">
+                <NavLink to="/boards/all">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     All
                   </li>
