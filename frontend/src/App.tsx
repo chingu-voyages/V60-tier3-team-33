@@ -1,9 +1,23 @@
-export default function App() {
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { InsightsPage } from "./pages/InsightsPage";
+import Dashboard from "./pages/Dashboard";
+import Boards from "./pages/Boards";
+import Layout from "./components/Layout";
+
+function App() {
   return (
-    <div className="bg-black">
-      <div className="h-screen flex items-center justify-center text-8xl text-blue-500">
-        Chingu 60: 3-33
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/boards/:status" element={<Boards />} />
+          <Route path="/insights" element={<InsightsPage />} />
+          <Route path="/account" element={<Dashboard />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
+
+export default App;

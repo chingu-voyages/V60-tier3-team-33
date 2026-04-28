@@ -1,4 +1,61 @@
 @import "tailwindcss";
 
-:root {}
-body { margin: 0; }
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ivan's char colors */
+:root {
+  --chart-axis: #e5e7eb;
+  --chart-tick: #6b7280;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #e5e7eb;
+  --chart-tooltip-text: #111827;
+  --chart-cursor: #f3f4f6;
+
+  --color-primary: #4f46e5;
+  --color-secondary: #a5b4fc;
+
+  --pie-1: #d6d3ff;
+  --pie-2: #a9a6d2;
+  --pie-3: #7f7ca4;
+  --pie-4: #585677;
+  --pie-5: #34324a;
+}
+
+.dark {
+  --chart-axis: #52525b;
+  --chart-tick: #71717a;
+  --chart-tooltip-bg: #2a2a2a;
+  --chart-tooltip-border: #3f3f46;
+  --chart-tooltip-text: #ffffff;
+  --chart-cursor: #27272a;
+
+  --color-primary: #d4fa31;
+  --color-secondary: #c4b5fd;
+
+  --pie-1: #fdffee;
+  --pie-2: #f8ffa0;
+  --pie-3: #f2ff53;
+  --pie-4: #b0bb2c;
+  --pie-5: #6b7218;
+}
+
+/* Greg's tailwind classes */
+@theme {
+  --color-background: rgba(15, 15, 15, 1);
+  --color-background-shadow: rgba(37, 37, 37, 1);
+  --color-text: rgba(255, 255, 255, 1);
+  --color-text-muted: rgba(107, 114, 128, 1);
+  --color-primary: rgba(214, 211, 255, 1);
+  --color-primary-hover: rgba(196, 192, 255);
+
+  --color-secondary: rgba(238, 255, 43, 1);
+  --color-secondary-hover: #a5b4fc;
+}
+
+.surface {
+  @apply border border-[rgb(212,212,212)] bg-[rgb(255,255,255)] dark:border-[#222324] dark:bg-black dark:bg-linear-to-b dark:from-[#1b1c1d] dark:to-[#151617];
+}
+
+body {
+  margin: 0;
+}
