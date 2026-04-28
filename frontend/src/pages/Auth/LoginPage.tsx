@@ -38,33 +38,12 @@ const LoginPage: React.FC = () => {
         localStorage.setItem("auth_token", response.access_token);
       }
       setApiMessage({ type: "success", text: "Successfully logged in!" });
-      // TODO: Handle routing to Dashboard
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 422) {
-          // Display backend errors as a unified banner message instead of field-specific text
-          const validationErrors: Record<string, string[]> =
-            error.response.data.errors || {};
-          const firstErrorKey = Object.keys(validationErrors)[0];
-          const errorMessage = firstErrorKey
-            ? validationErrors[firstErrorKey][0]
-            : error.response.data.message || "Invalid credentials provided.";
-
-          setApiMessage({ type: "error", text: errorMessage });
-        } else {
-          // General Backend Failure (e.g. 401 Unauthorized)
-          setApiMessage({
-            type: "error",
-            text:
-              error.response.data.message ||
-              "Invalid email or password. Please try again.",
-          });
-        }
+        const errorMessage = error.response.data.message || "Invalid email or password.";
+        setApiMessage({ type: "error", text: errorMessage });
       } else {
-        setApiMessage({
-          type: "error",
-          text: "An unexpected error occurred. Please check your connection.",
-        });
+        setApiMessage({ type: "error", text: "An unexpected error occurred." });
       }
     }
   };
@@ -75,25 +54,25 @@ const LoginPage: React.FC = () => {
         <h2 className="text-[28px] font-bold text-white tracking-tight">
           Welcome back
         </h2>
-        <p className="text-[14px] text-[#A1A1AA]">
+        <p className="text-[14px] text-[#9898A1]">
           Sign in to your account to continue
         </p>
       </div>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
-        <div className="flex flex-col">
-          <label
-            htmlFor="email"
-            className="mb-1.5 text-[13px] text-[#84848A] font-medium"
-          >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">
             Email address
           </label>
           <input
-            id="email"
             type="email"
             placeholder="you@example.com"
-            autoComplete="off"
+            autoComplete="email"
             {...register("email")}
-            className={`bg-[#18181B] border px-3.5 focus:border-[#E3F05B] focus:ring-1 focus:ring-[#E3F05B] outline-none transition-all rounded-[8px] h-[44px] w-full text-white placeholder-[#52525B] text-[14px] font-medium ${errors.email ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#27272A]"}`}
+            className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+              errors.email
+                ? "border-red-500 focus:ring-red-500"
+                : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
+            } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}
           />
           {errors.email && (
             <p className="text-red-500 text-[12px] mt-1.5">
@@ -102,29 +81,29 @@ const LoginPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex flex-col">
+        <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label
-              htmlFor="password"
-              className="text-[13px] text-[#84848A] font-medium"
-            >
+            <label className="block text-xs font-medium text-gray-500">
               Password
             </label>
             <Link
               to="/forgot-password"
-              className="text-[13px] text-[#E3F05B] hover:text-[#f4ffa3] font-medium transition-colors cursor-pointer"
+              className="text-xs text-[#E3F05B] hover:text-[#f4ffa3] hover:underline transition-colors cursor-pointer"
             >
               Forgot password?
             </Link>
           </div>
           <div className="relative w-full">
             <input
-              id="password"
               placeholder="••••••••••"
               type={showPassword ? "text" : "password"}
-              autoComplete="new-password"
+              autoComplete="current-password"
               {...register("password")}
-              className={`bg-[#18181B] border pl-3.5 pr-10 focus:border-[#E3F05B] focus:ring-1 focus:ring-[#E3F05B] outline-none transition-all rounded-[8px] h-[44px] w-full text-white placeholder-[#52525B] text-[14px] font-medium ${errors.password ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#27272A]"}`}
+              className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
+              } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}
             />
             <button
               type="button"
@@ -147,10 +126,10 @@ const LoginPage: React.FC = () => {
 
         {apiMessage && (
           <div
-            className={`p-3 rounded-[8px] text-[13px] font-medium transition-all ${
+            className={`p-3 rounded-xl text-[13px] font-medium transition-all ${
               apiMessage.type === "error"
                 ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                : "bg-[#E3F05B]/10 text-[#E3F05B] border border-[#E3F05B]/20"
+                : "bg-[#D4F03D]/10 text-[#D4F03D] border border-[#D4F03D]/20"
             }`}
           >
             {apiMessage.text}
@@ -160,33 +139,27 @@ const LoginPage: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-[#E3F05B] text-black text-[15px] font-semibold rounded-[8px] h-[44px] w-full hover:bg-[#D3E04F] disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-1 flex flex-row items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3 mt-2 flex items-center justify-center gap-2 font-semibold rounded-xl bg-[#D4F03D] text-black hover:bg-[#C2DE32] disabled:opacity-70 disabled:cursor-not-allowed hover:underline transition-colors cursor-pointer"
         >
           {isSubmitting ? (
             <Loader2 className="w-[18px] h-[18px] animate-spin" />
           ) : (
             <>
-              <span>Sign in</span>
-              <ArrowRight className="w-[18px] h-[18px]" strokeWidth={2.5} />
+              Sign in
+              <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
             </>
           )}
         </button>
       </form>
 
-      <div className="flex justify-center items-center mt-12 md:mt-8 text-[#A1A1AA] text-[14px]">
+      <div className="flex justify-center items-center mt-12 md:mt-8 text-[#9898A1] text-[14px]">
         Don't have an account?&nbsp;
         <Link
           to="/register"
-          className="text-[#E3F05B] hover:text-[#f4ffa3] font-semibold transition-colors cursor-pointer"
+          className="text-[#E3F05B] hover:text-[#f4ffa3] hover:underline font-semibold hover:underline transition-colors cursor-pointer"
         >
           Create one
         </Link>
-      </div>
-
-      <div className="flex justify-center w-full mt-[60px]">
-        <span className="text-[#3F3F46] text-[12px]">
-          Demo: any email + any password (6+ chars)
-        </span>
       </div>
     </div>
   );

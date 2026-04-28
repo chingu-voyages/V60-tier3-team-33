@@ -23,6 +23,13 @@ export interface AuthResponse {
   message?: string;
 }
 
+export interface ResetPasswordPayload {
+  token: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+
 export const authService = {
   login: async (data: LoginPayload): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>("/login", data);
@@ -39,6 +46,10 @@ export const authService = {
   },
   getProfile: async () => {
     const response = await apiClient.get("/profile");
+    return response.data;
+  },
+  resetPassword: async (data: ResetPasswordPayload) => {
+    const response = await apiClient.post("/reset-password", data);
     return response.data;
   },
 };
