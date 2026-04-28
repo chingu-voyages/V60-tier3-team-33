@@ -5,6 +5,7 @@ import AuthLayout from './layouts/AuthLayout';
 import AccountCreationPage from './pages/Auth/AccountCreationPage';
 import LoginPage from './pages/Auth/LoginPage';
 import ForgotPasswordPage from './pages/Auth/ForgotPasswordPage';
+import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Layout';
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<AccountCreationPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Route>
 
         {/* PROTECTED ROUTES */}

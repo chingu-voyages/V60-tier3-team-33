@@ -25,6 +25,7 @@ const AccountCreationPage: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormInputs>({
     resolver: zodResolver(registerSchema),
@@ -51,30 +52,13 @@ const AccountCreationPage: React.FC = () => {
       if (response.token) {
         localStorage.setItem("auth_token", response.token);
       }
-      setApiMessage({
-        type: "success",
-        text: "Account created successfully! Redirecting...",
-      });
-      // TODO: Handle routing to Dashboard
+      setApiMessage({ type: "success", text: "Account created successfully!" });
+      reset();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 422) {
-          const validationErrors: Record<string, string[]> =
-            error.response.data.errors || {};
-          const firstErrorKey = Object.keys(validationErrors)[0];
-          const errorMessage = firstErrorKey
-            ? validationErrors[firstErrorKey][0]
-            : error.response.data.message || "Please check the provided data.";
-
-          setApiMessage({ type: "error", text: errorMessage });
-        } else {
-          setApiMessage({
-            type: "error",
-            text:
-              error.response.data.message ||
-              "Registration failed. Please try again.",
-          });
-        }
+        const errorMessage =
+          error.response.data.message || "Account creation failed.";
+        setApiMessage({ type: "error", text: errorMessage });
       } else {
         setApiMessage({
           type: "error",
@@ -88,28 +72,28 @@ const AccountCreationPage: React.FC = () => {
     <div className="w-full flex flex-col">
       <div className="flex flex-col gap-1 mb-8 text-left">
         <h2 className="text-[28px] font-bold text-white tracking-tight">
-          Create account
+          Create your account
         </h2>
-        <p className="text-[14px] text-[#A1A1AA]">
-          Get started with your 30-day free trial
+        <p className="text-[14px] text-[#9898A1]">
+          Sign up to start tracking your applications
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <div className="flex flex-col">
-          <label
-            htmlFor="name"
-            className="mb-1.5 text-[13px] text-[#84848A] font-medium"
-          >
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">
             Full name
           </label>
           <input
-            id="name"
             type="text"
             placeholder="Michael Scott"
-            autoComplete="off"
+            autoComplete="name"
             {...register("name")}
-            className={`bg-[#18181B] border px-3.5 focus:border-[#E3F05B] focus:ring-1 focus:ring-[#E3F05B] outline-none transition-all rounded-[8px] h-[44px] w-full text-white placeholder-[#52525B] text-[14px] font-medium ${errors.name ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#27272A]"}`}
+            className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+              errors.name
+                ? "border-red-500 focus:ring-red-500"
+                : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
+            } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}
           />
           {errors.name && (
             <p className="text-red-500 text-[12px] mt-1.5">
@@ -118,20 +102,20 @@ const AccountCreationPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex flex-col">
-          <label
-            htmlFor="email"
-            className="mb-1.5 text-[13px] text-[#84848A] font-medium"
-          >
+        <div>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">
             Email address
           </label>
           <input
-            id="email"
             type="email"
             placeholder="you@example.com"
-            autoComplete="off"
+            autoComplete="email"
             {...register("email")}
-            className={`bg-[#18181B] border px-3.5 focus:border-[#E3F05B] focus:ring-1 focus:ring-[#E3F05B] outline-none transition-all rounded-[8px] h-[44px] w-full text-white placeholder-[#52525B] text-[14px] font-medium ${errors.email ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#27272A]"}`}
+            className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+              errors.email
+                ? "border-red-500 focus:ring-red-500"
+                : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
+            } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}
           />
           {errors.email && (
             <p className="text-red-500 text-[12px] mt-1.5">
@@ -140,21 +124,21 @@ const AccountCreationPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex flex-col">
-          <label
-            htmlFor="password"
-            className="mb-1.5 text-[13px] text-[#84848A] font-medium"
-          >
+        <div>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">
             Password
           </label>
           <div className="relative w-full">
             <input
-              id="password"
               placeholder="••••••••••"
               type={showPassword ? "text" : "password"}
               autoComplete="new-password"
               {...register("password")}
-              className={`bg-[#18181B] border pl-3.5 pr-10 focus:border-[#E3F05B] focus:ring-1 focus:ring-[#E3F05B] outline-none transition-all rounded-[8px] h-[44px] w-full text-white placeholder-[#52525B] text-[14px] font-medium ${errors.password ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#27272A]"}`}
+              className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
+              } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}
             />
             <button
               type="button"
@@ -175,21 +159,21 @@ const AccountCreationPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex flex-col">
-          <label
-            htmlFor="confirmPassword"
-            className="mb-1.5 text-[13px] text-[#84848A] font-medium"
-          >
+        <div>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">
             Confirm password
           </label>
           <div className="relative w-full">
             <input
-              id="confirmPassword"
               placeholder="••••••••••"
               type={showConfirmPassword ? "text" : "password"}
               autoComplete="new-password"
               {...register("confirmPassword")}
-              className={`bg-[#18181B] border pl-3.5 pr-10 focus:border-[#E3F05B] focus:ring-1 focus:ring-[#E3F05B] outline-none transition-all rounded-[8px] h-[44px] w-full text-white placeholder-[#52525B] text-[14px] font-medium ${errors.confirmPassword ? "border-red-500 focus:ring-red-500 focus:border-red-500" : "border-[#27272A]"}`}
+              className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+                errors.confirmPassword
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
+              } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}
             />
             <button
               type="button"
@@ -212,10 +196,10 @@ const AccountCreationPage: React.FC = () => {
 
         {apiMessage && (
           <div
-            className={`p-3 rounded-[8px] text-[13px] font-medium transition-all ${
+            className={`p-3 rounded-xl text-[13px] font-medium transition-all ${
               apiMessage.type === "error"
                 ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                : "bg-[#E3F05B]/10 text-[#E3F05B] border border-[#E3F05B]/20"
+                : "bg-[#D4F03D]/10 text-[#D4F03D] border border-[#D4F03D]/20"
             }`}
           >
             {apiMessage.text}
@@ -225,24 +209,23 @@ const AccountCreationPage: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-[#E3F05B] text-black text-[15px] font-semibold rounded-[8px] h-[44px] w-full hover:bg-[#D3E04F] disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-1 flex flex-row items-center justify-center gap-2 cursor-pointer"
+          className="w-full py-3 mt-2 flex items-center justify-center gap-2 font-semibold rounded-xl bg-[#D4F03D] text-black hover:bg-[#C2DE32] disabled:opacity-70 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           {isSubmitting ? (
             <Loader2 className="w-[18px] h-[18px] animate-spin" />
           ) : (
             <>
-              <span>Create account</span>
-              <ArrowRight className="w-[18px] h-[18px]" strokeWidth={2.5} />
+              Get Started
+              <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
             </>
           )}
         </button>
       </form>
-
-      <div className="flex justify-center items-center mt-10 text-[#A1A1AA] text-[14px]">
+      <div className="flex justify-center items-center mt-12 md:mt-8 text-[#9898A1] text-[14px]">
         Already have an account?&nbsp;
         <Link
           to="/login"
-          className="text-[#E3F05B] hover:text-[#f4ffa3] font-semibold transition-colors cursor-pointer"
+          className="text-[#E3F05B] hover:text-[#f4ffa3] hover:underline font-semibold transition-colors cursor-pointer"
         >
           Sign in
         </Link>
