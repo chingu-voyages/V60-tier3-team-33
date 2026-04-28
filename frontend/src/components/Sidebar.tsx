@@ -20,7 +20,6 @@ type SideBarProps = {
 function Sidebar({ isDark, setIsDark }: SideBarProps) {
   const [isBoardsOpen, setIsBoardsOpen] = useState<boolean>(false);
 
-  //   expand or close boards list
   const toggleBoards = () => {
     setIsBoardsOpen((prev) => !prev);
   };
@@ -29,14 +28,14 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
     <div className="flex h-screen flex-col bg-[#141414]">
       <div className="mb-5 text-xl font-bold">APPLYTICS</div>
       <nav className="flex flex-col justify-between border-t border-t-gray-400 px-3 overflow-auto">
-        {/* main */}
         <p className="my-2 pt-3 text-xs tracking-widest uppercase">Main</p>
         <ul className="space-y-2">
-          <NavLink to="/dashboard">
-            <li className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100">
-              <LayoutDashboard size={18} className="float-left mr-3" />
-              Dashboard
-            </li>
+          <NavLink 
+            to="/dashboard" 
+            className="flex w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100"
+          >
+            <LayoutDashboard size={18} className="mr-3" />
+            Dashboard
           </NavLink>
 
           <li>
@@ -105,7 +104,6 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
             </li>
           </NavLink>
         </ul>
-        {/* saved links */}
         <div className="mt-5">
           <div className="flex items-center justify-between">
             <p className="text-xs tracking-widest uppercase">Saved Links</p>
@@ -121,7 +119,6 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
           </ul>
         </div>
       </nav>
-      {/* settings */}
 
       <div className="mt-auto w-full border-t border-t-gray-400">
         <div className="flex flex-col gap-1 p-3">

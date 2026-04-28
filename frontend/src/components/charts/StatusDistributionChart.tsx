@@ -1,8 +1,15 @@
 import { PieChart, Pie, ResponsiveContainer, Legend, Tooltip, Sector } from 'recharts';
 
 interface StatusDistributionProps {
-    appliedCount: number;
-    interviewCount: number;
+    byStatus: {
+        applied: number;
+        screening: number;
+        interviewing: number;
+        offer_received: number;
+        accepted: number;
+        rejected: number;
+        withdrawn: number;
+    };
 }
 
 interface PieSectorProps {
@@ -16,14 +23,16 @@ interface PieSectorProps {
     cornerRadius?: number;
 }
 
-export const StatusDistributionChart = ({ appliedCount, interviewCount }: StatusDistributionProps) => {
+export const StatusDistributionChart = ({ byStatus }: StatusDistributionProps) => {
     const pieData = [
-        { name: 'Applied', value: appliedCount - interviewCount, fill: 'var(--pie-1)' },
-        { name: 'Interviewed', value: interviewCount, fill: 'var(--pie-3)' }
+        { name: 'Applied', value: byStatus.applied, fill: 'var(--pie-1)' },
+        { name: 'Interviewed', value: byStatus.screening + byStatus.interviewing, fill: 'var(--pie-2)' },
+        { name: 'Offer', value: byStatus.offer_received + byStatus.accepted, fill: 'var(--pie-3)' },
+        { name: 'Rejected', value: byStatus.rejected, fill: 'var(--pie-4)' }
     ].filter(item => item.value > 0);
 
     return (
-        <div className="bg-white dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-2xl p-6 h-[300px] flex flex-col transition-colors">
+        <div className="bg-white dark:bg-[#18181B] border border-gray-200 dark:border-[#27272A] rounded-2xl p-6 h-75 flex flex-col transition-colors shadow-sm dark:shadow-none">
             <h3 className="text-gray-900 dark:text-white font-medium mb-4">Status Distribution</h3>
             <div className="flex-1">
                 <ResponsiveContainer width="100%" height="100%">
@@ -32,11 +41,13 @@ export const StatusDistributionChart = ({ appliedCount, interviewCount }: Status
                             data={pieData}
                             cx="50%"
                             cy="50%"
-                            innerRadius="55%"
-                            outerRadius="80%"
-                            paddingAngle={2}
+                            innerRadius="65%"
+                            outerRadius="95%"
+                            paddingAngle={0}
                             dataKey="value"
-                            stroke="none"
+                            stroke="currentColor" 
+                            strokeWidth={3}
+                            className="text-white dark:text-[#18181B]"
                             shape={(props: PieSectorProps) => (
                                 <Sector 
                                     cx={props.cx}

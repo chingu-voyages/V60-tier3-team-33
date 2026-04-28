@@ -1,61 +1,70 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
 
-/* ivan's char colors */
+@theme {
+  --color-background: var(--bg-app);
+  --color-surface: var(--bg-surface);
+  --color-border: var(--border-color);
+  --color-accent: var(--accent-primary);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+}
+
 :root {
-  --chart-axis: #e5e7eb;
-  --chart-tick: #6b7280;
-  --chart-tooltip-bg: #ffffff;
-  --chart-tooltip-border: #e5e7eb;
+  --bg-app: #F9FAFB;
+  --bg-surface: #FFFFFF;
+  --border-color: #E5E7EB;
+  --text-main: #111827;
+  --text-muted: #6B7280;
+  
+  --accent-primary: #A5A3D1; 
+  
+  --color-primary: #A5A3D1;
+  --color-secondary: #D5D5FA;
+  
+  --chart-axis: #D1D5DB;
+  --chart-tick: #6B7280;
+  --chart-cursor: #E5E7EB;
+  --chart-tooltip-bg: #FFFFFF;
+  --chart-tooltip-border: #E5E7EB;
   --chart-tooltip-text: #111827;
-  --chart-cursor: #f3f4f6;
-
-  --color-primary: #4f46e5;
-  --color-secondary: #a5b4fc;
-
-  --pie-1: #d6d3ff;
-  --pie-2: #a9a6d2;
-  --pie-3: #7f7ca4;
-  --pie-4: #585677;
-  --pie-5: #34324a;
+  
+  --pie-1: #D5D5FA;
+  --pie-2: #A5A3D1;
+  --pie-3: #7A78AC;
+  --pie-4: #E2E0EC;
 }
 
 .dark {
-  --chart-axis: #52525b;
-  --chart-tick: #71717a;
-  --chart-tooltip-bg: #2a2a2a;
-  --chart-tooltip-border: #3f3f46;
-  --chart-tooltip-text: #ffffff;
-  --chart-cursor: #27272a;
-
-  --color-primary: #d4fa31;
-  --color-secondary: #c4b5fd;
-
-  --pie-1: #fdffee;
-  --pie-2: #f8ffa0;
-  --pie-3: #f2ff53;
-  --pie-4: #b0bb2c;
-  --pie-5: #6b7218;
-}
-
-/* Greg's tailwind classes */
-@theme {
-  --color-background: rgba(15, 15, 15, 1);
-  --color-background-shadow: rgba(37, 37, 37, 1);
-  --color-text: rgba(255, 255, 255, 1);
-  --color-text-muted: rgba(107, 114, 128, 1);
-  --color-primary: rgba(214, 211, 255, 1);
-  --color-primary-hover: rgba(196, 192, 255);
-
-  --color-secondary: rgba(238, 255, 43, 1);
-  --color-secondary-hover: #a5b4fc;
-}
-
-.surface {
-  @apply border border-[rgb(212,212,212)] bg-[rgb(255,255,255)] dark:border-[#222324] dark:bg-black dark:bg-linear-to-b dark:from-[#1b1c1d] dark:to-[#151617];
+  --bg-app: #09090B; 
+  --bg-surface: #121212; 
+  --border-color: #27272A;
+  --text-main: #FFFFFF;
+  --text-muted: #A1A1AA;
+  
+  --accent-primary: #C1D536;
+  
+  --color-primary: #C1D536;
+  --color-secondary: #657124;
+  
+  --chart-axis: #3F3F46;
+  --chart-tick: #A1A1AA;
+  --chart-cursor: #27272A;
+  --chart-tooltip-bg: #18181B;
+  --chart-tooltip-border: #27272A;
+  --chart-tooltip-text: #FFFFFF;
+  
+  --pie-1: #657124;
+  --pie-2: #C1D536;
+  --pie-3: #E2FA63;
+  --pie-4: #475217;
 }
 
 body {
-  margin: 0;
+  background-color: var(--bg-app);
+  color: var(--text-main);
 }
