@@ -4,24 +4,21 @@ import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
 import type { Application } from "../types/application";
 import { Star } from "lucide-react";
+import { getStatusStyles } from '../utilities/themeUtils';
 
 interface AppListTypes {
   boardsView: boolean;
   applications: Application[];
+  onEdit?: (app: Application) => void;
+  onDelete?: (id: number) => void;
 }
 
-function AppList({ boardsView, applications}: AppListTypes) {
+function AppList({ boardsView, applications, onEdit, onDelete }: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
-
-
-  const handleDelete = (id: number) => {
-    console.log(id);
-  };
-
   return (
-    <div className="surface dark:text-text-muted m-5 overflow-x-auto rounded-2xl border border-gray-100 bg-white text-black shadow-sm">
+    <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">      
       <table className="w-full min-w-4xl table-fixed">
         <thead className="tracking-wide text-gray-400 uppercase">
           <tr className="border-b-[.5px] border-[#b4b4b41a] text-sm">
@@ -43,13 +40,13 @@ function AppList({ boardsView, applications}: AppListTypes) {
           {applications.map((app) => (
             <tr
               key={app.id}
-              className="dark:hover:bg-background-shadow cursor-pointer border-b-[.5px] border-[#b4b4b41a] duration-100 ease-in hover:bg-gray-100"
+              className="cursor-pointer border-b border-border transition-colors hover:bg-gray-50 dark:hover:bg-[#27272A]"
               onClick={() => {
                 setSelectedApp(app);
                 setIsCardModalOpen(true);
               }}
             >
-              <td className="py-2 dark:text-white">
+              <td className="py-3 font-medium">
                 <span className="mr-1 inline-block w-5 translate-y-0.5 px-5 opacity-50">
                   {app.favorite ? (
                     <Star fill="yellow" size={16} strokeWidth="0" />
@@ -61,13 +58,11 @@ function AppList({ boardsView, applications}: AppListTypes) {
               </td>
               <td className="p-2 text-gray-400">{app.role}</td>
               <td className="p-2">{formatDate(app.applied_at, "short")}</td>
-              <td className="p-2">
-                <td
-                  className={`rounded-3xl bg-[#b4b4b41a] px-3 py-1 ${app.status === "offer_received" && "text-green-500"}`}
-                >
-                  {app.status}
+                <td className="p-2">
+                  <span className={`inline-block rounded-3xl px-3 py-1 border text-xs font-medium ${getStatusStyles(app.status)}`}>
+                    {app.status}
+                  </span>
                 </td>
-              </td>
               <td className="p-2">
                 {app.location}{" "}
                 <p className="pt-1 text-xs">
@@ -96,9 +91,14 @@ function AppList({ boardsView, applications}: AppListTypes) {
           onClose={() => setIsCardModalOpen(false)}
           onEdit={() => {
             setIsCardModalOpen(false);
-            // setIsAddModalOpen(true);
+            if (onEdit) onEdit(selectedApp);
           }}
-          onDelete={() => selectedApp && handleDelete(selectedApp.id)}
+          onDelete={() => {
+            if (onDelete && selectedApp) {
+              onDelete(selectedApp.id);
+              setIsCardModalOpen(false);
+            }
+          }}
         />
       )}
     </div>

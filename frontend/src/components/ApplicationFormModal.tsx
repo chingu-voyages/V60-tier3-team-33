@@ -54,16 +54,6 @@ const mapInitialData = (mode: 'add' | 'edit', data?: Application | null): FormDa
 export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialData }: ApplicationFormModalProps) => {
     
     const [formData, setFormData] = useState<FormDataState>(() => mapInitialData(mode, initialData));
-    const [prevInitialData, setPrevInitialData] = useState(initialData);
-    const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-
-    if (initialData !== prevInitialData || isOpen !== prevIsOpen) {
-        setPrevInitialData(initialData);
-        setPrevIsOpen(isOpen);
-        if (isOpen) {
-            setFormData(mapInitialData(mode, initialData));
-        }
-    }
 
     if (!isOpen) return null;
 
@@ -133,7 +123,7 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Application Date *</label>
-                                <input required type="date" name="applied_at" value={formData.applied_at || ''} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors dark:[color-scheme:dark]" />
+                                <input required type="date" name="applied_at" value={formData.applied_at || ''} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors dark:scheme-dark" />
                             </div>
                             <div>
                                 <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Status</label>
@@ -220,12 +210,12 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                     </form>
                 </div>
 
-                <div className="p-6 border-t border-gray-200 dark:border-[#27272A] flex justify-end items-center gap-4 bg-gray-50 dark:bg-[#18181B] mt-auto">
-                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:bg-gray-200 dark:hover:bg-[#27272A] hover:text-gray-900 dark:hover:text-white text-sm font-medium py-2.5 px-4 rounded-lg transition-all active:scale-95">
-                        Cancel
-                    </button>
-                    <button type="submit" form="app-form" className="bg-indigo-600 hover:bg-indigo-700 dark:bg-[#D4FA31] dark:hover:bg-[#e1f961] text-white dark:text-black text-sm font-semibold py-2.5 px-8 rounded-lg transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 dark:focus:ring-[#D4FA31]/50 focus:ring-offset-2 dark:focus:ring-offset-[#18181B]">
+               <div className="p-6 border-t border-gray-200 dark:border-[#27272A] flex items-center gap-4 bg-white dark:bg-[#121212] mt-auto">
+                    <button type="submit" form="app-form" className="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-[#EEFF2B] dark:hover:bg-[#D4FA31] text-white dark:text-black text-sm font-semibold py-3 px-8 rounded-xl transition-all active:scale-95">
                         {mode === 'add' ? 'Add Application' : 'Save Changes'}
+                    </button>
+                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white text-sm font-medium py-3 px-4 rounded-xl transition-all active:scale-95">
+                        Cancel
                     </button>
                 </div>
 
