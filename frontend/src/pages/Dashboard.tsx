@@ -7,6 +7,7 @@ import { formatDate } from "../utilities/formatDate";
 import { api } from "../services/api";
 import type { Application } from "../types/application";
 import type { AnalyticsResponse, InsightsResponse } from "../types/metrics";
+import StatsOverview from "../components/StatsOverview";
 
 function Dashboard() {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -94,7 +95,10 @@ function Dashboard() {
         </button>
       </div>
 
+<StatsOverview applications={applications}/>
+<h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                
         <MetricCard
           title="Applied → Interview"
           value={`${analytics.conversions.applied_to_interview_percent}%`}
