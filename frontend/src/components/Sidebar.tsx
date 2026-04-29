@@ -57,32 +57,32 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
             </button>
             {isBoardsOpen && (
               <ul className="mt-2 ml-4 space-y-1 border-l border-l-gray-400 pl-4 text-xs">
-                <NavLink to="/boards/all">
+                <NavLink to="/boards">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     All
                   </li>
                 </NavLink>
-                <NavLink to="/boards/applied">
+                <NavLink to="/boards?status=applied">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Applied
                   </li>
                 </NavLink>
-                <NavLink to="/boards/interviewed">
+                <NavLink to="/boards?status=interviewed">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Interviewed
                   </li>
                 </NavLink>
-                <NavLink to="/boards/offer">
+                <NavLink to="/boards?status=offer">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Offer
                   </li>
                 </NavLink>
-                <NavLink to="/boards/rejected">
+                <NavLink to="/boards?status=rejected">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Rejected
                   </li>
                 </NavLink>
-                <NavLink to="/boards/favorites">
+                <NavLink to="/boards?status=favorites">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Favorites
                   </li>

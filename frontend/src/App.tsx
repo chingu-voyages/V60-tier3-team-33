@@ -38,14 +38,14 @@ export default function App() {
         <Route path="/register" element={<div>Register Page (Waiting for Auth Merge)</div>} />
 
         {/* PROTECTED ROUTES */}
-        <Route element={<ProtectedRoute />}>
+        {/* <Route element={<ProtectedRoute />}> */}
           <Route element={<Layout isDark={isDark} setIsDark={setIsDark} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/insights" element={<InsightsPage />} />
             <Route path="/boards" element={<Boards />} />
             
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          </Route>
+          {/* </Route> */}
         </Route>
       </Routes>
     </Router>
