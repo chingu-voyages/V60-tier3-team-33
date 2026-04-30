@@ -72,11 +72,11 @@ const ForgotPasswordPage: React.FC = () => {
             placeholder="you@example.com"
             autoComplete="email"
             {...register("email")}
-            className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border ${
+            className={`w-full px-4 py-3 rounded-xl text-sm bg-[#1A1A1A] border transition-all duration-200 ${
               errors.email
-                ? "border-red-500 focus:ring-red-500"
-                : "border-[#2A2A2A] focus:ring-[#D4F03D]/50"
-            } shadow-sm text-white placeholder-[#84848A] focus:outline-none focus:ring-2 transition-all`}  
+                ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                : "border-[#2A2A2A] focus:border-[#F2FF53] focus:ring-2 focus:ring-[#F2FF53]/20"
+            } shadow-sm text-white placeholder-[#84848A] focus:outline-none`}  
           />
           {errors.email && (
             <p className="text-red-500 text-[12px] mt-1.5">
@@ -90,7 +90,7 @@ const ForgotPasswordPage: React.FC = () => {
             className={`p-3 rounded-xl text-[13px] font-medium transition-all ${
               apiMessage.type === "error"
                 ? "bg-red-500/10 text-red-500 border border-red-500/20"
-                : "bg-[#D4F03D]/10 text-[#D4F03D] border border-[#D4F03D]/20"
+                : "bg-[#F2FF53]/10 text-[#F2FF53] border border-[#F2FF53]/20"
             }`}
           >
             {apiMessage.text}
@@ -100,7 +100,7 @@ const ForgotPasswordPage: React.FC = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 mt-2 flex items-center justify-center gap-2 font-semibold rounded-xl bg-[#D4F03D] text-black hover:bg-[#C2DE32] disabled:opacity-70 disabled:cursor-not-allowed hover:underline transition-colors cursor-pointer"
+          className="w-full py-3 mt-2 flex items-center justify-center gap-2 font-semibold rounded-xl bg-[#F2FF53] text-black hover:bg-[#e8f53b] disabled:opacity-70 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           {isSubmitting ? (
             <Loader2 className="w-[18px] h-[18px] animate-spin" />
