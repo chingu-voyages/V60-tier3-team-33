@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -31,6 +31,7 @@ const AccountCreationPage: React.FC = () => {
     resolver: zodResolver(registerSchema),
   });
 
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiMessage, setApiMessage] = useState<{
@@ -53,6 +54,9 @@ const AccountCreationPage: React.FC = () => {
         localStorage.setItem("auth_token", response.token);
       }
       setApiMessage({ type: "success", text: "Account created successfully!" });
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
       reset();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

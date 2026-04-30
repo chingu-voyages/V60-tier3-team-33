@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,6 +24,7 @@ const LoginPage: React.FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [apiMessage, setApiMessage] = useState<{
     type: "success" | "error";
@@ -38,6 +39,9 @@ const LoginPage: React.FC = () => {
         localStorage.setItem("auth_token", response.token);
       }
       setApiMessage({ type: "success", text: "Successfully logged in!" });
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const errorMessage = error.response.data.message || "Invalid email or password.";
