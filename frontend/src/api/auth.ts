@@ -13,7 +13,7 @@ export interface RegisterPayload {
 }
 
 export interface AuthResponse {
-  token: string;
+  access_token: string;
   user: {
     id: number;
     name: string;
