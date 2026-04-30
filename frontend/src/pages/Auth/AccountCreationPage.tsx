@@ -50,8 +50,8 @@ const AccountCreationPage: React.FC = () => {
       };
 
       const response = await authService.register(payload);
-      if (response.token) {
-        localStorage.setItem("auth_token", response.token);
+      if (response.access_token) {
+        localStorage.setItem("auth_token", response.access_token);
       }
       setApiMessage({ type: "success", text: "Account created successfully!" });
       setTimeout(() => {

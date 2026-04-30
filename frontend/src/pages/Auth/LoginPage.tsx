@@ -35,8 +35,8 @@ const LoginPage: React.FC = () => {
     setApiMessage(null);
     try {
       const response = await authService.login(data);
-      if (response.token) {
-        localStorage.setItem("auth_token", response.token);
+      if (response.access_token) {
+        localStorage.setItem("auth_token", response.access_token);
       }
       setApiMessage({ type: "success", text: "Successfully logged in!" });
       setTimeout(() => {
