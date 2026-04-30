@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-// TODO [Anthony: Uncomment these imports when merging the Auth feature
-// import AuthLayout from './layouts/AuthLayout';
-// import AccountCreationPage from './pages/Auth/AccountCreationPage';
-// import LoginPage from './pages/Auth/LoginPage';
 
 import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import { InsightsPage } from './pages/InsightsPage';
 import Boards from './pages/Boards';
+import { useState, useEffect } from 'react';
+
 
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -33,11 +29,9 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* AUTH ROUTES (Placeholder for Anthony) */}
-        <Route path="/login" element={<div>Login Page (Waiting for Auth Merge)</div>} />
-        <Route path="/register" element={<div>Register Page (Waiting for Auth Merge)</div>} />
+        <Route path="/login" element={<div>Login Page Placeholder</div>} />
+        <Route path="/register" element={<div>Register Page Placeholder</div>} />
 
-        {/* PROTECTED ROUTES */}
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout isDark={isDark} setIsDark={setIsDark} />}>
             <Route path="/dashboard" element={<Dashboard />} />
