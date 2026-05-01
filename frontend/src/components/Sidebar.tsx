@@ -18,16 +18,6 @@ type SideBarProps = {
   setIsDark: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type Stats = {
-        all: number,
-      applied: number,
-      interviewing: number,
-      offer_received: number,
-      accepted: number,
-      rejected: number,
-      favorites: number,
-}
-
 function Sidebar({ isDark, setIsDark }: SideBarProps) {
   const {applications} = useDashboard();
   const [isBoardsOpen, setIsBoardsOpen] = useState<boolean>(false);
