@@ -16,7 +16,7 @@ interface AppListTypes {
 function AppList({ boardsView, applications, onEdit, onDelete }: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
-
+console.log(applications)
   return (
     <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">      
       <table className="w-full min-w-4xl table-fixed">
@@ -40,21 +40,16 @@ function AppList({ boardsView, applications, onEdit, onDelete }: AppListTypes) {
           {applications.map((app) => (
             <tr
               key={app.id}
-              className="cursor-pointer border-b border-border transition-colors hover:bg-gray-50 dark:hover:bg-[#27272A]"
+              className="group cursor-pointer border-b border-border transition-colors hover:bg-gray-50 dark:hover:bg-[#27272A]"
               onClick={() => {
                 setSelectedApp(app);
                 setIsCardModalOpen(true);
               }}
             >
               <td className="py-3 font-medium">
-                <span className="mr-1 inline-block w-5 translate-y-0.5 px-5 opacity-50">
-                  {app.favorite ? (
-                    <Star fill="yellow" size={16} strokeWidth="0" />
-                  ) : (
-                    ""
-                  )}
-                </span>
-                {app.company_name}
+                <div className="flex items-center gap-2">
+                  <Star size={15} strokeWidth="2" className={`text-primary ml-3 ${!app.favorite ? "fill-primary opacity-50" : "opacity-0 group-hover:opacity-50 group-hover:text-primary"}`}/>
+               {app.company_name}</div>
               </td>
               <td className="p-2 text-gray-400">{app.role}</td>
               <td className="p-2">{formatDate(app.applied_at, "short")}</td>
