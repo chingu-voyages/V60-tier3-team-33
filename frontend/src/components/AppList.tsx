@@ -26,6 +26,7 @@ function AppList({
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
   const toggleFavorite = (id: number, app: Application) => {
+    console.log("toggle")
     setApplications((prev) =>
       prev.map((app) =>
         app.id === id ? { ...app, favorite: !app.favorite } : app,

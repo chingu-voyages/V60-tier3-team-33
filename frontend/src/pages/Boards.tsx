@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import AppList from "../components/AppList";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { NavLink, useSearchParams } from "react-router-dom";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import type { Application } from "../types/application";
 import { api } from "../services/api";
 import { cap } from "../utilities/capitalize";
@@ -12,6 +12,7 @@ function Boards() {
   const [search, setSearch] = useState<string>("");
   const [searchParams] = useSearchParams();
   const status = searchParams.get("status") || "all";
+  const favorites = searchParams.get("favorites") || null;
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
@@ -78,6 +79,13 @@ function Boards() {
     }
   };
 
+  const filteredApps = useMemo(() => {
+    if (favorites) {
+      return applications.filter((app) => app.favorite);
+    }
+    return applications;
+  }, [applications, searchParams]);
+  
   return (
     <div className="p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -96,7 +104,7 @@ function Boards() {
           </div>
           <div>
             <span className="pr-3 text-2xl font-bold">
-              {cap(status || "all")}
+              {cap(status || favorites ? "Favorites" : "all")}
             </span>
             <span className="text-gray-500">{applications.length}</span>
           </div>
@@ -129,7 +137,8 @@ function Boards() {
 
       <AppList
         boardsView={true}
-        applications={applications}
+        applications={filteredApps}
+        setApplications={setApplications}
         onEdit={(app) => {
           setEditingApp(app);
           setIsAddModalOpen(true);
