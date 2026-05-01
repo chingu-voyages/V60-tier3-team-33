@@ -4,9 +4,8 @@ import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
 import type { Application } from "../types/application";
 import { Star } from "lucide-react";
-import { getStatusStyles } from '../utilities/themeUtils';
+import { getStatusStyles } from "../utilities/themeUtils";
 import { api } from "../services/api";
-import { id } from "zod/locales";
 
 interface AppListTypes {
   boardsView: boolean;
@@ -16,27 +15,32 @@ interface AppListTypes {
   onDelete?: (id: number) => void;
 }
 
-function AppList({ boardsView, applications, setApplications, onEdit, onDelete }: AppListTypes) {
+function AppList({
+  boardsView,
+  applications,
+  setApplications,
+  onEdit,
+  onDelete,
+}: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
-  /// working on updating UI and BE without reloading data each time
   const toggleFavorite = (id: number, app: Application) => {
-setApplications((prev) => 
-  prev.map((app) => 
-    app.id === id
-? {...app, favorite: !app.favorite}
-: app
+    setApplications((prev) =>
+      prev.map((app) =>
+        app.id === id ? { ...app, favorite: !app.favorite } : app,
+      ),
+    );
 
-  )
+    setSelectedApp((prev) =>
+      prev?.id === id ? { ...prev, favorite: !prev.favorite } : prev,
+    );
 
-)
-
-api.updateApplication(id, {...app, favorite: !app.favorite})
-  }
+    api.updateApplication(id, { ...app, favorite: !app.favorite });
+  };
 
   return (
-    <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">      
+    <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">
       <table className="w-full min-w-4xl table-fixed">
         <thead className="tracking-wide text-gray-400 uppercase">
           <tr className="border-b-[.5px] border-[#b4b4b41a] text-sm">
@@ -58,7 +62,7 @@ api.updateApplication(id, {...app, favorite: !app.favorite})
           {applications.map((app) => (
             <tr
               key={app.id}
-              className="group cursor-pointer border-b border-border transition-colors hover:bg-gray-50 dark:hover:bg-[#27272A]"
+              className="group border-border cursor-pointer border-b transition-colors hover:bg-gray-50 dark:hover:bg-[#27272A]"
               onClick={() => {
                 setSelectedApp(app);
                 setIsCardModalOpen(true);
@@ -66,16 +70,27 @@ api.updateApplication(id, {...app, favorite: !app.favorite})
             >
               <td className="py-3 font-medium">
                 <div className="flex items-center gap-2">
-                  <Star size={15} strokeWidth="2" className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "opacity-0 group-hover:opacity-50 group-hover:text-primary"}`} onClick={(e) => {e.stopPropagation(); toggleFavorite(app.id, app)}}/>
-               {app.company_name}</div>
+                  <Star
+                    size={15}
+                    strokeWidth="2"
+                    className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "group-hover:text-primary opacity-0 group-hover:opacity-50"}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(app.id, app);
+                    }}
+                  />
+                  {app.company_name}
+                </div>
               </td>
               <td className="p-2 text-gray-400">{app.role}</td>
               <td className="p-2">{formatDate(app.applied_at, "short")}</td>
-                <td className="p-2">
-                  <span className={`inline-block rounded-3xl px-3 py-1 border text-xs font-medium ${getStatusStyles(app.status)}`}>
-                    {app.status}
-                  </span>
-                </td>
+              <td className="p-2">
+                <span
+                  className={`inline-block rounded-3xl border px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
+                >
+                  {app.status}
+                </span>
+              </td>
               <td className="p-2">
                 {app.location}{" "}
                 <p className="pt-1 text-xs">
