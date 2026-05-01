@@ -65,7 +65,7 @@ function Dashboard() {
 <StatsOverview applications={applications}/>
 <div className="flex justify-between items-center">
   <h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
-  <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary">View All <ArrowUpRight size={12}/></NavLink>
+  <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary hover:underline">View All <ArrowUpRight size={12}/></NavLink>
 </div>
 <InsightsOverview insights={insights} analytics={analytics} />
 
