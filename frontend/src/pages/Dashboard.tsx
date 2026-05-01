@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
 import AppList from "../components/AppList";
 import { MetricCard } from "../components/MetricCard";
@@ -6,38 +6,13 @@ import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { formatDate } from "../utilities/formatDate";
 import { api } from "../services/api";
 import type { Application } from "../types/application";
-import type { AnalyticsResponse, InsightsResponse } from "../types/metrics";
+import StatsOverview from "../components/StatsOverview";
+import { useDashboard } from "../components/DashboardProvider";
 
 function Dashboard() {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
-  const [insights, setInsights] = useState<InsightsResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const {applications, analytics, insights, isLoading, fetchData} = useDashboard();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
-
-  const fetchData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const [analyticsData, appsData, insightsData] = await Promise.all([
-        api.getAnalytics(),
-        api.getApplications(1, 10),
-        api.getInsights("allTime"),
-      ]);
-
-      setAnalytics(analyticsData);
-      setApplications(appsData.data);
-      setInsights(insightsData);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleSave = async (data: Partial<Application>) => {
     try {
@@ -94,7 +69,10 @@ function Dashboard() {
         </button>
       </div>
 
+<StatsOverview applications={applications}/>
+<h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                
         <MetricCard
           title="Applied → Interview"
           value={`${analytics.conversions.applied_to_interview_percent}%`}
