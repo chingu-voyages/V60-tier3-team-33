@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { ArrowUpRight, Search } from "lucide-react";
 import AppList from "../components/AppList";
-import { MetricCard } from "../components/MetricCard";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { formatDate } from "../utilities/formatDate";
 import { api } from "../services/api";
 import type { Application } from "../types/application";
 import StatsOverview from "../components/StatsOverview";
 import { useDashboard } from "../components/DashboardProvider";
+import InsightsOverview from "../components/InsightsOverview";
+import { NavLink } from "react-router-dom";
 
 function Dashboard() {
   const {applications, analytics, insights, isLoading, fetchData} = useDashboard();
@@ -45,14 +46,6 @@ function Dashboard() {
     return <div className="p-5 text-gray-500">Loading dashboard data...</div>;
   }
 
-  const avgResponseDays =
-    insights.avg_response_time && insights.avg_response_time.length > 0
-      ? Math.round(
-          insights.avg_response_time.reduce((acc, curr) => acc + curr.days, 0) /
-            insights.avg_response_time.length,
-        )
-      : 0;
-
   return (
     <div className="p-5 max-w-7xl mx-auto">
       <div className="flex items-center justify-between py-5 mb-2">
@@ -70,30 +63,11 @@ function Dashboard() {
       </div>
 
 <StatsOverview applications={applications}/>
-<h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                
-        <MetricCard
-          title="Applied → Interview"
-          value={`${analytics.conversions.applied_to_interview_percent}%`}
-          subtext={`${analytics.counts.interview_applications} of ${analytics.counts.total_applications}`}
-        />
-        <MetricCard
-          title="Interview → Offer"
-          value={`${analytics.conversions.interview_to_offer_percent}%`}
-          subtext={`${analytics.counts.offer_applications} offers`}
-        />
-        <MetricCard
-          title="Response Rate"
-          value={`${analytics.conversions.response_rate_percent}%`}
-          subtext="of applications"
-        />
-        <MetricCard
-          title="Avg Response Time"
-          value={`${avgResponseDays}d`}
-          subtext="to first response"
-        />
-      </div>
+<div className="flex justify-between items-center">
+  <h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
+  <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary hover:underline">View All <ArrowUpRight size={12}/></NavLink>
+</div>
+<InsightsOverview insights={insights} analytics={analytics} />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">Recent Applications</h2>
