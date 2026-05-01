@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import AppList from "../components/AppList";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import type { Application } from "../types/application";
 import { api } from "../services/api";
@@ -10,8 +10,9 @@ import { cap } from "../utilities/capitalize";
 function Boards() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [search, setSearch] = useState<string>("");
-  const { status } = useParams<{ status?: string }>();
-  
+  const [searchParams] = useSearchParams();
+  const status = searchParams.get("status") || "all";
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
 
@@ -51,10 +52,10 @@ function Boards() {
       } else {
         await api.createApplication(data);
       }
-      
+
       const newData = await fetchApplications();
       if (newData) setApplications(newData);
-      
+
       setIsAddModalOpen(false);
       setEditingApp(null);
     } catch (err) {
@@ -64,13 +65,13 @@ function Boards() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this application?")) return;
+    if (!window.confirm("Are you sure you want to delete this application?"))
+      return;
     try {
       await api.deleteApplication(id);
-      
+
       const newData = await fetchApplications();
       if (newData) setApplications(newData);
-      
     } catch (err) {
       console.error(err);
       alert("Failed to delete application");
@@ -79,27 +80,35 @@ function Boards() {
 
   return (
     <div className="p-5">
-      <div className="flex items-center justify-between mb-5">
+      <div className="mb-5 flex items-center justify-between">
         <div>
           <div>
             <span className="text-text-muted">
-              <NavLink to="/boards/all" className="hover:text-text-main transition-colors">Boards</NavLink> /{" "}
+              <NavLink
+                to="/boards"
+                className="hover:text-text-main transition-colors"
+              >
+                Boards
+              </NavLink>{" "}
+              /{" "}
             </span>
-            {cap(status || 'all')}
+            {cap(status || "all")}
           </div>
           <div>
-            <span className="pr-3 text-2xl font-bold">{cap(status || 'all')}</span>
+            <span className="pr-3 text-2xl font-bold">
+              {cap(status || "all")}
+            </span>
             <span className="text-gray-500">{applications.length}</span>
           </div>
         </div>
-        
+
         <div className="flex gap-3">
-          <div className="flex items-center relative">
-            <div className="absolute left-3 text-text-muted">
+          <div className="relative flex items-center">
+            <div className="text-text-muted absolute left-3">
               <Search size={18} />
             </div>
             <input
-              className="bg-surface border border-border h-10 w-64 rounded-xl pl-10 pr-4 text-sm text-text-main focus:outline-none focus:border-primary transition-colors"
+              className="bg-surface border-border text-text-main focus:border-primary h-10 w-64 rounded-xl border pr-4 pl-10 text-sm transition-colors focus:outline-none"
               placeholder="Search..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -107,7 +116,7 @@ function Boards() {
           </div>
           <button
             type="button"
-            className="bg-primary hover:opacity-90 cursor-pointer rounded-xl px-5 py-2 text-sm font-semibold text-black transition-all active:scale-95"
+            className="bg-primary cursor-pointer rounded-xl px-5 py-2 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
             onClick={() => {
               setEditingApp(null);
               setIsAddModalOpen(true);
@@ -117,10 +126,10 @@ function Boards() {
           </button>
         </div>
       </div>
-      
-      <AppList 
-        boardsView={true} 
-        applications={applications} 
+
+      <AppList
+        boardsView={true}
+        applications={applications}
         onEdit={(app) => {
           setEditingApp(app);
           setIsAddModalOpen(true);
