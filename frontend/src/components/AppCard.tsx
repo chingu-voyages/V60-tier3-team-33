@@ -20,9 +20,10 @@ interface AppCardType {
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  toggleFavorite: (id:number, app: Application) => void;
 }
 
-function AppCard({ app, isOpen, onClose, onEdit, onDelete }: AppCardType) {
+function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite }: AppCardType) {
   if (!isOpen) return null;
 
   return (
@@ -38,7 +39,7 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete }: AppCardType) {
               <span className="text-text-muted text-sm">{formatDate(app.applied_at, "short")}</span>
             </div>
             <div className="flex gap-4 text-text-muted">
-              <button className="hover:text-yellow-400 transition-colors cursor-pointer" onClick={() => {}}>
+              <button className="hover:text-yellow-400 transition-colors cursor-pointer" onClick={() => {toggleFavorite(app.id, app)}}>
                 {app.favorite ? <Star fill="currentColor" size={18} /> : <StarOff size={18} />}
               </button>
               <button className="hover:text-primary transition-colors cursor-pointer" onClick={onEdit}>

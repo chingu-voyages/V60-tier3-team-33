@@ -133,11 +133,13 @@ function Dashboard() {
       <AppList 
         boardsView={false} 
         applications={applications} 
+        setApplications={setApplications}
         onEdit={(app) => {
           setEditingApp(app);
           setIsAddModalOpen(true);
         }}
         onDelete={handleDelete}
+        fetchData={fetchData}
       />
 
       <ApplicationFormModal

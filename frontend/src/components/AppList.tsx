@@ -5,18 +5,36 @@ import { formatSalary } from "../utilities/formatSalary";
 import type { Application } from "../types/application";
 import { Star } from "lucide-react";
 import { getStatusStyles } from '../utilities/themeUtils';
+import { api } from "../services/api";
+import { id } from "zod/locales";
 
 interface AppListTypes {
   boardsView: boolean;
   applications: Application[];
+  setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
   onEdit?: (app: Application) => void;
   onDelete?: (id: number) => void;
 }
 
-function AppList({ boardsView, applications, onEdit, onDelete }: AppListTypes) {
+function AppList({ boardsView, applications, setApplications, onEdit, onDelete }: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
-console.log(applications)
+
+  /// working on updating UI and BE without reloading data each time
+  const toggleFavorite = (id: number, app: Application) => {
+setApplications((prev) => 
+  prev.map((app) => 
+    app.id === id
+? {...app, favorite: !app.favorite}
+: app
+
+  )
+
+)
+
+api.updateApplication(id, {...app, favorite: !app.favorite})
+  }
+
   return (
     <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">      
       <table className="w-full min-w-4xl table-fixed">
@@ -48,7 +66,7 @@ console.log(applications)
             >
               <td className="py-3 font-medium">
                 <div className="flex items-center gap-2">
-                  <Star size={15} strokeWidth="2" className={`text-primary ml-3 ${!app.favorite ? "fill-primary opacity-50" : "opacity-0 group-hover:opacity-50 group-hover:text-primary"}`}/>
+                  <Star size={15} strokeWidth="2" className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "opacity-0 group-hover:opacity-50 group-hover:text-primary"}`} onClick={(e) => {e.stopPropagation(); toggleFavorite(app.id, app)}}/>
                {app.company_name}</div>
               </td>
               <td className="p-2 text-gray-400">{app.role}</td>
@@ -94,6 +112,7 @@ console.log(applications)
               setIsCardModalOpen(false);
             }
           }}
+          toggleFavorite={toggleFavorite}
         />
       )}
     </div>
