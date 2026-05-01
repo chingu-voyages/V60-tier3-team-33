@@ -1,12 +1,25 @@
 import { ChevronRight } from "lucide-react";
+import type { Application } from "../types/application";
+import { NavLink } from "react-router-dom";
 // import { useEffect, useState } from "react";
 // import { api } from "../services/api";
 // import type { AnalyticsResponse } from "../types/metrics";
-import type { Application } from "../types/application";
-import { NavLink } from "react-router-dom";
 
 function StatsOverview({ applications }: { applications: Application[] }) {
   // const [analytics, setAnalytics] = useState<AnalyticsResponse>();
+  
+  // fetch applications counts
+  // useEffect(() => {
+  //   const fetchAnalytics = async () => {
+  //     try {
+  //       const  data  = await api.getAnalytics();
+  //       setAnalytics(data);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchAnalytics();
+  // }, []);
 
   // create an object with the number of each app status
   const stats = applications.reduce(
@@ -38,18 +51,6 @@ function StatsOverview({ applications }: { applications: Application[] }) {
     favorites: "Favorites",
   };
 
-  // fetch applications counts
-  // useEffect(() => {
-  //   const fetchAnalytics = async () => {
-  //     try {
-  //       const  data  = await api.getAnalytics();
-  //       setAnalytics(data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-  //   fetchAnalytics();
-  // }, []);
 
   return (
     <div className="flex gap-1">
