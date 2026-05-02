@@ -79,15 +79,17 @@ function AppList({
             >
               <td className="py-3 font-medium">
                 <div className="flex items-center gap-2">
-                  <Star
-                    size={15}
-                    strokeWidth="2"
-                    className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "group-hover:text-primary opacity-0 group-hover:opacity-50"}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(app.id, app);
-                    }}
-                  />
+                  <div>
+                    <Star
+                      size={15}
+                      strokeWidth="2"
+                      className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "group-hover:text-primary opacity-0 group-hover:opacity-50"}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(app.id, app);
+                      }}
+                    />
+                  </div>
                   {app.company_name}
                 </div>
               </td>
