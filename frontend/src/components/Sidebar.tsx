@@ -9,8 +9,10 @@ import {
   TrendingUp,
   User,
 } from "lucide-react";
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useMemo, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDashboard } from "./DashboardProvider";
+import { authService } from "../api/auth";
 
 type SideBarProps = {
   isDark: boolean;
@@ -18,11 +20,39 @@ type SideBarProps = {
 };
 
 function Sidebar({ isDark, setIsDark }: SideBarProps) {
+  const {applications} = useDashboard();
   const [isBoardsOpen, setIsBoardsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate("/login");
+  };
 
   const toggleBoards = () => {
     setIsBoardsOpen((prev) => !prev);
   };
+  
+const stats = useMemo(() => {
+  return applications.reduce(
+    (tally, app) => {
+      tally.all += 1;
+      tally[app.status as keyof typeof tally] =
+        (tally[app.status as keyof typeof tally] || 0) + 1;
+      if (app.favorite) tally.favorites += 1;
+      return tally;
+    },
+    {
+      all: 0,
+      applied: 0,
+      interviewing: 0,
+      offer_received: 0,
+      accepted: 0,
+      rejected: 0,
+      favorites: 0,
+    },
+  )
+}, [applications]);
 
   return (
     <div className="flex h-screen flex-col bg-[#141414]">
@@ -60,31 +90,37 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
                 <NavLink to="/boards">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     All
+                    <span>{stats.all}</span>
                   </li>
                 </NavLink>
                 <NavLink to="/boards?status=applied">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Applied
+                    <span>{stats.applied}</span>
                   </li>
                 </NavLink>
                 <NavLink to="/boards?status=interviewed">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Interviewed
+                    <span>{stats.interviewing}</span>
                   </li>
                 </NavLink>
                 <NavLink to="/boards?status=offer">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Offer
+                    <span>{stats.offer_received}</span>
                   </li>
                 </NavLink>
                 <NavLink to="/boards?status=rejected">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Rejected
+                    <span>{stats.rejected}</span>
                   </li>
                 </NavLink>
                 <NavLink to="/boards?favorites=true">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Favorites
+                    <span>{stats.favorites}</span>
                   </li>
                 </NavLink>
               </ul>
@@ -140,7 +176,10 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
             <Settings size={18} className="float-left mr-3" />
             Settings
           </button>
-          <button className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100">
+          <button 
+            onClick={handleLogout}
+            className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100"
+          >
             <LogOut size={18} className="float-left mr-3" />
             Log Out
           </button>

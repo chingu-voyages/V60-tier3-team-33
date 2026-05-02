@@ -2,7 +2,7 @@ import { useState } from "react";
 import { formatDate } from "../utilities/formatDate";
 import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
-import type { Application } from "../types/application";
+import type { Application, ApplicationStatus } from "../types/application";
 import { Star } from "lucide-react";
 import { getStatusStyles } from "../utilities/themeUtils";
 import { api } from "../services/api";
@@ -13,6 +13,7 @@ interface AppListTypes {
   setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
   onEdit?: (app: Application) => void;
   onDelete?: (id: number) => void;
+  onStatusUpdate?: (id: number, status: ApplicationStatus) => void;
 }
 
 function AppList({
@@ -20,7 +21,7 @@ function AppList({
   applications,
   setApplications,
   onEdit,
-  onDelete,
+  onDelete, onStatusUpdate,
 }: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
@@ -38,6 +39,13 @@ function AppList({
     );
 
     api.updateApplication(id, { ...app, favorite: !app.favorite });
+  };
+
+  const handleStatusUpdate = (id: number, status: ApplicationStatus) => {
+    if (onStatusUpdate) onStatusUpdate(id, status);
+    if (selectedApp && selectedApp.id === id) {
+      setSelectedApp({ ...selectedApp, status });
+    }
   };
 
   return (
@@ -129,6 +137,7 @@ function AppList({
             }
           }}
           toggleFavorite={toggleFavorite}
+          onStatusUpdate={handleStatusUpdate}
         />
       )}
     </div>

@@ -1,43 +1,19 @@
-import { useEffect, useState, useCallback } from "react";
-import { Search } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, Search } from "lucide-react";
 import AppList from "../components/AppList";
-import { MetricCard } from "../components/MetricCard";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { formatDate } from "../utilities/formatDate";
 import { api } from "../services/api";
-import type { Application } from "../types/application";
-import type { AnalyticsResponse, InsightsResponse } from "../types/metrics";
+import type { Application, ApplicationStatus } from "../types/application";
+import StatsOverview from "../components/StatsOverview";
+import { useDashboard } from "../components/DashboardProvider";
+import InsightsOverview from "../components/InsightsOverview";
+import { NavLink } from "react-router-dom";
 
 function Dashboard() {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
-  const [insights, setInsights] = useState<InsightsResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const {applications, analytics, insights, isLoading, fetchData} = useDashboard();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
-
-  const fetchData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const [analyticsData, appsData, insightsData] = await Promise.all([
-        api.getAnalytics(),
-        api.getApplications(1, 10),
-        api.getInsights("allTime"),
-      ]);
-
-      setAnalytics(analyticsData);
-      setApplications(appsData.data);
-      setInsights(insightsData);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const handleSave = async (data: Partial<Application>) => {
     try {
@@ -66,17 +42,19 @@ function Dashboard() {
     }
   };
 
+  const handleStatusUpdate = async (id: number, status: ApplicationStatus) => {
+    try {
+      await api.updateStatus(id, status);
+      await fetchData();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
+  };
+
   if (isLoading || !analytics || !insights) {
     return <div className="p-5 text-gray-500">Loading dashboard data...</div>;
   }
-
-  const avgResponseDays =
-    insights.avg_response_time && insights.avg_response_time.length > 0
-      ? Math.round(
-          insights.avg_response_time.reduce((acc, curr) => acc + curr.days, 0) /
-            insights.avg_response_time.length,
-        )
-      : 0;
 
   return (
     <div className="p-5 max-w-7xl mx-auto">
@@ -94,28 +72,12 @@ function Dashboard() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <MetricCard
-          title="Applied → Interview"
-          value={`${analytics.conversions.applied_to_interview_percent}%`}
-          subtext={`${analytics.counts.interview_applications} of ${analytics.counts.total_applications}`}
-        />
-        <MetricCard
-          title="Interview → Offer"
-          value={`${analytics.conversions.interview_to_offer_percent}%`}
-          subtext={`${analytics.counts.offer_applications} offers`}
-        />
-        <MetricCard
-          title="Response Rate"
-          value={`${analytics.conversions.response_rate_percent}%`}
-          subtext="of applications"
-        />
-        <MetricCard
-          title="Avg Response Time"
-          value={`${avgResponseDays}d`}
-          subtext="to first response"
-        />
-      </div>
+<StatsOverview applications={applications}/>
+<div className="flex justify-between items-center">
+  <h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
+  <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary hover:underline">View All <ArrowUpRight size={12}/></NavLink>
+</div>
+<InsightsOverview insights={insights} analytics={analytics} />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">Recent Applications</h2>
@@ -139,6 +101,7 @@ function Dashboard() {
           setIsAddModalOpen(true);
         }}
         onDelete={handleDelete}
+        onStatusUpdate={handleStatusUpdate}
       />
 
       <ApplicationFormModal
