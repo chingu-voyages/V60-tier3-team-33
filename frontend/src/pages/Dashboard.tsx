@@ -4,7 +4,7 @@ import AppList from "../components/AppList";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { formatDate } from "../utilities/formatDate";
 import { api } from "../services/api";
-import type { Application } from "../types/application";
+import type { Application, ApplicationStatus } from "../types/application";
 import StatsOverview from "../components/StatsOverview";
 import { useDashboard } from "../components/DashboardProvider";
 import InsightsOverview from "../components/InsightsOverview";
@@ -39,6 +39,16 @@ function Dashboard() {
     } catch (err) {
       console.error(err);
       alert("Failed to delete application");
+    }
+  };
+
+  const handleStatusUpdate = async (id: number, status: ApplicationStatus) => {
+    try {
+      await api.updateStatus(id, status);
+      await fetchData();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
     }
   };
 
@@ -90,6 +100,7 @@ function Dashboard() {
           setIsAddModalOpen(true);
         }}
         onDelete={handleDelete}
+        onStatusUpdate={handleStatusUpdate}
       />
 
       <ApplicationFormModal

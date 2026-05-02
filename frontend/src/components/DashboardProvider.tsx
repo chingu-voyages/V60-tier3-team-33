@@ -23,24 +23,23 @@ function DashboardProvider({children}: DashboardProviderTypes) {
     const [insights, setInsights] = useState<InsightsResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-      const fetchData = useCallback(async () => {
-          try {
-            setIsLoading(true);
-            const [analyticsData, appsData, insightsData] = await Promise.all([
-              api.getAnalytics(),
-              api.getApplications(1, 10),
-              api.getInsights("allTime"),
-            ]);
-      
-            setAnalytics(analyticsData);
-            setApplications(appsData.data);
-            setInsights(insightsData);
-          } catch (err) {
-            console.error(err);
-          } finally {
-            setIsLoading(false);
-          }
-        }, []);
+  const fetchData = useCallback(async () => {
+    try {
+      const [analyticsData, appsData, insightsData] = await Promise.all([
+        api.getAnalytics(),
+        api.getApplications(1, 10),
+        api.getInsights("allTime"),
+      ]);
+
+      setAnalytics(analyticsData);
+      setApplications(appsData.data);
+      setInsights(insightsData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
       
         useEffect(() => {
           fetchData();

@@ -3,7 +3,7 @@ import AppList from "../components/AppList";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { NavLink, useSearchParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
-import type { Application } from "../types/application";
+import type { Application, ApplicationStatus } from "../types/application";
 import { api } from "../services/api";
 import { cap } from "../utilities/capitalize";
 
@@ -78,6 +78,17 @@ function Boards() {
     }
   };
 
+  const handleStatusUpdate = async (id: number, status: ApplicationStatus) => {
+    try {
+      await api.updateStatus(id, status);
+      const newData = await fetchApplications();
+      if (newData) setApplications(newData);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
+  };
+
   return (
     <div className="p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -135,6 +146,7 @@ function Boards() {
           setIsAddModalOpen(true);
         }}
         onDelete={handleDelete}
+        onStatusUpdate={handleStatusUpdate}
       />
 
       <ApplicationFormModal

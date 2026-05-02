@@ -66,6 +66,14 @@ export const api = {
     return response.data;
   },
 
+  updateStatus: async (
+    id: number,
+    status: ApplicationStatus,
+  ): Promise<{ message: string; data: Application }> => {
+    const response = await apiClient.patch<{ message: string; data: Application }>(`/applications/${id}/status`, { status });
+    return response.data;
+  },
+
   deleteApplication: async (id: number): Promise<void> => {
     await apiClient.delete(`/applications/${id}`);
   },
