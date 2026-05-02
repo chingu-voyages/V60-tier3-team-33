@@ -85,7 +85,7 @@ function Boards() {
     }
     return applications;
   }, [applications, searchParams]);
-  
+
   return (
     <div className="p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -100,13 +100,13 @@ function Boards() {
               </NavLink>{" "}
               /{" "}
             </span>
-            {cap(status || "all")}
+            {cap((favorites && "Favorites") || status)}
           </div>
           <div>
             <span className="pr-3 text-2xl font-bold">
-              {cap(status || favorites ? "Favorites" : "all")}
+              {cap((favorites && "Favorites") || status)}
             </span>
-            <span className="text-gray-500">{applications.length}</span>
+            <span className="text-gray-500">{filteredApps.length}</span>
           </div>
         </div>
 
