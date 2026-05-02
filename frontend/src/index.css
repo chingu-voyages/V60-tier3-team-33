@@ -69,6 +69,24 @@ body {
   color: var(--text-main);
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, ".AppleSystemUIFont", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  scrollbar-gutter: stable;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
 }
 
 input:-webkit-autofill,
