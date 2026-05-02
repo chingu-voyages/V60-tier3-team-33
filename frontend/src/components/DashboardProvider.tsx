@@ -91,6 +91,7 @@ function DashboardProvider({children}: DashboardProviderTypes) {
     <DashboardContext.Provider 
       value={{ 
         applications, 
+        setApplications,
         analytics, 
         insights, 
         isLoading, 

@@ -6,11 +6,8 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import type { Application, ApplicationStatus } from "../types/application";
 import { api } from "../services/api";
 import { cap } from "../utilities/capitalize";
-import { useDashboard } from "../components/DashboardProvider";
 
 function Boards() {
-  const { saveApplication, deleteApplication, changeApplicationStatus } = useDashboard();
-  
   const [applications, setApplications] = useState<Application[]>([]);
   const [search, setSearch] = useState<string>("");
   const [searchParams] = useSearchParams();
@@ -50,17 +47,36 @@ function Boards() {
   }, [fetchApplications]);
 
   const handleSave = async (data: Partial<Application>) => {
-    await saveApplication(data, editingApp?.id);
-    const newData = await fetchApplications();
-    if (newData) setApplications(newData);
-    setIsAddModalOpen(false);
-    setEditingApp(null);
+    try {
+      if (editingApp) {
+        await api.updateApplication(editingApp.id, data);
+      } else {
+        await api.createApplication(data);
+      }
+
+      const newData = await fetchApplications();
+      if (newData) setApplications(newData);
+
+      setIsAddModalOpen(false);
+      setEditingApp(null);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save application");
+    }
   };
 
   const handleDelete = async (id: number) => {
-    await deleteApplication(id);
-    const newData = await fetchApplications();
-    if (newData) setApplications(newData);
+    if (!window.confirm("Are you sure you want to delete this application?"))
+      return;
+    try {
+      await api.deleteApplication(id);
+
+      const newData = await fetchApplications();
+      if (newData) setApplications(newData);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete application");
+    }
   };
 
   const filteredApps = useMemo(() => {
@@ -71,9 +87,14 @@ function Boards() {
   }, [applications, searchParams]);
 
   const handleStatusUpdate = async (id: number, status: ApplicationStatus) => {
-    await changeApplicationStatus(id, status);
-    const newData = await fetchApplications();
-    if (newData) setApplications(newData);
+    try {
+      await api.updateStatus(id, status);
+      const newData = await fetchApplications();
+      if (newData) setApplications(newData);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status");
+    }
   };
 
   return (

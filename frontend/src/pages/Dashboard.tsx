@@ -12,6 +12,7 @@ import { NavLink } from "react-router-dom";
 function Dashboard() {
   const { 
     applications, 
+    setApplications,
     analytics, 
     insights, 
     isLoading, 
@@ -82,6 +83,7 @@ function Dashboard() {
       <AppList 
         boardsView={false} 
         applications={sortedApplications} 
+        setApplications={setApplications}
         onEdit={(app) => {
           setEditingApp(app);
           setIsAddModalOpen(true);
