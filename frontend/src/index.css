@@ -40,8 +40,8 @@
 }
 
 .dark {
-  --bg-app: #09090B; 
-  --bg-surface: #121212; 
+  --bg-app: #0F0F0F; 
+  --bg-surface: #18191A; 
   --border-color: #27272A;
   --text-main: #FFFFFF;
   --text-muted: #A1A1AA;
@@ -69,6 +69,25 @@ body {
   color: var(--text-main);
   margin: 0;
   font-family: 'Inter', sans-serif;
+  scrollbar-gutter: stable;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444444;
 }
 
 input:-webkit-autofill,
