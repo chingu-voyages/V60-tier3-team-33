@@ -54,6 +54,7 @@ const mapInitialData = (mode: 'add' | 'edit', data?: Application | null): FormDa
 export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialData }: ApplicationFormModalProps) => {
     
     const [formData, setFormData] = useState<FormDataState>(() => mapInitialData(mode, initialData));
+    const [hasSubmitted, setHasSubmitted] = useState(false);
 
     if (!isOpen) return null;
 
@@ -65,6 +66,11 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
 
     const handleSubmit = (e: React.SyntheticEvent) => {
         e.preventDefault();
+        setHasSubmitted(true);
+
+        if (!formData.company_name || !formData.role || !formData.applied_at) {
+            return; 
+        }
         
         const payload: Partial<Application> = {
             company_name: formData.company_name,
@@ -88,9 +94,9 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity">
-            <div className="bg-white dark:bg-[#18181B] border border-gray-200 dark:border-[#27272A] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div className="bg-white dark:bg-[#151617] border border-gray-200 dark:border-[#1E1F20] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                 
-                <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-[#27272A]">
+                <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-[#1E1F20]">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                         {mode === 'add' ? 'Add Application' : 'Edit Application'}
                     </h2>
@@ -102,32 +108,70 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                 </div>
 
                 <div className="p-6 overflow-y-auto custom-scrollbar">
-                    <form id="app-form" onSubmit={handleSubmit} className="space-y-5">
+                    <form id="app-form" onSubmit={handleSubmit} noValidate className="space-y-5">
                         
                         <div>
                             <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Job Listing URL</label>
-                            <input type="url" name="url" value={formData.url || ''} onChange={handleChange} placeholder="https://company.com/jobs/123" className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                            <input type="url" name="url" value={formData.url || ''} onChange={handleChange} placeholder="https://company.com/jobs/123" className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Company *</label>
-                                <input required type="text" name="company_name" value={formData.company_name || ''} onChange={handleChange} placeholder="Stripe" className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                                <label className={`block text-sm mb-1.5 ${hasSubmitted && !formData.company_name ? 'text-red-500' : 'text-gray-500 dark:text-[#A1A1AA]'}`}>Company *</label>
+                                <input 
+                                    required 
+                                    type="text" 
+                                    name="company_name" 
+                                    value={formData.company_name || ''} 
+                                    onChange={handleChange} 
+                                    placeholder="Stripe" 
+                                    className={`w-full bg-gray-50 dark:bg-[#181A1B] border rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none transition-colors ${
+                                        hasSubmitted && !formData.company_name 
+                                        ? 'border-red-500 dark:border-red-500 focus:border-red-500 dark:focus:border-red-500 ring-1 ring-red-500' 
+                                        : 'border-gray-200 dark:border-[#222324] focus:border-indigo-500 dark:focus:border-[#D4FA31]'
+                                    }`} 
+                                />
+                                {hasSubmitted && !formData.company_name && <p className="text-red-500 text-xs mt-1.5">Company is required</p>}
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Job Title *</label>
-                                <input required type="text" name="role" value={formData.role || ''} onChange={handleChange} placeholder="Frontend Engineer" className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                                <label className={`block text-sm mb-1.5 ${hasSubmitted && !formData.role ? 'text-red-500' : 'text-gray-500 dark:text-[#A1A1AA]'}`}>Job Title *</label>
+                                <input 
+                                    required 
+                                    type="text" 
+                                    name="role" 
+                                    value={formData.role || ''} 
+                                    onChange={handleChange} 
+                                    placeholder="Frontend Engineer" 
+                                    className={`w-full bg-gray-50 dark:bg-[#181A1B] border rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none transition-colors ${
+                                        hasSubmitted && !formData.role 
+                                        ? 'border-red-500 dark:border-red-500 focus:border-red-500 dark:focus:border-red-500 ring-1 ring-red-500' 
+                                        : 'border-gray-200 dark:border-[#222324] focus:border-indigo-500 dark:focus:border-[#D4FA31]'
+                                    }`} 
+                                />
+                                {hasSubmitted && !formData.role && <p className="text-red-500 text-xs mt-1.5">Job title is required</p>}
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Application Date *</label>
-                                <input required type="date" name="applied_at" value={formData.applied_at || ''} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors dark:scheme-dark" />
+                                <label className={`block text-sm mb-1.5 ${hasSubmitted && !formData.applied_at ? 'text-red-500' : 'text-gray-500 dark:text-[#A1A1AA]'}`}>Application Date *</label>
+                                <input 
+                                    required 
+                                    type="date" 
+                                    name="applied_at" 
+                                    value={formData.applied_at || ''} 
+                                    onChange={handleChange} 
+                                    className={`w-full bg-gray-50 dark:bg-[#181A1B] border rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none transition-colors dark:scheme-dark ${
+                                        hasSubmitted && !formData.applied_at 
+                                        ? 'border-red-500 dark:border-red-500 focus:border-red-500 dark:focus:border-red-500 ring-1 ring-red-500' 
+                                        : 'border-gray-200 dark:border-[#222324] focus:border-indigo-500 dark:focus:border-[#D4FA31]'
+                                    }`} 
+                                />
+                                {hasSubmitted && !formData.applied_at && <p className="text-red-500 text-xs mt-1.5">Date is required</p>}
                             </div>
                             <div>
                                 <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Status</label>
-                                <select name="status" value={formData.status || 'applied'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
+                                <select name="status" value={formData.status || 'applied'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
                                     <option value="applied">Applied</option>
                                     <option value="screening">Screening</option>
                                     <option value="interviewing">Interviewing</option>
@@ -142,7 +186,7 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Job Nature</label>
-                                <select name="jobNature" value={formData.jobNature || 'Full-time'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
+                                <select name="jobNature" value={formData.jobNature || 'Full-time'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
                                     <option>Full-time</option>
                                     <option>Part-time</option>
                                     <option>Contract</option>
@@ -152,7 +196,7 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                             </div>
                             <div>
                                 <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Work Type</label>
-                                <select name="workType" value={formData.workType || 'On-site'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
+                                <select name="workType" value={formData.workType || 'On-site'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
                                     <option>On-site</option>
                                     <option>Hybrid</option>
                                     <option>Remote</option>
@@ -162,7 +206,7 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
 
                         <div>
                             <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Location</label>
-                            <input type="text" name="location" value={formData.location || ''} onChange={handleChange} placeholder="San Francisco, CA" className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                            <input type="text" name="location" value={formData.location || ''} onChange={handleChange} placeholder="San Francisco, CA" className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
                         </div>
 
                         <div>
@@ -196,25 +240,25 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                             
                             {!formData.noSalaryRange && (
                                 <div className="grid grid-cols-2 gap-4">
-                                    <input type="number" name="salary_min" value={formData.salary_min || ''} onChange={handleChange} placeholder="Min (e.g. 120000)" className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
-                                    <input type="number" name="salary_max" value={formData.salary_max || ''} onChange={handleChange} placeholder="Max (e.g. 160000)" className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                                    <input type="number" name="salary_min" value={formData.salary_min || ''} onChange={handleChange} placeholder="Min (e.g. 120000)" className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                                    <input type="number" name="salary_max" value={formData.salary_max || ''} onChange={handleChange} placeholder="Max (e.g. 160000)" className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
                                 </div>
                             )}
                         </div>
 
                         <div>
                             <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Notes</label>
-                            <textarea name="notes" value={formData.notes || ''} onChange={handleChange} placeholder="Any additional notes..." rows={3} className="w-full bg-gray-50 dark:bg-[#121212] border border-gray-200 dark:border-[#27272A] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors resize-none"></textarea>
+                            <textarea name="notes" value={formData.notes || ''} onChange={handleChange} placeholder="Any additional notes..." rows={3} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors resize-none"></textarea>
                         </div>
 
                     </form>
                 </div>
 
-               <div className="p-6 border-t border-gray-200 dark:border-[#27272A] flex items-center gap-4 bg-white dark:bg-[#121212] mt-auto">
+               <div className="p-6 border-t border-gray-200 dark:border-[#1E1F20] flex items-center gap-4 bg-white dark:bg-[#151617] mt-auto">
                     <button type="submit" form="app-form" className="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-[#EEFF2B] dark:hover:bg-[#D4FA31] text-white dark:text-black text-sm font-semibold py-3 px-8 rounded-xl transition-all active:scale-95">
                         {mode === 'add' ? 'Add Application' : 'Save Changes'}
                     </button>
-                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white text-sm font-medium py-3 px-4 rounded-xl transition-all active:scale-95">
+                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-[#222324] hover:bg-gray-50 dark:hover:bg-[#1E1F20] text-sm font-medium py-3 px-6 rounded-xl transition-all active:scale-95">
                         Cancel
                     </button>
                 </div>

@@ -50,6 +50,22 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleStatusChange = (newStatus: ApplicationStatus) => {
@@ -58,7 +74,14 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div className="bg-surface border-border text-text-main relative flex max-h-[90vh] w-full max-w-2xl flex-1 flex-col overflow-auto rounded-2xl border shadow-2xl">
         <div className="p-6">
           <div className="mb-4 flex items-center justify-between">
@@ -124,7 +147,6 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
 
         <hr className="border-border" />
 
-        {/* Details Grid */}
         <div className="grid grid-cols-2 gap-6 p-6">
           <div className="flex gap-3">
             <div className="text-text-muted pt-1">

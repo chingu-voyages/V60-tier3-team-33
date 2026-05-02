@@ -33,6 +33,9 @@ export interface Application {
   salary_max?: number;
   extras?: ApplicationExtras;
   favorite?: boolean;
+  responded_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface PaginatedApplications {

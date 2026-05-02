@@ -3,58 +3,42 @@ import { ArrowUpRight, Search } from "lucide-react";
 import AppList from "../components/AppList";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
 import { formatDate } from "../utilities/formatDate";
-import { api } from "../services/api";
-import type { Application, ApplicationStatus } from "../types/application";
+import type { Application } from "../types/application";
 import StatsOverview from "../components/StatsOverview";
 import { useDashboard } from "../components/DashboardProvider";
 import InsightsOverview from "../components/InsightsOverview";
 import { NavLink } from "react-router-dom";
 
 function Dashboard() {
-  const {applications, setApplications, analytics, insights, isLoading, fetchData} = useDashboard();
+  const { 
+    applications, 
+    setApplications,
+    analytics, 
+    insights, 
+    isLoading, 
+    saveApplication, 
+    deleteApplication, 
+    changeApplicationStatus 
+  } = useDashboard();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
 
   const handleSave = async (data: Partial<Application>) => {
-    try {
-      if (editingApp) {
-        await api.updateApplication(editingApp.id, data);
-      } else {
-        await api.createApplication(data);
-      }
-      await fetchData();
-      setIsAddModalOpen(false);
-      setEditingApp(null);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save application");
-    }
-  };
-
-  const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this application?")) return;
-    try {
-      await api.deleteApplication(id);
-      await fetchData();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete application");
-    }
-  };
-
-  const handleStatusUpdate = async (id: number, status: ApplicationStatus) => {
-    try {
-      await api.updateStatus(id, status);
-      await fetchData();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update status");
-    }
+    await saveApplication(data, editingApp?.id);
+    setIsAddModalOpen(false);
+    setEditingApp(null);
   };
 
   if (isLoading || !analytics || !insights) {
     return <div className="p-5 text-gray-500">Loading dashboard data...</div>;
   }
+
+  const sortedApplications = [...applications].sort((a, b) => {
+    const dateA = new Date(a.updated_at || a.created_at || a.applied_at).getTime();
+    const dateB = new Date(b.updated_at || b.created_at || b.applied_at).getTime();
+    
+    return dateB - dateA;
+  });
 
   return (
     <div className="p-5 max-w-7xl mx-auto">
@@ -72,12 +56,16 @@ function Dashboard() {
         </button>
       </div>
 
-<StatsOverview applications={applications}/>
-<div className="flex justify-between items-center">
-  <h2 className="mt-8 mb-4 text-xl font-semibold">Insights</h2>
-  <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary hover:underline">View All <ArrowUpRight size={12}/></NavLink>
-</div>
-<InsightsOverview insights={insights} analytics={analytics} />
+      <StatsOverview applications={applications}/>
+      
+      <div className="flex justify-between items-center mt-8 mb-4">
+        <h2 className="text-xl font-semibold">Insights</h2>
+        <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary hover:underline">
+            View All <ArrowUpRight size={12}/>
+        </NavLink>
+      </div>
+      
+      <InsightsOverview insights={insights} analytics={analytics} timeframe="thisMonth" />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">Recent Applications</h2>
@@ -94,14 +82,14 @@ function Dashboard() {
 
       <AppList 
         boardsView={false} 
-        applications={applications} 
+        applications={sortedApplications} 
         setApplications={setApplications}
         onEdit={(app) => {
           setEditingApp(app);
           setIsAddModalOpen(true);
         }}
-        onDelete={handleDelete}
-        onStatusUpdate={handleStatusUpdate}
+        onDelete={deleteApplication}
+        onStatusUpdate={changeApplicationStatus}
       />
 
       <ApplicationFormModal
