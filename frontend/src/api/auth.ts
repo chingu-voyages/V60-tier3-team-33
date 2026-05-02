@@ -39,9 +39,13 @@ export const authService = {
     return response.data;
   },
   logout: async () => {
-    const response = await apiClient.post('/logout');
-    localStorage.removeItem('auth_token');
-    return response.data;
+    try {
+      await apiClient.post('/logout');
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    } finally {
+      localStorage.removeItem('auth_token');
+    }
   },
   getProfile: async () => {
     const response = await apiClient.get('/profile');

@@ -10,8 +10,9 @@ import {
   User,
 } from "lucide-react";
 import React, { useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useDashboard } from "./DashboardProvider";
+import { authService } from "../api/auth";
 
 type SideBarProps = {
   isDark: boolean;
@@ -21,6 +22,13 @@ type SideBarProps = {
 function Sidebar({ isDark, setIsDark }: SideBarProps) {
   const {applications} = useDashboard();
   const [isBoardsOpen, setIsBoardsOpen] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await authService.logout();
+    navigate("/login");
+  };
+
   const toggleBoards = () => {
     setIsBoardsOpen((prev) => !prev);
   };
@@ -168,7 +176,10 @@ const stats = useMemo(() => {
             <Settings size={18} className="float-left mr-3" />
             Settings
           </button>
-          <button className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100">
+          <button 
+            onClick={handleLogout}
+            className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100"
+          >
             <LogOut size={18} className="float-left mr-3" />
             Log Out
           </button>
