@@ -2,19 +2,18 @@ import type { AnalyticsResponse, InsightsResponse } from "../types/metrics";
 import { MetricCard } from "./MetricCard";
 
 type InsightsOverviewTypes = {
-    insights: InsightsResponse
-    analytics: AnalyticsResponse
+    insights: InsightsResponse;
+    analytics: AnalyticsResponse;
+    timeframe?: 'thisMonth' | 'allTime';
 }
-function InsightsOverview({insights, analytics}: InsightsOverviewTypes) {
+function InsightsOverview({ insights, analytics, timeframe = 'thisMonth' }: InsightsOverviewTypes) {
+    const validData = insights.avg_response_time?.filter(item => item.days > 0) || [];    
+    const avgResponseDays = validData.length > 0
+        ? Math.round(validData.reduce((acc, curr) => acc + curr.days, 0) / validData.length)
+        : 0;
+
+    const titleSuffix = timeframe === 'thisMonth' ? '(This Month)' : '(All Time)';    
     
-    const avgResponseDays =
-    insights.avg_response_time && insights.avg_response_time.length > 0
-      ? Math.round(
-          insights.avg_response_time.reduce((acc, curr) => acc + curr.days, 0) /
-            insights.avg_response_time.length,
-        )
-      : 0;
-  
     return (
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 
@@ -34,7 +33,7 @@ function InsightsOverview({insights, analytics}: InsightsOverviewTypes) {
           subtext="of applications"
         />
         <MetricCard
-          title="Avg Response Time"
+          title={`Avg Response Time ${titleSuffix}`}
           value={`${avgResponseDays}d`}
           subtext="to first response"
         />

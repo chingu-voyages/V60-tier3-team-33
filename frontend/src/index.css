@@ -40,9 +40,9 @@
 }
 
 .dark {
-  --bg-app: #09090B; 
-  --bg-surface: #121212; 
-  --border-color: #27272A;
+  --bg-app: #0F0F0F; 
+  --bg-surface: #151617;
+  --border-color: #1E1F20;
   --text-main: #FFFFFF;
   --text-muted: #A1A1AA;
   
@@ -68,7 +68,7 @@ body {
   background-color: var(--bg-app);
   color: var(--text-main);
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, ".AppleSystemUIFont", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 input:-webkit-autofill,

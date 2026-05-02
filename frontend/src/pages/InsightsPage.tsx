@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MetricCard } from '../components/MetricCard';
+import InsightsOverview from '../components/InsightsOverview';
 import { WeeklyApplicationsChart } from '../components/charts/WeeklyApplicationsChart';
 import { StatusDistributionChart } from '../components/charts/StatusDistributionChart';
 import { TopJobsChart } from '../components/charts/TopJobsChart';
@@ -61,10 +61,6 @@ export const InsightsPage = () => {
 
     if (error) return <div className="text-red-500 p-8">Error: {error}</div>;
 
-    const avgResponseDays = insights.avg_response_time && insights.avg_response_time.length > 0
-        ? Math.round(insights.avg_response_time.reduce((acc, curr) => acc + curr.days, 0) / insights.avg_response_time.length)
-        : 12;
-
     const subtitleText = timeframe === 'thisMonth' 
         ? new Date().toLocaleString('default', { month: 'long', year: 'numeric' })
         : 'Lifetime Overview';
@@ -80,7 +76,6 @@ export const InsightsPage = () => {
                     </div>
                     
                     <div className="flex justify-between items-end mb-8">
-                        
                         <div className="flex bg-surface border border-border rounded-lg p-1">
                             <button 
                                 onClick={() => setTimeframe('thisMonth')}
@@ -106,29 +101,7 @@ export const InsightsPage = () => {
                     </div>
                 </div>
 
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <MetricCard 
-                        title="Applied → Interview" 
-                        value={`${analytics.conversions.applied_to_interview_percent}%`} 
-                        subtext={`${analytics.counts.interview_applications} of ${analytics.counts.total_applications}`} 
-                    />
-                    <MetricCard 
-                        title="Interview → Offer" 
-                        value={`${analytics.conversions.interview_to_offer_percent}%`} 
-                        subtext={`${analytics.counts.offer_applications} offers`} 
-                    />
-                    <MetricCard 
-                        title="Response Rate" 
-                        value={`${analytics.conversions.response_rate_percent}%`} 
-                        subtext="of applications" 
-                    />
-                    <MetricCard 
-                        title="Avg Response Time" 
-                        value={`${avgResponseDays}d`} 
-                        subtext="to first response" 
-                    />
-                </div>
+                <InsightsOverview insights={insights} analytics={analytics} timeframe={timeframe} />
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                     <WeeklyApplicationsChart 
