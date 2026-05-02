@@ -9,6 +9,7 @@ type DashboardProviderTypes = {
 
 type DashboardContextType = {
   applications: Application[];
+  setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
   analytics: AnalyticsResponse | null; 
   insights: InsightsResponse| null;
   isLoading: boolean;

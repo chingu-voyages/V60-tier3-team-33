@@ -22,6 +22,7 @@ interface AppCardType {
   onClose: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  toggleFavorite: (id:number, app: Application) => void;
   onStatusUpdate: (id: number, status: ApplicationStatus) => void;
 }
 
@@ -35,7 +36,7 @@ const STATUS_OPTIONS: ApplicationStatus[] = [
   "withdrawn",
 ];
 
-function AppCard({ app, isOpen, onClose, onEdit, onDelete, onStatusUpdate }: AppCardType) {
+function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onStatusUpdate }: AppCardType) {
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -114,16 +115,9 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, onStatusUpdate }: App
                 {formatDate(app.applied_at, "short")}
               </span>
             </div>
-            <div className="text-text-muted flex gap-4">
-              <button
-                className="cursor-pointer transition-colors hover:text-yellow-400"
-                onClick={() => {}}
-              >
-                {app.favorite ? (
-                  <Star fill="currentColor" size={18} />
-                ) : (
-                  <StarOff size={18} />
-                )}
+            <div className="flex gap-4 text-text-muted">
+              <button className="hover:text-yellow-400 transition-colors cursor-pointer" onClick={() => {toggleFavorite(app.id, app)}}>
+                {app.favorite ? <Star fill="currentColor" size={18} /> : <StarOff size={18} />}
               </button>
               <button
                 className="hover:text-primary cursor-pointer transition-colors"

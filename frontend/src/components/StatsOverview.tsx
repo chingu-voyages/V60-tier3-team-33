@@ -55,7 +55,7 @@ function StatsOverview({ applications }: { applications: Application[] }) {
   return (
     <div className="flex gap-1">
       {Object.entries(stats).map(([key, value]) => (
-        <NavLink to={`/boards?status=${key}`} className="w-full">
+        <NavLink key={key} to={key !== "favorites" ? `/boards?status=${key}` : "/boards?favorites=true"} className="w-full">
           <div
             key={key}
             className="group m-1 flex flex-1 cursor-pointer justify-between rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-colors duration-100 ease-in hover:scale-105 dark:border-[#27272A] dark:bg-[linear-gradient(180deg,#1b1c1d,#151617)] dark:shadow-none"

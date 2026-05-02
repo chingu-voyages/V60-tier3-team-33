@@ -117,7 +117,7 @@ const stats = useMemo(() => {
                     <span>{stats.rejected}</span>
                   </li>
                 </NavLink>
-                <NavLink to="/boards?status=favorites">
+                <NavLink to="/boards?favorites=true">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Favorites
                     <span>{stats.favorites}</span>
@@ -133,9 +133,9 @@ const stats = useMemo(() => {
             </li>
           </NavLink>
 
-          <NavLink to="/account">
-            <li className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100">
-              <User fill={"gray"} size={18} className="float-left mr-3" />
+          <NavLink to="/settings">
+            <li className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100 flex items-center">
+              <User size={18} className="mr-3 text-[#94A3B8]" />
               Account
             </li>
           </NavLink>
@@ -172,10 +172,15 @@ const stats = useMemo(() => {
               </>
             )}
           </button>
-          <button className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100">
-            <Settings size={18} className="float-left mr-3" />
+          <NavLink 
+            to="/settings"
+            className={({ isActive }) => 
+              `w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100 flex items-center ${isActive ? 'bg-[#222222] text-gray-100' : ''}`
+            }
+          >
+            <Settings size={18} className="mr-3" />
             Settings
-          </button>
+          </NavLink>
           <button 
             onClick={handleLogout}
             className="w-full cursor-pointer rounded-lg p-2 text-left hover:bg-[#222222] hover:text-gray-100"

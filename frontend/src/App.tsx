@@ -12,6 +12,7 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import { InsightsPage } from './pages/InsightsPage';
 import Boards from './pages/Boards';
+import SettingsPage from './pages/SettingsPage';
 
 export default function App() {
   const [isDark, setIsDark] = useState(() => {
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/insights" element={<InsightsPage />} />
             <Route path="/boards" element={<Boards />} />
+            <Route path="/settings" element={<SettingsPage />} />
             
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Route>
