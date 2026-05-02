@@ -3,7 +3,7 @@ import type {
   OverviewResponse,
   InsightsResponse,
 } from "../types/metrics";
-import type { Application, PaginatedApplications } from "../types/application";
+import type { Application, PaginatedApplications, ApplicationStatus } from "../types/application";
 import axios, { type InternalAxiosRequestConfig } from "axios";
 
 const API_BASE_URL = "https://jobtracker-api.afuwapetunde.com/api";
@@ -63,6 +63,14 @@ export const api = {
     data: Partial<Application>,
   ): Promise<{ message: string; data: Application }> => {
     const response = await apiClient.patch<{ message: string; data: Application }>(`/applications/${id}`, data);
+    return response.data;
+  },
+
+  updateStatus: async (
+    id: number,
+    status: ApplicationStatus,
+  ): Promise<{ message: string; data: Application }> => {
+    const response = await apiClient.patch<{ message: string; data: Application }>(`/applications/${id}/status`, { status });
     return response.data;
   },
 

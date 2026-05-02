@@ -2,7 +2,7 @@ import { useState } from "react";
 import { formatDate } from "../utilities/formatDate";
 import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
-import type { Application } from "../types/application";
+import type { Application, ApplicationStatus } from "../types/application";
 import { Star } from "lucide-react";
 import { getStatusStyles } from '../utilities/themeUtils';
 
@@ -11,11 +11,19 @@ interface AppListTypes {
   applications: Application[];
   onEdit?: (app: Application) => void;
   onDelete?: (id: number) => void;
+  onStatusUpdate?: (id: number, status: ApplicationStatus) => void;
 }
 
-function AppList({ boardsView, applications, onEdit, onDelete }: AppListTypes) {
+function AppList({ boardsView, applications, onEdit, onDelete, onStatusUpdate }: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+
+  const handleStatusUpdate = (id: number, status: ApplicationStatus) => {
+    if (onStatusUpdate) onStatusUpdate(id, status);
+    if (selectedApp && selectedApp.id === id) {
+      setSelectedApp({ ...selectedApp, status });
+    }
+  };
 
   return (
     <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">      
@@ -99,6 +107,7 @@ function AppList({ boardsView, applications, onEdit, onDelete }: AppListTypes) {
               setIsCardModalOpen(false);
             }
           }}
+          onStatusUpdate={handleStatusUpdate}
         />
       )}
     </div>
