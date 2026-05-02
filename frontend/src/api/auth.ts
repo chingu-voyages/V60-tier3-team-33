@@ -55,4 +55,8 @@ export const authService = {
     const response = await apiClient.post("/reset-password", data);
     return response.data;
   },
+  updateProfile: async (data: any) => {
+    const response = await apiClient.patch('/profile', data);
+    return response.data;
+  },
 };
