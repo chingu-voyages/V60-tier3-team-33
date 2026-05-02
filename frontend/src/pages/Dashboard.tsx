@@ -139,7 +139,6 @@ function Dashboard() {
           setIsAddModalOpen(true);
         }}
         onDelete={handleDelete}
-        fetchData={fetchData}
       />
 
       <ApplicationFormModal
