@@ -117,7 +117,7 @@ const stats = useMemo(() => {
                     <span>{stats.rejected}</span>
                   </li>
                 </NavLink>
-                <NavLink to="/boards?status=favorites">
+                <NavLink to="/boards?favorites=true">
                   <li className="flex w-full cursor-pointer items-center justify-between rounded p-1 text-left hover:bg-[#222222] hover:text-gray-100">
                     Favorites
                     <span>{stats.favorites}</span>

@@ -11,7 +11,7 @@ import InsightsOverview from "../components/InsightsOverview";
 import { NavLink } from "react-router-dom";
 
 function Dashboard() {
-  const {applications, analytics, insights, isLoading, fetchData} = useDashboard();
+  const {applications, setApplications, analytics, insights, isLoading, fetchData} = useDashboard();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
 
@@ -95,6 +95,7 @@ function Dashboard() {
       <AppList 
         boardsView={false} 
         applications={applications} 
+        setApplications={setApplications}
         onEdit={(app) => {
           setEditingApp(app);
           setIsAddModalOpen(true);
