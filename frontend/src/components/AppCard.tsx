@@ -192,17 +192,12 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, onStatusUpdate }: App
           <div className="text-text-muted mb-3 text-xs font-semibold tracking-wider uppercase">
             Status Timeline
           </div>
-          <div className="flex items-center gap-4">
-             <div className="relative">
-                <button
-                  onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                  className={`flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold tracking-wide transition-all hover:opacity-80 active:scale-95 ${getStatusStyles(app.status)}`}
-                >
-                  {app.status.replace("_", " ").toUpperCase()}
-                  <ChevronDown size={14} />
-                </button>
-                {/* We don't need a second dropdown here, but we can make it clickable to open the main one or just sync it */}
-              </div>
+          <div className="flex flex-col">
+            <span
+              className={`mb-2 inline-block w-fit rounded-full border px-3 py-1 text-xs font-semibold tracking-wide ${getStatusStyles(app.status)}`}
+            >
+              {app.status.replace("_", " ").toUpperCase()}
+            </span>
             <div className="text-text-muted text-sm">
               {formatDate(app.applied_at, "long")}
             </div>

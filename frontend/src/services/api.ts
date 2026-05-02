@@ -3,7 +3,7 @@ import type {
   OverviewResponse,
   InsightsResponse,
 } from "../types/metrics";
-import type { Application, PaginatedApplications } from "../types/application";
+import type { Application, PaginatedApplications, ApplicationStatus } from "../types/application";
 import axios, { type InternalAxiosRequestConfig } from "axios";
 
 const API_BASE_URL = "https://jobtracker-api.afuwapetunde.com/api";
