@@ -41,7 +41,7 @@ const getInputClass = (hasError: boolean) => {
   return `w-full px-4 py-3 rounded-xl text-sm bg-[var(--bg-app)] dark:bg-[#1A1A1A] border transition-all duration-200 shadow-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none ${
     hasError
       ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
-      : "border-[var(--border-color)] focus:border-[#9B6DFF] focus:ring-2 focus:ring-[#9B6DFF]/20"
+      : "border-[var(--border-color)] focus:border-[#9B6DFF] focus:ring-2 focus:ring-[#9B6DFF]/20 dark:focus:border-[#F2FF53] dark:focus:ring-[#F2FF53]/20"
   }`;
 };
 
@@ -482,7 +482,8 @@ const DocumentsTab: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid },
   } = useForm({
     resolver: zodResolver(socialLinksSchema),
     mode: "onChange",
@@ -522,10 +523,21 @@ const DocumentsTab: React.FC = () => {
   };
 
   const onAddLink = (data: any) => {
+    // Check for duplicates
+    const isDuplicate = savedLinks.some(
+      (link) => link.url.toLowerCase() === data.url.toLowerCase(),
+    );
+
+    if (isDuplicate) {
+      alert("This link has already been saved.");
+      return;
+    }
+
     setSavedLinks([
       ...savedLinks,
       { id: Date.now(), label: data.label, url: data.url },
     ]);
+    reset(); // Clear input fields after success
   };
 
   return (
@@ -632,7 +644,8 @@ const DocumentsTab: React.FC = () => {
           </div>
           <button
             type="submit"
-            className="flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#D6D3FF] px-6 py-3 text-sm font-semibold text-[#111111] transition-all duration-200 hover:bg-[#C4C0FF] focus:ring-2 focus:ring-[#9B6DFF]/50 focus:outline-none dark:bg-[#F2FF53] dark:text-[#111111] dark:hover:bg-[#EEFF2B]"
+            disabled={!isValid}
+            className="flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#D6D3FF] px-6 py-3 text-sm font-semibold text-[#111111] transition-all duration-200 hover:bg-[#C4C0FF] focus:ring-2 focus:ring-[#9B6DFF]/50 focus:outline-none disabled:cursor-not-allowed disabled:opacity-40 dark:bg-[#F2FF53] dark:text-[#111111] dark:hover:bg-[#EEFF2B]"
           >
             <span className="mb-0.5 text-lg leading-none">+</span> Add
           </button>
