@@ -11,12 +11,16 @@ type DashboardContextType = {
   applications: Application[];
   setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
   analytics: AnalyticsResponse | null; 
-  insights: InsightsResponse| null;
+  insights: InsightsResponse | null;
   isLoading: boolean;
   fetchData: (showLoading?: boolean) => Promise<void>;
   saveApplication: (data: Partial<Application>, id?: number) => Promise<void>;
   deleteApplication: (id: number) => Promise<void>;
   changeApplicationStatus: (id: number, status: ApplicationStatus) => Promise<void>;
+  page: number;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  loadMoreApplications: () => Promise<void>;
 };
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
@@ -26,6 +30,9 @@ function DashboardProvider({children}: DashboardProviderTypes) {
     const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
     const [insights, setInsights] = useState<InsightsResponse | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
   const fetchData = useCallback(async (showLoading: boolean = true) => {
     try {
@@ -39,6 +46,10 @@ function DashboardProvider({children}: DashboardProviderTypes) {
       setAnalytics(analyticsData);
       setApplications(appsData.data);
       setInsights(insightsData);
+      
+      setPage(1);
+      setHasMore(appsData.data.length === 10);
+      
     } catch (err) {
       console.error(err);
     } finally {
@@ -49,6 +60,31 @@ function DashboardProvider({children}: DashboardProviderTypes) {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const loadMoreApplications = useCallback(async () => {
+    if (isLoadingMore || !hasMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const res = await api.getApplications(nextPage, 10);
+      
+      setApplications(prev => {
+        const existingIds = new Set(prev.map(app => app.id));
+        const newApps = res.data.filter((app: Application) => !existingIds.has(app.id));
+        return [...prev, ...newApps];
+      });
+      
+      setPage(nextPage);
+      setHasMore(res.data.length === 10);
+      
+    } catch (err) {
+      console.error("Failed to load more applications", err);
+      setHasMore(false);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [page, hasMore, isLoadingMore]);
 
   const saveApplication = async (data: Partial<Application>, id?: number) => {
     try {
@@ -77,12 +113,18 @@ function DashboardProvider({children}: DashboardProviderTypes) {
   };
 
   const changeApplicationStatus = async (id: number, status: ApplicationStatus) => {
+    const previousApps = [...applications];
+    
+    setApplications(prev => 
+      prev.map(app => app.id === id ? { ...app, status } : app)
+    );
+
     try {
-      await api.updateApplication(id, { status });
-      await fetchData(false);
+      await api.updateStatus(id, status);
+      
     } catch (err) {
       console.error("Failed to update status", err);
-      throw err;
+      setApplications(previousApps);
     }
   };
 
@@ -98,7 +140,11 @@ function DashboardProvider({children}: DashboardProviderTypes) {
         fetchData,
         saveApplication,
         deleteApplication,
-        changeApplicationStatus
+        changeApplicationStatus,
+        page,
+        hasMore,
+        isLoadingMore,
+        loadMoreApplications
       }}
     >
       {children}

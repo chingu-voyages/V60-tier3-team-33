@@ -76,23 +76,23 @@ export const InsightsPage = () => {
                     </div>
                     
                     <div className="flex justify-between items-end mb-8">
-                        <div className="flex bg-surface border border-border rounded-lg p-1">
+                        <div className="flex bg-surface border border-border rounded-[14px] p-1">
                             <button 
                                 onClick={() => setTimeframe('thisMonth')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                className={`px-5 py-1.5 rounded-[10px] text-sm font-medium transition-all ${
                                     timeframe === 'thisMonth' 
-                                    ? 'bg-background text-text-main shadow-sm' 
-                                    : 'text-text-muted hover:text-text-main'
+                                    ? 'bg-gray-200 dark:bg-[#323233] text-gray-900 dark:text-white shadow-sm' 
+                                    : 'text-gray-500 dark:text-[#84848A] hover:text-gray-900 dark:hover:text-white'
                                 }`}
                             >
                                 This Month
                             </button>
                             <button 
                                 onClick={() => setTimeframe('allTime')}
-                                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                className={`px-5 py-1.5 rounded-[10px] text-sm font-medium transition-all ${
                                     timeframe === 'allTime' 
-                                    ? 'bg-background text-text-main shadow-sm' 
-                                    : 'text-text-muted hover:text-text-main'
+                                    ? 'bg-gray-200 dark:bg-[#323233] text-gray-900 dark:text-white shadow-sm' 
+                                    : 'text-gray-500 dark:text-[#84848A] hover:text-gray-900 dark:hover:text-white'
                                 }`}
                             >
                                 All Time
