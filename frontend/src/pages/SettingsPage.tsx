@@ -41,7 +41,7 @@ const getInputClass = (hasError: boolean) => {
   return `w-full px-4 py-3 rounded-xl text-sm bg-[var(--bg-app)] dark:bg-[#1A1A1A] border transition-all duration-200 shadow-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none ${
     hasError
       ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
-      : "border-[var(--border-color)] focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20"
+      : "border-[var(--border-color)] focus:border-[#9B6DFF] focus:ring-2 focus:ring-[#9B6DFF]/20"
   }`;
 };
 
@@ -68,7 +68,7 @@ const SettingsPage: React.FC = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`rounded-[12px] border px-8 py-2.5 text-sm font-medium transition-all ${
+              className={`cursor-pointer rounded-[12px] border px-8 py-2.5 text-sm font-medium transition-all ${
                 activeTab === tab
                   ? "border-(--border-color) bg-(--chart-cursor) text-(--text-main) shadow-md"
                   : "border-transparent text-(--text-muted) hover:text-(--text-main)"
@@ -122,7 +122,10 @@ const AccountTab: React.FC = () => {
           employmentStatus: userData.employment_status || "Unemployed",
         });
       } catch (error) {
-        console.error("Failed to fetch profile. Falling back to mock data.", error);
+        console.error(
+          "Failed to fetch profile. Falling back to mock data.",
+          error,
+        );
         // Fallback to mock data since backend profile endpoint is missing
         reset({
           fullName: "Alex Johnson",
@@ -159,7 +162,7 @@ const AccountTab: React.FC = () => {
         name: data.fullName,
         email: data.email,
         phone_number: data.phoneNumber,
-        employment_status: data.employmentStatus
+        employment_status: data.employmentStatus,
       });
       setIsSuccessAccount(true);
       setTimeout(() => setIsSuccessAccount(false), 2000);
@@ -189,78 +192,78 @@ const AccountTab: React.FC = () => {
 
         {isLoadingProfile ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-[var(--accent-primary)]" />
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--accent-primary)]" />
           </div>
         ) : (
           <form
             onSubmit={handleAccountSubmit(onAccountSubmit)}
             className="space-y-6"
           >
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <label className={labelClass}>Full Name</label>
-              <input
-                {...registerAccount("fullName")}
-                className={getInputClass(!!accountErrors.fullName)}
-              />
-              {accountErrors.fullName && (
-                <p className="mt-1.5 text-[12px] text-red-500">
-                  {accountErrors.fullName.message as string}
-                </p>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label className={labelClass}>Full Name</label>
+                <input
+                  {...registerAccount("fullName")}
+                  className={getInputClass(!!accountErrors.fullName)}
+                />
+                {accountErrors.fullName && (
+                  <p className="mt-1.5 text-[12px] text-red-500">
+                    {accountErrors.fullName.message as string}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className={labelClass}>Email address</label>
+                <input
+                  {...registerAccount("email")}
+                  className={getInputClass(!!accountErrors.email)}
+                />
+                {accountErrors.email && (
+                  <p className="mt-1.5 text-[12px] text-red-500">
+                    {accountErrors.email.message as string}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className={labelClass}>Phone Number</label>
+                <input
+                  {...registerAccount("phoneNumber")}
+                  className={getInputClass(!!accountErrors.phoneNumber)}
+                />
+              </div>
+
+              <div>
+                <label className={labelClass}>Employment Status</label>
+                <input
+                  {...registerAccount("employmentStatus")}
+                  className={getInputClass(!!accountErrors.employmentStatus)}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmittingAccount || isSuccessAccount}
+              className={`mt-4 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${
+                isSuccessAccount
+                  ? "bg-green-500 text-white hover:bg-green-600"
+                  : "bg-[#D6D3FF] text-[#111111] hover:bg-[#C4C0FF] focus:ring-2 focus:ring-[#9B6DFF]/50 focus:outline-none dark:bg-[#F2FF53] dark:text-[#111111] dark:hover:bg-[#EEFF2B]"
+              }`}
+            >
+              {isSubmittingAccount ? (
+                <Loader2 className="h-[18px] w-[18px] animate-spin" />
+              ) : isSuccessAccount ? (
+                <>
+                  <Check className="h-[18px] w-[18px]" strokeWidth={2.5} />
+                  Saved!
+                </>
+              ) : (
+                "Save Changes"
               )}
-            </div>
-
-            <div>
-              <label className={labelClass}>Email address</label>
-              <input
-                {...registerAccount("email")}
-                className={getInputClass(!!accountErrors.email)}
-              />
-              {accountErrors.email && (
-                <p className="mt-1.5 text-[12px] text-red-500">
-                  {accountErrors.email.message as string}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className={labelClass}>Phone Number</label>
-              <input
-                {...registerAccount("phoneNumber")}
-                className={getInputClass(!!accountErrors.phoneNumber)}
-              />
-            </div>
-
-            <div>
-              <label className={labelClass}>Employment Status</label>
-              <input
-                {...registerAccount("employmentStatus")}
-                className={getInputClass(!!accountErrors.employmentStatus)}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmittingAccount || isSuccessAccount}
-            className={`mt-4 flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 ${
-              isSuccessAccount
-                ? "bg-green-500 text-white hover:bg-green-600 dark:text-black"
-                : "bg-[var(--accent-primary)] text-white hover:opacity-90 disabled:opacity-70 dark:text-black"
-            }`}
-          >
-            {isSubmittingAccount ? (
-              <Loader2 className="h-[18px] w-[18px] animate-spin" />
-            ) : isSuccessAccount ? (
-              <>
-                <Check className="h-[18px] w-[18px]" strokeWidth={2.5} />
-                Saved!
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </button>
-        </form>
+            </button>
+          </form>
         )}
       </div>
 
@@ -331,10 +334,10 @@ const AccountTab: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmittingSecurity || isSuccessSecurity}
-            className={`mt-2 flex items-center justify-center gap-2 rounded-xl border px-6 py-3 text-sm font-semibold transition-all duration-300 hover:opacity-90 disabled:opacity-70 ${
+            className={`mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-40 ${
               isSuccessSecurity
-                ? "border-green-500 bg-green-500 text-white hover:bg-green-600 dark:border-green-500 dark:bg-green-500 dark:text-black dark:hover:bg-green-600"
-                : "border-gray-400 bg-[var(--bg-surface)] text-black dark:border-[#222324] dark:bg-[#151617] dark:text-white dark:hover:bg-[#1E1F20]"
+                ? "bg-green-500 text-white hover:bg-green-600"
+                : "bg-transaprent border border-gray-300 text-[#111111] hover:bg-[#9CA3AF]/20 focus:ring-2 focus:ring-[#9B6DFF]/50 focus:outline-none dark:border-gray-700 dark:bg-transparent dark:text-white dark:hover:bg-gray-500/5"
             }`}
           >
             {isSubmittingSecurity ? (
@@ -429,17 +432,18 @@ const NotificationsTab: React.FC = () => {
                   onClick={() =>
                     toggleSetting(row.id as keyof typeof settings, "push")
                   }
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:ring-2 focus:ring-[var(--accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] focus:outline-none ${
+                  aria-pressed={settings[row.id as keyof typeof settings].push}
+                  className={`relative inline-flex h-[26px] w-[46px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] focus:outline-none ${
                     settings[row.id as keyof typeof settings].push
-                      ? "bg-[var(--accent-primary)]"
-                      : "bg-[var(--chart-axis)]"
+                      ? "bg-[#606060] focus:ring-[#9B6DFF]/50 dark:bg-[#606060] dark:focus:ring-[#606060]/50"
+                      : "bg-[#3A3A3A] focus:ring-gray-400/50 dark:bg-[#2A2A2A] dark:focus:ring-gray-600/50"
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    className={`pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white shadow-md ring-0 transition-all duration-300 ease-in-out ${
                       settings[row.id as keyof typeof settings].push
-                        ? "translate-x-6"
-                        : "translate-x-1"
+                        ? "translate-x-5"
+                        : "translate-x-0"
                     }`}
                   />
                 </button>
@@ -450,17 +454,18 @@ const NotificationsTab: React.FC = () => {
                   onClick={() =>
                     toggleSetting(row.id as keyof typeof settings, "email")
                   }
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:ring-2 focus:ring-[var(--accent-primary)] focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] focus:outline-none ${
+                  aria-pressed={settings[row.id as keyof typeof settings].email}
+                  className={`relative inline-flex h-[26px] w-[46px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] focus:outline-none ${
                     settings[row.id as keyof typeof settings].email
-                      ? "bg-[var(--accent-primary)]"
-                      : "bg-[var(--chart-axis)]"
+                      ? "bg-[#606060] focus:ring-[#9B6DFF]/50 dark:bg-[#606060] dark:focus:ring-[#606060]/50"
+                      : "bg-[#3A3A3A] focus:ring-gray-400/50 dark:bg-[#2A2A2A] dark:focus:ring-gray-600/50"
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    className={`pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white shadow-md ring-0 transition-all duration-300 ease-in-out ${
                       settings[row.id as keyof typeof settings].email
-                        ? "translate-x-6"
-                        : "translate-x-1"
+                        ? "translate-x-5"
+                        : "translate-x-0"
                     }`}
                   />
                 </button>
@@ -494,7 +499,9 @@ const DocumentsTab: React.FC = () => {
     { id: 4, label: "Portfolio", url: "https://yourportfolio.com" },
   ]);
 
-  const [uploadedFiles, setUploadedFiles] = useState<{ id: string; name: string; date: string }[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<
+    { id: string; name: string; date: string }[]
+  >([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -503,7 +510,11 @@ const DocumentsTab: React.FC = () => {
       const newFile = {
         id: Date.now().toString(),
         name: file.name,
-        date: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date())
+        date: new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }).format(new Date()),
       };
       setUploadedFiles((prev) => [...prev, newFile]);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -525,9 +536,9 @@ const DocumentsTab: React.FC = () => {
           Upload resumes, cover letters, and other files
         </p>
 
-        <div 
+        <div
           onClick={() => fileInputRef.current?.click()}
-          className="group flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-(--border-color) bg-(--bg-app) p-12 text-center transition-all hover:border-[#F2FF53] hover:bg-[#F2FF53]/20 dark:bg-[#1A1A1A] hover:dark:bg-[#F2FF53]/5"
+          className="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#E5E7EB] bg-gray-50 p-12 text-center transition-all duration-200 hover:border-[#D6D3FF] hover:bg-[#D6D3FF]/10 dark:border-[#27272A] dark:bg-[#1A1A1A] dark:hover:border-[#F2FF53] dark:hover:bg-[#F2FF53]/10"
         >
           <input
             type="file"
@@ -536,10 +547,10 @@ const DocumentsTab: React.FC = () => {
             className="hidden"
             accept=".pdf,.doc,.docx"
           />
-          <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-gray-400 transition-transform group-hover:scale-110 dark:bg-[#1A1A1A]">
+          <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-gray-200 transition-all duration-200 group-hover:scale-110 group-hover:bg-[#D6D3FF]/30 dark:bg-[#222222] dark:group-hover:bg-[#F2FF53]/10">
             <Upload
               size={18}
-              className="text-gray-900 transition-colors group-hover:text-black dark:text-white"
+              className="text-gray-500 transition-colors duration-200 group-hover:text-[#9B6DFF] dark:text-gray-400 dark:group-hover:text-[#F2FF53]"
             />
           </div>
           <div className={sectionTitleClass}>Upload a file</div>
@@ -569,9 +580,11 @@ const DocumentsTab: React.FC = () => {
                 <div className="flex items-center gap-4 opacity-0 transition-opacity group-hover:opacity-100">
                   <button
                     onClick={() =>
-                      setUploadedFiles(uploadedFiles.filter((f) => f.id !== file.id))
+                      setUploadedFiles(
+                        uploadedFiles.filter((f) => f.id !== file.id),
+                      )
                     }
-                    className="p-1 text-(--text-muted) transition-colors hover:text-red-400"
+                    className="cursor-pointer p-1 text-(--text-muted) transition-colors hover:text-red-400"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -619,7 +632,7 @@ const DocumentsTab: React.FC = () => {
           </div>
           <button
             type="submit"
-            className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-(--accent-primary) px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 dark:text-black"
+            className="flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#D6D3FF] px-6 py-3 text-sm font-semibold text-[#111111] transition-all duration-200 hover:bg-[#C4C0FF] focus:ring-2 focus:ring-[#9B6DFF]/50 focus:outline-none dark:bg-[#F2FF53] dark:text-[#111111] dark:hover:bg-[#EEFF2B]"
           >
             <span className="mb-0.5 text-lg leading-none">+</span> Add
           </button>
@@ -645,14 +658,14 @@ const DocumentsTab: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-4 opacity-0 transition-opacity group-hover:opacity-100">
-                <button className="rounded-lg border border-(--border-color) px-3 py-1.5 text-xs font-medium text-(--text-muted) transition-all hover:bg-(--chart-cursor) hover:text-(--text-main)">
+                <button className="cursor-pointer rounded-lg border border-(--border-color) px-3 py-1.5 text-xs font-medium text-(--text-muted) transition-all hover:bg-(--chart-cursor) hover:text-(--text-main)">
                   Edit
                 </button>
                 <button
                   onClick={() =>
                     setSavedLinks(savedLinks.filter((l) => l.id !== link.id))
                   }
-                  className="p-1 text-(--text-muted) transition-colors hover:text-red-400"
+                  className="cursor-pointer p-1 text-(--text-muted) transition-colors hover:text-red-400"
                 >
                   <Trash2 size={16} />
                 </button>
