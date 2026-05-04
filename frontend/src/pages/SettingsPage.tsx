@@ -289,7 +289,7 @@ const AccountTab: React.FC = () => {
                   </button>
 
                   {isDropdownOpen && (
-                    <div className="absolute z-50 mt-2 w-full animate-in fade-in zoom-in-95 overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-surface)] shadow-xl duration-200">
+                    <div className="animate-in fade-in zoom-in-95 absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-surface)] shadow-xl duration-200">
                       {options.map((option) => (
                         <div
                           key={option}
@@ -301,7 +301,7 @@ const AccountTab: React.FC = () => {
                           }}
                           className={`cursor-pointer px-4 py-2.5 text-sm transition-colors hover:bg-[#9B6DFF]/10 hover:text-[#9B6DFF] dark:hover:bg-[#F2FF53]/10 dark:hover:text-[#F2FF53] ${
                             employmentStatus === option
-                              ? "bg-[#9B6DFF]/5 text-[#9B6DFF] font-medium dark:bg-[#F2FF53]/5 dark:text-[#F2FF53]"
+                              ? "bg-[#9B6DFF]/5 font-medium text-[#9B6DFF] dark:bg-[#F2FF53]/5 dark:text-[#F2FF53]"
                               : "text-[var(--text-main)]"
                           }`}
                         >
@@ -651,7 +651,7 @@ const DocumentsTab: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 opacity-100 transition-opacity md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
+                <div className="flex items-center gap-4 opacity-100 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 md:opacity-0">
                   <button
                     onClick={() =>
                       setUploadedFiles(
@@ -732,7 +732,7 @@ const DocumentsTab: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-4 opacity-100 transition-opacity md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
+              <div className="flex items-center gap-4 opacity-100 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 md:opacity-1">
                 <button className="cursor-pointer rounded-lg border border-(--border-color) px-3 py-1.5 text-xs font-medium text-(--text-muted) transition-all hover:bg-(--chart-cursor) hover:text-(--text-main)">
                   Edit
                 </button>
