@@ -7,12 +7,20 @@ type DashboardProviderTypes = {
     children: React.ReactNode;
 }
 
+export interface SavedLink {
+  id: number;
+  label: string;
+  url: string;
+}
+
 type DashboardContextType = {
   applications: Application[];
   setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
   analytics: AnalyticsResponse | null; 
   insights: InsightsResponse | null;
   isLoading: boolean;
+  savedLinks: SavedLink[];
+  setSavedLinks: React.Dispatch<React.SetStateAction<SavedLink[]>>;
   fetchData: (showLoading?: boolean) => Promise<void>;
   saveApplication: (data: Partial<Application>, id?: number) => Promise<void>;
   deleteApplication: (id: number) => Promise<void>;
@@ -33,6 +41,30 @@ function DashboardProvider({children}: DashboardProviderTypes) {
     const [page, setPage] = useState(1);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const [savedLinks, setSavedLinks] = useState<SavedLink[]>(() => {
+      const stored = localStorage.getItem("saved_links");
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error("Failed to parse saved links", e);
+        }
+      }
+      return [
+        {
+          id: 1,
+          label: "LinkedIn Profile",
+          url: "https://linkedin.com/in/yourusername",
+        },
+        { id: 2, label: "GitHub", url: "https://github.com/yourusername" },
+        { id: 3, label: "X", url: "https://x.com/yourusername" },
+        { id: 4, label: "Portfolio", url: "https://yourportfolio.com" },
+      ];
+    });
+
+    useEffect(() => {
+      localStorage.setItem("saved_links", JSON.stringify(savedLinks));
+    }, [savedLinks]);
 
   const fetchData = useCallback(async (showLoading: boolean = true) => {
     try {
@@ -137,6 +169,8 @@ function DashboardProvider({children}: DashboardProviderTypes) {
         analytics, 
         insights, 
         isLoading, 
+        savedLinks,
+        setSavedLinks,
         fetchData,
         saveApplication,
         deleteApplication,

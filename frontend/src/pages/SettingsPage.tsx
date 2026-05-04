@@ -11,8 +11,10 @@ import {
   Loader2,
   Check,
   FileText,
+  ChevronDown,
 } from "lucide-react";
 import { authService } from "../api/auth";
+import { useDashboard } from "../components/DashboardProvider";
 
 // --- SCHEMAS ---
 
@@ -99,6 +101,8 @@ const AccountTab: React.FC = () => {
     handleSubmit: handleAccountSubmit,
     formState: { errors: accountErrors },
     reset,
+    setValue,
+    watch,
   } = useForm({
     resolver: zodResolver(accountSchema),
     mode: "onChange",
@@ -154,6 +158,31 @@ const AccountTab: React.FC = () => {
 
   const [isSubmittingSecurity, setIsSubmittingSecurity] = useState(false);
   const [isSuccessSecurity, setIsSuccessSecurity] = useState(false);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const employmentStatus = watch("employmentStatus");
+
+  const options = [
+    "Currently employed",
+    "Unemployed",
+    "Student",
+    "Freelancer",
+    "Other",
+  ];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const onAccountSubmit = async (data: any) => {
     setIsSubmittingAccount(true);
@@ -236,10 +265,52 @@ const AccountTab: React.FC = () => {
 
               <div>
                 <label className={labelClass}>Employment Status</label>
-                <input
-                  {...registerAccount("employmentStatus")}
-                  className={getInputClass(!!accountErrors.employmentStatus)}
-                />
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className={`${getInputClass(
+                      !!accountErrors.employmentStatus,
+                    )} flex cursor-pointer items-center justify-between text-left`}
+                  >
+                    <span
+                      className={
+                        employmentStatus ? "" : "text-[var(--text-muted)]"
+                      }
+                    >
+                      {employmentStatus || "Select Status"}
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={`text-[var(--text-muted)] transition-transform duration-300 ${
+                        isDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {isDropdownOpen && (
+                    <div className="absolute z-50 mt-2 w-full animate-in fade-in zoom-in-95 overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-surface)] shadow-xl duration-200">
+                      {options.map((option) => (
+                        <div
+                          key={option}
+                          onClick={() => {
+                            setValue("employmentStatus", option, {
+                              shouldValidate: true,
+                            });
+                            setIsDropdownOpen(false);
+                          }}
+                          className={`cursor-pointer px-4 py-2.5 text-sm transition-colors hover:bg-[#9B6DFF]/10 hover:text-[#9B6DFF] dark:hover:bg-[#F2FF53]/10 dark:hover:text-[#F2FF53] ${
+                            employmentStatus === option
+                              ? "bg-[#9B6DFF]/5 text-[#9B6DFF] font-medium dark:bg-[#F2FF53]/5 dark:text-[#F2FF53]"
+                              : "text-[var(--text-main)]"
+                          }`}
+                        >
+                          {option}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -489,16 +560,7 @@ const DocumentsTab: React.FC = () => {
     mode: "onChange",
   });
 
-  const [savedLinks, setSavedLinks] = useState([
-    {
-      id: 1,
-      label: "LinkedIn Profile",
-      url: "https://linkedin.com/in/yourusername",
-    },
-    { id: 2, label: "GitHub", url: "https://github.com/yourusername" },
-    { id: 3, label: "X", url: "https://x.com/yourusername" },
-    { id: 4, label: "Portfolio", url: "https://yourportfolio.com" },
-  ]);
+  const { savedLinks, setSavedLinks } = useDashboard();
 
   const [uploadedFiles, setUploadedFiles] = useState<
     { id: string; name: string; date: string }[]
@@ -589,7 +651,7 @@ const DocumentsTab: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="flex items-center gap-4 opacity-100 transition-opacity md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
                   <button
                     onClick={() =>
                       setUploadedFiles(
@@ -670,7 +732,7 @@ const DocumentsTab: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-4 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="flex items-center gap-4 opacity-100 transition-opacity md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100">
                 <button className="cursor-pointer rounded-lg border border-(--border-color) px-3 py-1.5 text-xs font-medium text-(--text-muted) transition-all hover:bg-(--chart-cursor) hover:text-(--text-main)">
                   Edit
                 </button>
