@@ -143,15 +143,27 @@ const stats = useMemo(() => {
         <div className="mt-5">
           <div className="flex items-center justify-between">
             <p className="text-xs tracking-widest uppercase">Saved Links</p>
-            <p className="mr-2">+</p>
+            <NavLink to="/settings" className="mr-2 text-gray-400 hover:text-white">
+              +
+            </NavLink>
           </div>
-          <ul>
-            <li className="w-full cursor-pointer rounded-lg p-1 text-left hover:bg-[#222222] hover:text-gray-100">
-              saved link 1
-            </li>
-            <li className="w-full cursor-pointer rounded-lg p-1 text-left hover:bg-[#222222] hover:text-gray-100">
-              saved link 2
-            </li>
+          <ul className="mt-2 space-y-1">
+            {useDashboard().savedLinks.map((link) => (
+              <li
+                key={link.id}
+                onClick={() => {
+                  navigator.clipboard.writeText(link.url);
+                  // Optional: add a toast or notification
+                }}
+                className="w-full cursor-pointer rounded-lg p-2 text-left text-sm text-gray-400 transition-colors hover:bg-[#222222] hover:text-gray-100"
+                title={`Click to copy: ${link.url}`}
+              >
+                {link.label}
+              </li>
+            ))}
+            {useDashboard().savedLinks.length === 0 && (
+              <p className="px-2 text-xs text-gray-500 italic">No links yet</p>
+            )}
           </ul>
         </div>
       </nav>
