@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { ArrowUpRight, Search } from "lucide-react";
 import AppList from "../components/AppList";
 import { ApplicationFormModal } from "../components/ApplicationFormModal";
@@ -18,10 +18,27 @@ function Dashboard() {
     isLoading, 
     saveApplication, 
     deleteApplication, 
-    changeApplicationStatus 
+    changeApplicationStatus,
+    hasMore,
+    isLoadingMore,
+    loadMoreApplications
   } = useDashboard();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  const lastElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (isLoading || isLoadingMore) return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMoreApplications();
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [isLoading, isLoadingMore, hasMore, loadMoreApplications]);
 
   const handleSave = async (data: Partial<Application>) => {
     await saveApplication(data, editingApp?.id);
@@ -34,10 +51,7 @@ function Dashboard() {
   }
 
   const sortedApplications = [...applications].sort((a, b) => {
-    const dateA = new Date(a.updated_at || a.created_at || a.applied_at).getTime();
-    const dateB = new Date(b.updated_at || b.created_at || b.applied_at).getTime();
-    
-    return dateB - dateA;
+    return new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime();
   });
 
   return (
@@ -91,6 +105,13 @@ function Dashboard() {
         onDelete={deleteApplication}
         onStatusUpdate={changeApplicationStatus}
       />
+
+      <div ref={lastElementRef} className="h-4 w-full" />
+      {isLoadingMore && (
+        <div className="text-center py-4 text-sm text-text-muted">
+          Loading more applications...
+        </div>
+      )}
 
       <ApplicationFormModal
         key={editingApp ? `edit-${editingApp.id}` : `add-${isAddModalOpen}`}
