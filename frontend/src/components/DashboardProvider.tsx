@@ -2,12 +2,13 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import type { Application, ApplicationStatus } from '../types/application';
 import type { AnalyticsResponse, InsightsResponse } from '../types/metrics';
 import { api } from '../services/api';
+import { authService } from '../api/auth';
 
 type DashboardProviderTypes = {
     children: React.ReactNode;
 }
 
-import type { DashboardContextType, SavedLink } from '../types/dashboard';
+import type { DashboardContextType, SavedLink, UploadedFile, UserProfile } from '../types/dashboard';
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
 
@@ -15,6 +16,7 @@ function DashboardProvider({children}: DashboardProviderTypes) {
     const [applications, setApplications] = useState<Application[]>([]);
     const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
     const [insights, setInsights] = useState<InsightsResponse | null>(null);
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -63,18 +65,38 @@ function DashboardProvider({children}: DashboardProviderTypes) {
   const fetchData = useCallback(async (showLoading: boolean = true) => {
     try {
       if (showLoading) setIsLoading(true);
-      const [analyticsData, appsData, insightsData] = await Promise.all([
+      const [analyticsData, appsData, insightsData, profileResponse] = await Promise.allSettled([
         api.getAnalytics(),
         api.getApplications(1, 10),
         api.getInsights("thisMonth"),
+        authService.getProfile(),
       ]);
 
-      setAnalytics(analyticsData);
-      setApplications(appsData.data);
-      setInsights(insightsData);
+      if (analyticsData.status === 'fulfilled') setAnalytics(analyticsData.value);
+      if (appsData.status === 'fulfilled') {
+        setApplications(appsData.value.data);
+        setPage(1);
+        setHasMore(appsData.value.data.length === 10);
+      }
+      if (insightsData.status === 'fulfilled') setInsights(insightsData.value);
       
-      setPage(1);
-      setHasMore(appsData.data.length === 10);
+      if (profileResponse.status === 'fulfilled') {
+        const userData = profileResponse.value.user || profileResponse.value;
+        setUserProfile({
+          fullName: userData.name || "",
+          email: userData.email || "",
+          phoneNumber: userData.phone_number || "",
+          employmentStatus: userData.employment_status || "Unemployed",
+        });
+      } else {
+        // Fallback for profile
+        setUserProfile({
+          fullName: "Alex Johnson",
+          email: "alex@example.com",
+          phoneNumber: "+1 (555) 000-0000",
+          employmentStatus: "Unemployed",
+        });
+      }
       
     } catch (err) {
       console.error(err);
@@ -162,6 +184,8 @@ function DashboardProvider({children}: DashboardProviderTypes) {
         setApplications,
         analytics, 
         insights, 
+        userProfile,
+        setUserProfile,
         isLoading, 
         savedLinks,
         setSavedLinks,

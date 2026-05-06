@@ -13,11 +13,20 @@ export interface UploadedFile {
   date: string;
 }
 
+export interface UserProfile {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  employmentStatus: string;
+}
+
 export type DashboardContextType = {
   applications: Application[];
   setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
   analytics: AnalyticsResponse | null; 
   insights: InsightsResponse | null;
+  userProfile: UserProfile | null;
+  setUserProfile: React.Dispatch<React.SetStateAction<UserProfile | null>>;
   isLoading: boolean;
   savedLinks: SavedLink[];
   setSavedLinks: React.Dispatch<React.SetStateAction<SavedLink[]>>;

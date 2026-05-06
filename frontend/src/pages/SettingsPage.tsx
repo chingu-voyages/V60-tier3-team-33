@@ -94,7 +94,11 @@ const SettingsPage: React.FC = () => {
 
 const AccountTab: React.FC = () => {
   const [showPwd, setShowPwd] = useState({ current: false, new: false });
-  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const {
+    userProfile,
+    setUserProfile,
+    isLoading: isLoadingDashboard,
+  } = useDashboard();
 
   const {
     register: registerAccount,
@@ -106,7 +110,7 @@ const AccountTab: React.FC = () => {
   } = useForm({
     resolver: zodResolver(accountSchema),
     mode: "onChange",
-    defaultValues: {
+    defaultValues: userProfile || {
       fullName: "",
       email: "",
       phoneNumber: "",
@@ -115,34 +119,10 @@ const AccountTab: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await authService.getProfile();
-        const userData = response.user || response;
-        reset({
-          fullName: userData.name || "",
-          email: userData.email || "",
-          phoneNumber: userData.phone_number || "",
-          employmentStatus: userData.employment_status || "Unemployed",
-        });
-      } catch (error) {
-        console.error(
-          "Failed to fetch profile. Falling back to mock data.",
-          error,
-        );
-        // Fallback to mock data since backend profile endpoint is missing
-        reset({
-          fullName: "Alex Johnson",
-          email: "alex@example.com",
-          phoneNumber: "+1 (555) 000-0000",
-          employmentStatus: "Unemployed",
-        });
-      } finally {
-        setIsLoadingProfile(false);
-      }
-    };
-    fetchProfile();
-  }, [reset]);
+    if (userProfile) {
+      reset(userProfile);
+    }
+  }, [userProfile, reset]);
 
   const {
     register: registerSecurity,
@@ -193,6 +173,15 @@ const AccountTab: React.FC = () => {
         phone_number: data.phoneNumber,
         employment_status: data.employmentStatus,
       });
+      
+      // Update global state
+      setUserProfile({
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        employmentStatus: data.employmentStatus,
+      });
+
       setIsSuccessAccount(true);
       setTimeout(() => setIsSuccessAccount(false), 2000);
     } catch (error) {
@@ -219,7 +208,7 @@ const AccountTab: React.FC = () => {
           Update your personal details here.
         </p>
 
-        {isLoadingProfile ? (
+        {isLoadingDashboard && !userProfile ? (
           <div className="flex justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-[var(--accent-primary)]" />
           </div>
