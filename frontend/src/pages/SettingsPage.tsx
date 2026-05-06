@@ -560,11 +560,12 @@ const DocumentsTab: React.FC = () => {
     mode: "onChange",
   });
 
-  const { savedLinks, setSavedLinks } = useDashboard();
-
-  const [uploadedFiles, setUploadedFiles] = useState<
-    { id: string; name: string; date: string }[]
-  >([]);
+  const {
+    savedLinks,
+    setSavedLinks,
+    uploadedFiles,
+    setUploadedFiles,
+  } = useDashboard();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

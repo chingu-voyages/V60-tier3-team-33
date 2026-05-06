@@ -40,9 +40,25 @@ function DashboardProvider({children}: DashboardProviderTypes) {
       ];
     });
 
+    const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(() => {
+      const stored = localStorage.getItem("uploaded_files");
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error("Failed to parse uploaded files", e);
+        }
+      }
+      return [];
+    });
+
     useEffect(() => {
       localStorage.setItem("saved_links", JSON.stringify(savedLinks));
     }, [savedLinks]);
+
+    useEffect(() => {
+      localStorage.setItem("uploaded_files", JSON.stringify(uploadedFiles));
+    }, [uploadedFiles]);
 
   const fetchData = useCallback(async (showLoading: boolean = true) => {
     try {
@@ -149,6 +165,8 @@ function DashboardProvider({children}: DashboardProviderTypes) {
         isLoading, 
         savedLinks,
         setSavedLinks,
+        uploadedFiles,
+        setUploadedFiles,
         fetchData,
         saveApplication,
         deleteApplication,

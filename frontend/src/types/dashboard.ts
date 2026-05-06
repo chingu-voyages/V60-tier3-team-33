@@ -7,6 +7,12 @@ export interface SavedLink {
   url: string;
 }
 
+export interface UploadedFile {
+  id: string;
+  name: string;
+  date: string;
+}
+
 export type DashboardContextType = {
   applications: Application[];
   setApplications: React.Dispatch<React.SetStateAction<Application[]>>;
@@ -15,6 +21,8 @@ export type DashboardContextType = {
   isLoading: boolean;
   savedLinks: SavedLink[];
   setSavedLinks: React.Dispatch<React.SetStateAction<SavedLink[]>>;
+  uploadedFiles: UploadedFile[];
+  setUploadedFiles: React.Dispatch<React.SetStateAction<UploadedFile[]>>;
   fetchData: (showLoading?: boolean) => Promise<void>;
   saveApplication: (data: Partial<Application>, id?: number) => Promise<void>;
   deleteApplication: (id: number) => Promise<void>;
