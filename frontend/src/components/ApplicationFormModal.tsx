@@ -56,6 +56,14 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
     const [formData, setFormData] = useState<FormDataState>(() => mapInitialData(mode, initialData));
     const [hasSubmitted, setHasSubmitted] = useState(false);
 
+    const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget) {
+            if (window.confirm("Do you want to close this window? Unsaved changes will be lost.")) {
+                onClose();
+            }
+        }
+    };
+
     if (!isOpen) return null;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -93,7 +101,10 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity">
+        <div 
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-black/60 backdrop-blur-sm transition-opacity"
+            onMouseDown={handleBackdropClick}
+        >
             <div className="bg-white dark:bg-[#151617] border border-gray-200 dark:border-[#1E1F20] rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
                 
                 <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-[#1E1F20]">
@@ -240,8 +251,26 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                             
                             {!formData.noSalaryRange && (
                                 <div className="grid grid-cols-2 gap-4">
-                                    <input type="number" name="salary_min" value={formData.salary_min || ''} onChange={handleChange} placeholder="Min (e.g. 120000)" className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
-                                    <input type="number" name="salary_max" value={formData.salary_max || ''} onChange={handleChange} placeholder="Max (e.g. 160000)" className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" />
+                                    <input 
+                                        type="text" 
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        name="salary_min" 
+                                        value={formData.salary_min || ''} 
+                                        onChange={handleChange} 
+                                        placeholder="Min (e.g. 120000)" 
+                                        className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" 
+                                    />
+                                    <input 
+                                        type="text" 
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        name="salary_max" 
+                                        value={formData.salary_max || ''} 
+                                        onChange={handleChange} 
+                                        placeholder="Max (e.g. 160000)" 
+                                        className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors" 
+                                    />
                                 </div>
                             )}
                         </div>

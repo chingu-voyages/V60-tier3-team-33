@@ -58,7 +58,7 @@ function Dashboard() {
     <div className="p-5 max-w-7xl mx-auto">
       <div className="flex items-center justify-between py-5 mb-2">
         <div>
-          <h1 className="mb-1 text-3xl font-bold">Dashboard</h1>
+          <h1 className="mb-1 text-2xl font-bold">Dashboard</h1>
           <div className="text-text-muted">{formatDate(new Date(), "long")}</div>
         </div>
         <button
@@ -73,7 +73,7 @@ function Dashboard() {
       <StatsOverview applications={applications}/>
       
       <div className="flex justify-between items-center mt-8 mb-4">
-        <h2 className="text-xl font-semibold">Insights</h2>
+        <h2 className="text-lg font-semibold">Insights</h2>
         <NavLink to="/insights" className="text-xs flex items-center gap-1 text-primary hover:underline">
             View All <ArrowUpRight size={12}/>
         </NavLink>
@@ -82,7 +82,7 @@ function Dashboard() {
       <InsightsOverview insights={insights} analytics={analytics} timeframe="thisMonth" />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Recent Applications</h2>
+        <h2 className="text-lg font-semibold">Recent Applications</h2>
         <div className="flex items-center relative">
           <div className="absolute left-3 text-gray-400">
             <Search size={18} />
