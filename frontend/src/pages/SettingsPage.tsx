@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -55,7 +56,28 @@ const sectionSubtitleClass = "text-xs text-gray-500 dark:text-gray-400 mb-5";
 // --- COMPONENTS ---
 
 const SettingsPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>("Account");
+  const [searchParams] = useSearchParams();
+  const initialTab = (searchParams.get("tab") as Tab) || "Account";
+  const [activeTab, setActiveTab] = useState<Tab>(
+    ["Account", "Notifications", "Documents"].includes(initialTab)
+      ? initialTab
+      : "Account"
+  );
+
+  // Scroll to hash target after tab renders
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      // Small delay to let the tab content render
+      const timer = setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [activeTab]);
 
   return (
     <div className="font-inter min-h-screen bg-(--bg-app) text-(--text-main)">
@@ -191,12 +213,22 @@ const AccountTab: React.FC = () => {
     }
   };
 
-  const onSecuritySubmit = async (_data: any) => {
+  const onSecuritySubmit = async (data: any) => {
     setIsSubmittingSecurity(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setIsSubmittingSecurity(false);
-    setIsSuccessSecurity(true);
-    setTimeout(() => setIsSuccessSecurity(false), 2000);
+    try {
+      await authService.updatePassword({
+        current_password: data.currentPassword,
+        password: data.newPassword,
+        password_confirmation: data.newPassword, // Usually required by Laravel
+      });
+      setIsSuccessSecurity(true);
+      setTimeout(() => setIsSuccessSecurity(false), 2000);
+    } catch (error: any) {
+      console.error("Failed to update password", error);
+      alert(error.response?.data?.message || "Failed to update password. Please check your current password.");
+    } finally {
+      setIsSubmittingSecurity(false);
+    }
   };
 
   return (
@@ -338,58 +370,67 @@ const AccountTab: React.FC = () => {
           onSubmit={handleSecuritySubmit(onSecuritySubmit)}
           className="max-w-md space-y-6"
         >
-          {(
-            [
-              {
-                id: "currentPassword",
-                label: "Current Password",
-                key: "current",
-              },
-              { id: "newPassword", label: "New Password", key: "new" },
-            ] as const
-          ).map((field) => (
-            <div key={field.id}>
-              <label className={labelClass}>{field.label}</label>
-              <div className="relative">
-                <input
-                  type={
-                    showPwd[field.key as keyof typeof showPwd]
-                      ? "text"
-                      : "password"
-                  }
-                  placeholder="••••••••••"
-                  {...registerSecurity(field.id)}
-                  className={getInputClass(
-                    !!securityErrors[field.id as keyof typeof securityErrors],
-                  )}
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowPwd((p) => ({
-                      ...p,
-                      [field.key]: !p[field.key as keyof typeof showPwd],
-                    }))
-                  }
-                  className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-4 text-[var(--text-muted)] transition-colors hover:text-[var(--text-main)]"
-                >
-                  {showPwd[field.key as keyof typeof showPwd] ? (
-                    <EyeOff size={18} strokeWidth={2} />
-                  ) : (
-                    <Eye size={18} strokeWidth={2} />
-                  )}
-                </button>
-              </div>
-              {securityErrors[field.id as keyof typeof securityErrors] && (
-                <p className="mt-1.5 text-[12px] text-red-500">
-                  {
-                    securityErrors[field.id as keyof typeof securityErrors]
-                      ?.message as string
-                  }
-                </p>
-              )}
+          {/* Current Password */}
+          <div>
+            <label className={labelClass}>Current Password</label>
+            <div className="relative">
+              <input
+                type={showPwd.current ? "text" : "password"}
+                placeholder="••••••••••"
+                autoComplete="off"
+                {...registerSecurity("currentPassword")}
+                className={getInputClass(!!securityErrors.currentPassword)}
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPwd((p) => ({ ...p, current: !p.current }))
+                }
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-4 text-[var(--text-muted)] transition-colors hover:text-[var(--text-main)]"
+              >
+                {showPwd.current ? (
+                  <Eye size={18} strokeWidth={2} />
+                ) : (
+                  <EyeOff size={18} strokeWidth={2} />
+                )}
+              </button>
             </div>
-          ))}
+            {securityErrors.currentPassword && (
+              <p className="mt-1.5 text-[12px] text-red-500">
+                {securityErrors.currentPassword.message as string}
+              </p>
+            )}
+          </div>
+
+          {/* New Password */}
+          <div>
+            <label className={labelClass}>New Password</label>
+            <div className="relative">
+              <input
+                type={showPwd.new ? "text" : "password"}
+                placeholder="••••••••••"
+                autoComplete="new-password"
+                {...registerSecurity("newPassword")}
+                className={getInputClass(!!securityErrors.newPassword)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPwd((p) => ({ ...p, new: !p.new }))}
+                className="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-4 text-[var(--text-muted)] transition-colors hover:text-[var(--text-main)]"
+              >
+                {showPwd.new ? (
+                  <Eye size={18} strokeWidth={2} />
+                ) : (
+                  <EyeOff size={18} strokeWidth={2} />
+                )}
+              </button>
+            </div>
+            {securityErrors.newPassword && (
+              <p className="mt-1.5 text-[12px] text-red-500">
+                {securityErrors.newPassword.message as string}
+              </p>
+            )}
+          </div>
 
           <button
             type="submit"
@@ -418,23 +459,84 @@ const AccountTab: React.FC = () => {
 };
 
 const NotificationsTab: React.FC = () => {
-  const [settings, setSettings] = useState({
-    appReminders: { push: true, email: false },
-    interviewReminders: { push: true, email: true },
-    weeklySummary: { push: true, email: true },
+  const { userProfile, fetchData } = useDashboard();
+  const [settings, setSettings] = useState(() => {
+    const cached = localStorage.getItem("notification_settings");
+    if (cached) return JSON.parse(cached);
+    return {
+      appReminders: { push: true, email: true },
+      interviewReminders: { push: true, email: true },
+      weeklySummary: { push: true, email: true },
+    };
   });
 
-  const toggleSetting = (
+  // Save to localStorage whenever settings change
+  useEffect(() => {
+    localStorage.setItem("notification_settings", JSON.stringify(settings));
+  }, [settings]);
+
+  // Sync with global profile state on load (if server has data)
+  useEffect(() => {
+    if (userProfile?.notificationSettings) {
+      const ns = userProfile.notificationSettings;
+      const serverSettings = {
+        appReminders: ns.application_reminders || { push: true, email: true },
+        interviewReminders: ns.interview_reminders || { push: true, email: true },
+        weeklySummary: ns.weekly_summary || { push: true, email: true },
+      };
+      setSettings(serverSettings);
+      localStorage.setItem("notification_settings", JSON.stringify(serverSettings));
+    }
+  }, [userProfile]);
+
+  const toggleSetting = async (
     rowId: keyof typeof settings,
     type: "push" | "email",
   ) => {
-    setSettings((s) => ({
-      ...s,
-      [rowId]: {
-        ...s[rowId],
-        [type]: !s[rowId][type],
-      },
-    }));
+    if (!settings[rowId]) {
+      console.error(`Settings for ${String(rowId)} not found`);
+      return;
+    }
+    
+    const newVal = !settings[rowId][type];
+    const newSettings = {
+      ...settings,
+      [rowId]: { ...settings[rowId], [type]: newVal },
+    };
+
+    // Optimistically update UI
+    setSettings(newSettings);
+
+    try {
+      // Map frontend keys to backend keys safely
+      const payload = {
+        notification_settings: {
+          application_reminders: newSettings.appReminders || { push: true, email: true },
+          interview_reminders: newSettings.interviewReminders || { push: true, email: true },
+          weekly_summary: newSettings.weeklySummary || { push: true, email: true },
+        },
+      };
+
+      console.log("Updating notifications with payload:", payload);
+      await authService.updateNotifications(payload);
+      console.log("Notification update successful");
+      
+      // Force a global data refresh to sync everything
+      await fetchData(false);
+    } catch (err: any) {
+      console.error("CRITICAL: Notification update failed", {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message,
+      });
+
+      // Revert on actual error
+      setSettings(settings);
+
+      alert(
+        `Failed to save notification preference: ${err.response?.data?.message || JSON.stringify(err.response?.data) || err.message}`,
+      );
+    }
   };
 
   return (
@@ -487,44 +589,46 @@ const NotificationsTab: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-10">
-              <div className="flex w-11 justify-center">
+              {/* Push Toggle */}
+              <div className="flex w-12 justify-center">
                 <button
                   onClick={() =>
                     toggleSetting(row.id as keyof typeof settings, "push")
                   }
                   aria-pressed={settings[row.id as keyof typeof settings].push}
-                  className={`relative inline-flex h-[26px] w-[46px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] focus:outline-none ${
+                  className={`group relative inline-flex h-[26px] w-[48px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none ${
                     settings[row.id as keyof typeof settings].push
-                      ? "bg-[#606060] focus:ring-[#9B6DFF]/50 dark:bg-[#606060] dark:focus:ring-[#606060]/50"
-                      : "bg-[#3A3A3A] focus:ring-gray-400/50 dark:bg-[#2A2A2A] dark:focus:ring-gray-600/50"
+                      ? "bg-[#606060]"
+                      : "bg-[#E5E7EB] dark:bg-[#27272A]"
                   }`}
                 >
                   <span
-                    className={`pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white shadow-md ring-0 transition-all duration-300 ease-in-out ${
+                    className={`pointer-events-none inline-block h-[22px] w-[22px] transform rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] ring-0 transition-transform duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] ${
                       settings[row.id as keyof typeof settings].push
-                        ? "translate-x-5"
+                        ? "translate-x-[22px]"
                         : "translate-x-0"
                     }`}
                   />
                 </button>
               </div>
 
-              <div className="flex w-11 justify-center">
+              {/* Email Toggle */}
+              <div className="flex w-12 justify-center">
                 <button
                   onClick={() =>
                     toggleSetting(row.id as keyof typeof settings, "email")
                   }
                   aria-pressed={settings[row.id as keyof typeof settings].email}
-                  className={`relative inline-flex h-[26px] w-[46px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)] focus:outline-none ${
+                  className={`group relative inline-flex h-[26px] w-[48px] shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-300 ease-in-out focus:outline-none ${
                     settings[row.id as keyof typeof settings].email
-                      ? "bg-[#606060] focus:ring-[#9B6DFF]/50 dark:bg-[#606060] dark:focus:ring-[#606060]/50"
-                      : "bg-[#3A3A3A] focus:ring-gray-400/50 dark:bg-[#2A2A2A] dark:focus:ring-gray-600/50"
+                      ? "bg-[#606060]"
+                      : "bg-[#E5E7EB] dark:bg-[#27272A]"
                   }`}
                 >
                   <span
-                    className={`pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white shadow-md ring-0 transition-all duration-300 ease-in-out ${
+                    className={`pointer-events-none inline-block h-[22px] w-[22px] transform rounded-full bg-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] ring-0 transition-transform duration-300 ease-[cubic-bezier(0.33,1,0.68,1)] ${
                       settings[row.id as keyof typeof settings].email
-                        ? "translate-x-5"
+                        ? "translate-x-[22px]"
                         : "translate-x-0"
                     }`}
                   />
@@ -551,45 +655,37 @@ const DocumentsTab: React.FC = () => {
 
   const {
     savedLinks,
-    setSavedLinks,
     uploadedFiles,
-    setUploadedFiles,
+    uploadNewDocument,
+    removeDocument,
+    addSavedLink,
+    removeSavedLink,
   } = useDashboard();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      const newFile = {
-        id: Date.now().toString(),
-        name: file.name,
-        date: new Intl.DateTimeFormat("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        }).format(new Date()),
-      };
-      setUploadedFiles((prev) => [...prev, newFile]);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      setIsUploading(true);
+      try {
+        await uploadNewDocument(file);
+      } catch (err) {
+        alert("Failed to upload document. Please try again.");
+      } finally {
+        setIsUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+      }
     }
   };
 
-  const onAddLink = (data: any) => {
-    // Check for duplicates
-    const isDuplicate = savedLinks.some(
-      (link) => link.url.toLowerCase() === data.url.toLowerCase(),
-    );
-
-    if (isDuplicate) {
-      alert("This link has already been saved.");
-      return;
+  const onAddLink = async (data: any) => {
+    try {
+      await addSavedLink(data.label, data.url);
+      reset(); 
+    } catch (err) {
+      alert("Failed to save link. It might already exist.");
     }
-
-    setSavedLinks([
-      ...savedLinks,
-      { id: Date.now(), label: data.label, url: data.url },
-    ]);
-    reset(); // Clear input fields after success
   };
 
   return (
@@ -601,8 +697,10 @@ const DocumentsTab: React.FC = () => {
         </p>
 
         <div
-          onClick={() => fileInputRef.current?.click()}
-          className="group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#E5E7EB] bg-gray-50 p-12 text-center transition-all duration-200 hover:border-[#D6D3FF] hover:bg-[#D6D3FF]/10 dark:border-[#27272A] dark:bg-[#1A1A1A] dark:hover:border-[#F2FF53] dark:hover:bg-[#F2FF53]/10"
+          onClick={() => !isUploading && fileInputRef.current?.click()}
+          className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#E5E7EB] bg-gray-50 p-12 text-center transition-all duration-200 hover:border-[#D6D3FF] hover:bg-[#D6D3FF]/10 dark:border-[#27272A] dark:bg-[#1A1A1A] dark:hover:border-[#F2FF53] dark:hover:bg-[#F2FF53]/10 ${
+            isUploading ? "cursor-wait opacity-50" : ""
+          }`}
         >
           <input
             type="file"
@@ -610,14 +708,21 @@ const DocumentsTab: React.FC = () => {
             onChange={handleFileUpload}
             className="hidden"
             accept=".pdf,.doc,.docx"
+            disabled={isUploading}
           />
           <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-gray-200 transition-all duration-200 group-hover:scale-110 group-hover:bg-[#D6D3FF]/30 dark:bg-[#222222] dark:group-hover:bg-[#F2FF53]/10">
-            <Upload
-              size={18}
-              className="text-gray-500 transition-colors duration-200 group-hover:text-[#9B6DFF] dark:text-gray-400 dark:group-hover:text-[#F2FF53]"
-            />
+            {isUploading ? (
+              <Loader2 className="h-5 w-5 animate-spin text-[#9B6DFF] dark:text-[#F2FF53]" />
+            ) : (
+              <Upload
+                size={18}
+                className="text-gray-500 transition-colors duration-200 group-hover:text-[#9B6DFF] dark:text-gray-400 dark:group-hover:text-[#F2FF53]"
+              />
+            )}
           </div>
-          <div className={sectionTitleClass}>Upload a file</div>
+          <div className={sectionTitleClass}>
+            {isUploading ? "Uploading..." : "Upload a file"}
+          </div>
           <div className={sectionSubtitleClass}>PDF, DOC, DOCX up to 10MB</div>
         </div>
 
@@ -643,11 +748,7 @@ const DocumentsTab: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-4 opacity-100 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 md:opacity-0">
                   <button
-                    onClick={() =>
-                      setUploadedFiles(
-                        uploadedFiles.filter((f) => f.id !== file.id),
-                      )
-                    }
+                    onClick={() => removeDocument(file.id)}
                     className="cursor-pointer p-1 text-(--text-muted) transition-colors hover:text-red-400"
                   >
                     <Trash2 size={16} />
@@ -659,7 +760,7 @@ const DocumentsTab: React.FC = () => {
         )}
       </div>
 
-      <div className="rounded-[16px] border border-[var(--border-color)] bg-[var(--bg-surface)] p-8 shadow-sm">
+      <div id="saved-links-section" className="rounded-[16px] border border-[var(--border-color)] bg-[var(--bg-surface)] p-8 shadow-sm scroll-mt-8">
         <h2 className={sectionTitleClass}>Saved Links</h2>
         <p className={sectionSubtitleClass}>
           Links appear in the sidebar — click to copy for quick pasting into job
@@ -727,9 +828,7 @@ const DocumentsTab: React.FC = () => {
                   Edit
                 </button>
                 <button
-                  onClick={() =>
-                    setSavedLinks(savedLinks.filter((l) => l.id !== link.id))
-                  }
+                  onClick={() => removeSavedLink(link.id)}
                   className="cursor-pointer p-1 text-(--text-muted) transition-colors hover:text-red-400"
                 >
                   <Trash2 size={16} />
