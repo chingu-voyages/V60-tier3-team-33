@@ -48,7 +48,7 @@ dist/
 dist-ssr/
 *.local
 .tmp/
-.xml
+repomix.xml
 
 .eslintcache
 *.tsbuildinfo
