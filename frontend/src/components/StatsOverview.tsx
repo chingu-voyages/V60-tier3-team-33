@@ -57,23 +57,20 @@ function StatsOverview({ applications }: { applications: Application[] }) {
 
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-4">
       {Object.entries(stats).map(([key, value]) => (
-        <NavLink key={key} to={key !== "favorites" ? `/boards?status=${key}` : "/boards?favorites=true"} className="w-full">
+        <NavLink key={key} to={key !== "favorites" ? `/boards?status=${key}` : "/boards?favorites=true"} className="flex-1">
           <div
-            key={key}
-            className="group m-1 flex flex-1 cursor-pointer justify-between rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-colors duration-100 ease-in hover:scale-105 dark:border-[#27272A] dark:bg-[linear-gradient(180deg,#1b1c1d,#151617)] dark:shadow-none"
+            className="group relative cursor-pointer rounded-2xl border border-gray-200 bg-white p-4 text-left shadow-sm transition-all hover:scale-[1.02] dark:border-[#2A2A2A] dark:bg-[#1A1A1A] dark:shadow-none"
           >
-            <div>
-              <div className="mb-1 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-                {value}
-              </div>
-              <div className="text-sm text-gray-500 dark:text-[#71717A]">
-                {statusLabels[key as keyof typeof statusLabels] || key}
-              </div>
+            <div className="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {value}
             </div>
-            <div className="text-text-muted hidden duration-100 ease-in group-hover:block">
-              <ChevronRight />
+            <div className="text-xs font-medium text-gray-500 dark:text-[#71717A]">
+              {statusLabels[key as keyof typeof statusLabels] || key}
+            </div>
+            <div className="absolute right-4 top-4 text-gray-400 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:text-[#71717A]">
+              <ChevronRight size={15} />
             </div>
           </div>
         </NavLink>

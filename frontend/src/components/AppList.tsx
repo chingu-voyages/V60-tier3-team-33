@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { formatDate } from "../utilities/formatDate";
 import AppCard from "./AppCard";
 import { formatSalary } from "../utilities/formatSalary";
 import type { Application, ApplicationStatus } from "../types/application";
-import { Star } from "lucide-react";
+import { Star, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { getStatusStyles } from "../utilities/themeUtils";
 import { api } from "../services/api";
 
@@ -27,6 +27,8 @@ interface AppListTypes {
   onStatusUpdate?: (id: number, status: ApplicationStatus) => void;
 }
 
+type SortKey = keyof Application | 'workType' | 'salary';
+
 function AppList({
   boardsView,
   applications,
@@ -36,6 +38,7 @@ function AppList({
 }: AppListTypes) {
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'asc' | 'desc' } | null>(null);
 
   const toggleFavorite = (id: number, app: Application) => {
     console.log("toggle")
@@ -59,14 +62,51 @@ function AppList({
     }
   };
 
+  const handleSort = (key: SortKey) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedApps = useMemo(() => {
+    if (!sortConfig) return applications;
+
+    return [...applications].sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+
+      if (sortConfig.key === 'workType') {
+        aValue = a.extras?.workType || '';
+        bValue = b.extras?.workType || '';
+      } else if (sortConfig.key === 'salary') {
+        aValue = a.salary_min || 0;
+        bValue = b.salary_min || 0;
+      } else {
+        aValue = (a[sortConfig.key as keyof Application] || '').toString().toLowerCase();
+        bValue = (b[sortConfig.key as keyof Application] || '').toString().toLowerCase();
+      }
+
+      if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [applications, sortConfig]);
+
+  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
+    if (!sortConfig || sortConfig.key !== columnKey) return <ArrowUpDown size={12} className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />;
+    return sortConfig.direction === 'asc' ? <ArrowUp size={12} className="ml-1 text-[#9B6DFF] dark:text-[#F2FF53]" /> : <ArrowDown size={12} className="ml-1 text-[#9B6DFF] dark:text-[#F2FF53]" />;
+  };
+
   return (
     <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-[#2A2A2A] overflow-x-auto rounded-2xl shadow-sm dark:shadow-none transition-colors [&::-webkit-scrollbar]:h-[4px] [&::-webkit-scrollbar-thumb]:bg-[#3F3F46] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
       <table className="w-full table-fixed" style={{ minWidth: boardsView ? '1100px' : '750px' }}>
         <colgroup>
           <col style={{ width: '18%' }} /> {/* Company */}
-          <col style={{ width: boardsView ? '17%' : '22%' }} /> {/* Role */}
+          <col style={{ width: boardsView ? '15%' : '22%' }} /> {/* Role */}
           <col style={{ width: boardsView ? '12%' : '15%' }} /> {/* Date Applied */}
-          <col style={{ width: boardsView ? '11%' : '14%' }} /> {/* Status */}
+          <col style={{ width: boardsView ? '13%' : '14%' }} /> {/* Status */}
           <col style={{ width: boardsView ? '12%' : '18%' }} /> {/* Location */}
           {boardsView && (
             <>
@@ -78,28 +118,49 @@ function AppList({
         </colgroup>
         <thead>
           <tr className="border-b border-gray-100 dark:border-[#2A2A2A]">
-            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-              Company
+            <th 
+              onClick={() => handleSort('company_name')}
+              className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              <div className="flex items-center">Company <SortIcon columnKey="company_name" /></div>
             </th>
-            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-              Role
+            <th 
+              onClick={() => handleSort('role')}
+              className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              <div className="flex items-center">Role <SortIcon columnKey="role" /></div>
             </th>
-            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-              Date Applied
+            <th 
+              onClick={() => handleSort('applied_at')}
+              className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              <div className="flex items-center">Date Applied <SortIcon columnKey="applied_at" /></div>
             </th>
-            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-              Status
+            <th 
+              onClick={() => handleSort('status')}
+              className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              <div className="flex items-center">Status <SortIcon columnKey="status" /></div>
             </th>
-            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-              Location
+            <th 
+              onClick={() => handleSort('location')}
+              className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              <div className="flex items-center">Location <SortIcon columnKey="location" /></div>
             </th>
             {boardsView && (
               <>
-                <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-                  Type
+                <th 
+                  onClick={() => handleSort('workType')}
+                  className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <div className="flex items-center">Type <SortIcon columnKey="workType" /></div>
                 </th>
-                <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
-                  Salary
+                <th 
+                  onClick={() => handleSort('salary')}
+                  className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A] cursor-pointer group hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  <div className="flex items-center">Salary <SortIcon columnKey="salary" /></div>
                 </th>
                 <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
                   Notes
@@ -108,8 +169,8 @@ function AppList({
             )}
           </tr>
         </thead>
-        <tbody>
-          {applications.map((app) => (
+        <tbody className="divide-y divide-gray-50 dark:divide-[#2A2A2A]">
+          {sortedApps.map((app) => (
             <tr
               key={app.id}
               className="group border-b border-gray-50 dark:border-[#2A2A2A] last:border-0 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-[#1E1F20]"
@@ -146,7 +207,7 @@ function AppList({
               </td>
               <td className="px-4 py-5">
                 <span
-                  className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
+                  className={`inline-block whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
                 >
                   {statusDisplayLabel[app.status] || app.status}
                 </span>

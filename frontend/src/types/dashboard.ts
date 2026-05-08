@@ -18,6 +18,11 @@ export interface UserProfile {
   email: string;
   phoneNumber: string;
   employmentStatus: string;
+  notificationSettings?: {
+    application_reminders: { push: boolean; email: boolean };
+    interview_reminders: { push: boolean; email: boolean };
+    weekly_summary: { push: boolean; email: boolean };
+  };
 }
 
 export type DashboardContextType = {
@@ -36,6 +41,12 @@ export type DashboardContextType = {
   saveApplication: (data: Partial<Application>, id?: number) => Promise<void>;
   deleteApplication: (id: number) => Promise<void>;
   changeApplicationStatus: (id: number, status: ApplicationStatus) => Promise<void>;
+  addSavedLink: (label: string, url: string) => Promise<void>;
+  editSavedLink: (id: number | string, label: string, url: string) => Promise<void>;
+  removeSavedLink: (id: number | string) => Promise<void>;
+  uploadNewDocument: (file: File) => Promise<void>;
+  removeDocument: (id: number | string) => Promise<void>;
+  updateUserPersonalInfo: (data: Partial<UserProfile>) => Promise<void>;
   page: number;
   hasMore: boolean;
   isLoadingMore: boolean;

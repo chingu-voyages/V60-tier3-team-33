@@ -80,18 +80,24 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
 
   return (
     <div className="flex h-screen flex-col bg-[#141414]">
-      {/* Logo — same SVG as auth pages */}
-      <div className="px-5 pt-5 pb-4">
-        <img src={logo} alt="Applytics" className="h-5 w-auto" />
+      {/* Logo — Fixed at top */}
+      <div className="px-4 py-5 shrink-0">
+        <img 
+          src={logo} 
+          alt="Applytics" 
+          style={{ width: '113px', height: '22px' }} 
+          className="w-auto" 
+        />
       </div>
 
       {/* Top divider */}
-      <div className="mx-3 border-t border-[#1E1F20]" />
+      <div className="mx-0 border-t border-[#2A2A2A]" />
 
-      <nav className="flex flex-1 flex-col justify-between px-3 overflow-auto">
+      {/* Scrollable Area */}
+      <nav className="flex-1 px-3 overflow-y-auto custom-scrollbar">
         <div>
           {/* MAIN section */}
-          <p className="px-3 pt-4 pb-2 text-[10px] font-semibold tracking-wider uppercase text-[#45454A]">
+          <p className="px-3 pt-4 pb-2 text-[10px] font-semibold tracking-wider uppercase text-[#4A4A4A]">
             Main
           </p>
           <ul className="space-y-1">
@@ -120,7 +126,7 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
                 </div>
               </button>
               {isBoardsOpen && (
-                <ul className="mt-1 ml-5 space-y-0.5 border-l border-[#1E1F20] pl-4">
+                <ul className="mt-1 ml-5 space-y-0.5 border-l border-[#2A2A2A] pl-4">
                   <NavLink to="/boards">
                     <li className={boardItemClass}>
                       All
@@ -192,15 +198,14 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
             </NavLink>
           </ul>
 
-          {/* SAVED LINKS section */}
-          <div className="mt-6">
+          <div className="mt-4 pb-6">
             <div className="flex items-center justify-between px-3 pb-2">
-              <p className="text-[10px] font-semibold tracking-wider uppercase text-[#45454A]">
-                Saved Links
+              <p className="text-[10px] font-semibold tracking-wider uppercase text-[#4A4A4A]">
+                SAVED LINKS
               </p>
               <NavLink
                 to="/settings?tab=Documents#saved-links-section"
-                className="text-[#45454A] hover:text-white transition-colors text-sm"
+                className="text-[#45454A] hover:text-white transition-colors text-sm cursor-pointer"
               >
                 +
               </NavLink>
@@ -245,40 +250,40 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
             </ul>
           </div>
         </div>
-
-        {/* Bottom Section */}
-        <div className="pb-4">
-          {/* Bottom divider */}
-          <div className="mx-0 mb-2 border-t border-[#1E1F20]" />
-          <div className="flex flex-col gap-0.5">
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className="flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-sm text-[#71717A] text-left hover:bg-[#1E1F20] hover:text-gray-100 transition-colors"
-            >
-              {isDark ? (
-                <>
-                  <Sun size={16} className="mr-3" /> Light Mode
-                </>
-              ) : (
-                <>
-                  <Moon size={16} className="mr-3" /> Dark Mode
-                </>
-              )}
-            </button>
-            <NavLink to="/settings" className={navLinkClass}>
-              <Settings size={16} className="mr-3" />
-              Settings
-            </NavLink>
-            <button
-              onClick={handleLogout}
-              className="flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-sm text-[#71717A] text-left hover:bg-red-500/10 hover:text-red-400 transition-colors"
-            >
-              <LogOut size={16} className="mr-3" />
-              Log Out
-            </button>
-          </div>
-        </div>
       </nav>
+
+      {/* Bottom Section — Fixed at bottom */}
+      <div className="px-3 pb-4 shrink-0">
+        {/* Bottom divider */}
+        <div className="-mx-3 mb-4 border-t border-[#2A2A2A]" />
+        <div className="flex flex-col gap-0.5">
+          <button
+            onClick={() => setIsDark(!isDark)}
+            className="flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-sm text-[#71717A] text-left hover:bg-[#1E1F20] hover:text-gray-100 transition-colors"
+          >
+            {isDark ? (
+              <>
+                <Sun size={16} className="mr-3" /> Light Mode
+              </>
+            ) : (
+              <>
+                <Moon size={16} className="mr-3" /> Dark Mode
+              </>
+            )}
+          </button>
+          <NavLink to="/settings" className={navLinkClass}>
+            <Settings size={16} className="mr-3" />
+            Settings
+          </NavLink>
+          <button
+            onClick={handleLogout}
+            className="flex w-full cursor-pointer items-center rounded-lg px-3 py-2 text-sm text-[#71717A] text-left hover:bg-red-500/10 hover:text-red-400 transition-colors"
+          >
+            <LogOut size={16} className="mr-3" />
+            Log Out
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

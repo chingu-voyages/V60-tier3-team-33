@@ -38,6 +38,14 @@ const LoginPage: React.FC = () => {
       if (response.access_token) {
         localStorage.setItem("auth_token", response.access_token);
       }
+      if (response.user) {
+        localStorage.setItem("user_profile", JSON.stringify({
+          fullName: response.user.name || "",
+          email: response.user.email || "",
+          phoneNumber: "", // Not returned by login usually
+          employmentStatus: "Unemployed",
+        }));
+      }
       setApiMessage({ type: "success", text: "Successfully logged in!" });
       setTimeout(() => {
         navigate("/dashboard");
@@ -115,9 +123,9 @@ const LoginPage: React.FC = () => {
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#52525B] hover:text-white transition-colors cursor-pointer"
             >
               {showPassword ? (
-                <EyeOff className="w-[18px] h-[18px]" strokeWidth={2} />
-              ) : (
                 <Eye className="w-[18px] h-[18px]" strokeWidth={2} />
+              ) : (
+                <EyeOff className="w-[18px] h-[18px]" strokeWidth={2} />
               )}
             </button>
           </div>

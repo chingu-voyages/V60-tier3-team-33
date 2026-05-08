@@ -12,10 +12,11 @@ import {
   Loader2,
   Check,
   FileText,
-  ChevronDown,
+  X,
 } from "lucide-react";
 import { authService } from "../api/auth";
 import { useDashboard } from "../components/DashboardProvider";
+import Dropdown from "../components/Dropdown";
 
 // --- SCHEMAS ---
 
@@ -41,10 +42,10 @@ type Tab = "Account" | "Notifications" | "Documents";
 // --- HELPERS ---
 
 const getInputClass = (hasError: boolean) => {
-  return `w-full px-4 py-3 rounded-xl text-sm bg-[var(--bg-app)] dark:bg-[#1A1A1A] border transition-all duration-200 shadow-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none ${
+  return `w-full px-4 py-3 rounded-xl text-sm bg-gray-50 dark:bg-[#1A1A1A] border transition-all duration-200 shadow-sm text-gray-900 dark:text-white placeholder:text-[var(--text-muted)] focus:outline-none ${
     hasError
       ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
-      : "border-[var(--border-color)] focus:border-[#9B6DFF] focus:ring-2 focus:ring-[#9B6DFF]/20 dark:focus:border-[#F2FF53] dark:focus:ring-[#F2FF53]/20"
+      : "border-gray-200 dark:border-[#2A2A2A] focus:border-[#9B6DFF] focus:ring-2 focus:ring-[#9B6DFF]/20 dark:focus:border-[#F2FF53] dark:focus:ring-[#F2FF53]/20"
   }`;
 };
 
@@ -141,6 +142,7 @@ const AccountTab: React.FC = () => {
   });
 
   useEffect(() => {
+    console.log("AccountTab useEffect: userProfile is", userProfile);
     if (userProfile) {
       reset(userProfile);
     }
@@ -161,8 +163,6 @@ const AccountTab: React.FC = () => {
   const [isSubmittingSecurity, setIsSubmittingSecurity] = useState(false);
   const [isSuccessSecurity, setIsSuccessSecurity] = useState(false);
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const employmentStatus = watch("employmentStatus");
 
   const options = [
@@ -173,41 +173,34 @@ const AccountTab: React.FC = () => {
     "Other",
   ];
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const onAccountSubmit = async (data: any) => {
     setIsSubmittingAccount(true);
+    
+    // Optimistic Update: Update global state and persist to localStorage immediately
+    const updatedProfile = {
+      ...(userProfile || {}),
+      fullName: data.fullName,
+      email: data.email,
+      phoneNumber: data.phoneNumber,
+      employmentStatus: data.employmentStatus,
+    };
+    setUserProfile(updatedProfile);
+    localStorage.setItem("user_profile", JSON.stringify(updatedProfile));
+
     try {
       await authService.updateProfile({
         name: data.fullName,
         email: data.email,
-        phone_number: data.phoneNumber,
+        phone: data.phoneNumber,
         employment_status: data.employmentStatus,
-      });
-      
-      // Update global state
-      setUserProfile({
-        fullName: data.fullName,
-        email: data.email,
-        phoneNumber: data.phoneNumber,
-        employmentStatus: data.employmentStatus,
       });
 
       setIsSuccessAccount(true);
       setTimeout(() => setIsSuccessAccount(false), 2000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to update profile", error);
+      // We keep the optimistic update so the UI doesn't break, but notify the user
+      alert("Note: Changes were saved locally, but failed to sync to the server. Please try again later.");
     } finally {
       setIsSubmittingAccount(false);
     }
@@ -285,53 +278,13 @@ const AccountTab: React.FC = () => {
               </div>
 
               <div>
-                <label className={labelClass}>Employment Status</label>
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className={`${getInputClass(
-                      !!accountErrors.employmentStatus,
-                    )} flex cursor-pointer items-center justify-between text-left`}
-                  >
-                    <span
-                      className={
-                        employmentStatus ? "" : "text-[var(--text-muted)]"
-                      }
-                    >
-                      {employmentStatus || "Select Status"}
-                    </span>
-                    <ChevronDown
-                      size={16}
-                      className={`text-[var(--text-muted)] transition-transform duration-300 ${
-                        isDropdownOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {isDropdownOpen && (
-                    <div className="animate-in fade-in zoom-in-95 absolute z-50 mt-2 w-full overflow-hidden rounded-xl border border-[var(--border-color)] bg-[var(--bg-surface)] shadow-xl duration-200">
-                      {options.map((option) => (
-                        <div
-                          key={option}
-                          onClick={() => {
-                            setValue("employmentStatus", option, {
-                              shouldValidate: true,
-                            });
-                            setIsDropdownOpen(false);
-                          }}
-                          className={`cursor-pointer px-4 py-2.5 text-sm transition-colors hover:bg-[#9B6DFF]/10 hover:text-[#9B6DFF] dark:hover:bg-[#F2FF53]/10 dark:hover:text-[#F2FF53] ${
-                            employmentStatus === option
-                              ? "bg-[#9B6DFF]/5 font-medium text-[#9B6DFF] dark:bg-[#F2FF53]/5 dark:text-[#F2FF53]"
-                              : "text-[var(--text-main)]"
-                          }`}
-                        >
-                          {option}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <Dropdown
+                  label="Employment Status"
+                  options={options}
+                  value={employmentStatus || ""}
+                  onChange={(val) => setValue("employmentStatus", val, { shouldValidate: true })}
+                  error={accountErrors.employmentStatus?.message}
+                />
               </div>
             </div>
 
@@ -659,23 +612,27 @@ const DocumentsTab: React.FC = () => {
     uploadNewDocument,
     removeDocument,
     addSavedLink,
+    editSavedLink,
     removeSavedLink,
   } = useDashboard();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [editingLinkId, setEditingLinkId] = useState<number | string | null>(null);
+  const [editLabel, setEditLabel] = useState("");
+  const [editUrl, setEditUrl] = useState("");
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      
       setIsUploading(true);
-      try {
-        await uploadNewDocument(file);
-      } catch (err) {
-        alert("Failed to upload document. Please try again.");
-      } finally {
+      uploadNewDocument(file).catch(err => {
+        alert("Upload Error: " + (err.message || JSON.stringify(err)));
+      }).finally(() => {
         setIsUploading(false);
-        if (fileInputRef.current) fileInputRef.current.value = "";
-      }
+      });
+      
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -686,6 +643,29 @@ const DocumentsTab: React.FC = () => {
     } catch (err) {
       alert("Failed to save link. It might already exist.");
     }
+  };
+
+  const handleEditClick = (link: any) => {
+    setEditingLinkId(link.id);
+    setEditLabel(link.label);
+    setEditUrl(link.url);
+  };
+
+  const handleEditSave = async () => {
+    if (editingLinkId && editLabel && editUrl) {
+      try {
+        await editSavedLink(editingLinkId, editLabel, editUrl);
+        setEditingLinkId(null);
+      } catch (err) {
+        alert("Failed to update link.");
+      }
+    }
+  };
+
+  const handleEditCancel = () => {
+    setEditingLinkId(null);
+    setEditLabel("");
+    setEditUrl("");
   };
 
   return (
@@ -810,30 +790,64 @@ const DocumentsTab: React.FC = () => {
               key={link.id}
               className="group flex items-center justify-between rounded-xl bg-gray-50 p-3 dark:bg-[#191A1A]"
             >
-              <div className="flex items-center gap-4">
-                <div className="rounded-lg p-2">
-                  <Link size={16} className="text-(--text-muted)" />
+              {editingLinkId === link.id ? (
+                <div className="flex w-full items-center gap-3">
+                  <input
+                    value={editLabel}
+                    onChange={(e) => setEditLabel(e.target.value)}
+                    className="flex-1 rounded-xl border border-gray-200 dark:border-[#2A2A2A] bg-gray-50 dark:bg-[#1A1A1A] px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-[var(--text-muted)] transition-colors focus:border-[#9B6DFF] focus:outline-none focus:ring-2 focus:ring-[#9B6DFF]/20 dark:focus:border-[#F2FF53] dark:focus:ring-[#F2FF53]/20"
+                    placeholder="Label"
+                  />
+                  <input
+                    value={editUrl}
+                    onChange={(e) => setEditUrl(e.target.value)}
+                    className="flex-1 rounded-xl border border-gray-200 dark:border-[#2A2A2A] bg-gray-50 dark:bg-[#1A1A1A] px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-[var(--text-muted)] transition-colors focus:border-[#9B6DFF] focus:outline-none focus:ring-2 focus:ring-[#9B6DFF]/20 dark:focus:border-[#F2FF53] dark:focus:ring-[#F2FF53]/20"
+                    placeholder="URL"
+                  />
+                  <button
+                    onClick={handleEditSave}
+                    className="flex shrink-0 cursor-pointer items-center justify-center rounded-xl bg-[#D6D3FF] px-4 py-3 text-[#111111] transition-all hover:bg-[#C4C0FF] dark:bg-[#F2FF53] dark:text-[#111111] dark:hover:bg-[#EEFF2B]"
+                  >
+                    <Check size={18} strokeWidth={2.5} />
+                  </button>
+                  <button
+                    onClick={handleEditCancel}
+                    className="flex shrink-0 cursor-pointer items-center justify-center rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-600 transition-all hover:bg-red-100 dark:border-red-900/30 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20"
+                  >
+                    <X size={18} strokeWidth={2.5} />
+                  </button>
                 </div>
-                <div>
-                  <div className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
-                    {link.label}
+              ) : (
+                <>
+                  <div className="flex items-center gap-4">
+                    <div className="rounded-lg p-2">
+                      <Link size={16} className="text-(--text-muted)" />
+                    </div>
+                    <div>
+                      <div className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
+                        {link.label}
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {link.url}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    {link.url}
+                  <div className="flex items-center gap-4 opacity-100 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 md:opacity-1">
+                    <button 
+                      onClick={() => handleEditClick(link)}
+                      className="cursor-pointer rounded-lg border border-(--border-color) px-3 py-1.5 text-xs font-medium text-(--text-muted) transition-all hover:bg-(--chart-cursor) hover:text-(--text-main)"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => removeSavedLink(link.id)}
+                      className="cursor-pointer p-1 text-(--text-muted) transition-colors hover:text-red-400"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 opacity-100 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 md:opacity-1">
-                <button className="cursor-pointer rounded-lg border border-(--border-color) px-3 py-1.5 text-xs font-medium text-(--text-muted) transition-all hover:bg-(--chart-cursor) hover:text-(--text-main)">
-                  Edit
-                </button>
-                <button
-                  onClick={() => removeSavedLink(link.id)}
-                  className="cursor-pointer p-1 text-(--text-muted) transition-colors hover:text-red-400"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
+                </>
+              )}
             </div>
           ))}
         </div>

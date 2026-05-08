@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Application, ApplicationStatus } from '../types/application';
+import Dropdown from './Dropdown';
 
 interface ApplicationFormModalProps {
     isOpen: boolean;
@@ -100,7 +101,7 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                         {mode === 'add' ? 'Add Application' : 'Edit Application'}
                     </h2>
-                    <button onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer">
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
@@ -170,37 +171,39 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                                 {hasSubmitted && !formData.applied_at && <p className="text-red-500 text-xs mt-1.5">Date is required</p>}
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Status</label>
-                                <select name="status" value={formData.status || 'applied'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
-                                    <option value="applied">Applied</option>
-                                    <option value="screening">Screening</option>
-                                    <option value="interviewing">Interviewing</option>
-                                    <option value="offer_received">Offer Received</option>
-                                    <option value="accepted">Accepted</option>
-                                    <option value="rejected">Rejected</option>
-                                    <option value="withdrawn">Withdrawn</option>
-                                </select>
+                                <Dropdown
+                                    label="Status"
+                                    options={[
+                                        { label: 'Applied', value: 'applied' },
+                                        { label: 'Screening', value: 'screening' },
+                                        { label: 'Interviewing', value: 'interviewing' },
+                                        { label: 'Offer Received', value: 'offer_received' },
+                                        { label: 'Accepted', value: 'accepted' },
+                                        { label: 'Rejected', value: 'rejected' },
+                                        { label: 'Withdrawn', value: 'withdrawn' }
+                                    ]}
+                                    value={formData.status || 'applied'}
+                                    onChange={(val) => setFormData(prev => ({ ...prev, status: val }))}
+                                />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Job Nature</label>
-                                <select name="jobNature" value={formData.jobNature || 'Full-time'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
-                                    <option>Full-time</option>
-                                    <option>Part-time</option>
-                                    <option>Contract</option>
-                                    <option>Freelance</option>
-                                    <option>Internship</option>
-                                </select>
+                                <Dropdown
+                                    label="Job Nature"
+                                    options={['Full-time', 'Part-time', 'Contract', 'Freelance', 'Internship']}
+                                    value={formData.jobNature || 'Full-time'}
+                                    onChange={(val) => setFormData(prev => ({ ...prev, jobNature: val }))}
+                                />
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-500 dark:text-[#A1A1AA] mb-1.5">Work Type</label>
-                                <select name="workType" value={formData.workType || 'On-site'} onChange={handleChange} className="w-full bg-gray-50 dark:bg-[#181A1B] border border-gray-200 dark:border-[#222324] rounded-lg px-4 py-2.5 text-gray-900 dark:text-white focus:outline-none focus:border-indigo-500 dark:focus:border-[#D4FA31] transition-colors appearance-none">
-                                    <option>On-site</option>
-                                    <option>Hybrid</option>
-                                    <option>Remote</option>
-                                </select>
+                                <Dropdown
+                                    label="Work Type"
+                                    options={['On-site', 'Hybrid', 'Remote']}
+                                    value={formData.workType || 'On-site'}
+                                    onChange={(val) => setFormData(prev => ({ ...prev, workType: val }))}
+                                />
                             </div>
                         </div>
 
@@ -255,10 +258,10 @@ export const ApplicationFormModal = ({ isOpen, onClose, onSave, mode, initialDat
                 </div>
 
                <div className="p-6 border-t border-gray-200 dark:border-[#1E1F20] flex items-center gap-4 bg-white dark:bg-[#151617] mt-auto">
-                    <button type="submit" form="app-form" className="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-[#EEFF2B] dark:hover:bg-[#D4FA31] text-white dark:text-black text-sm font-semibold py-3 px-8 rounded-xl transition-all active:scale-95">
+                    <button type="submit" form="app-form" className="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-[#EEFF2B] dark:hover:bg-[#D4FA31] text-white dark:text-black text-sm font-semibold py-3 px-8 rounded-xl transition-all active:scale-95 cursor-pointer">
                         {mode === 'add' ? 'Add Application' : 'Save Changes'}
                     </button>
-                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-[#222324] hover:bg-gray-50 dark:hover:bg-[#1E1F20] text-sm font-medium py-3 px-6 rounded-xl transition-all active:scale-95">
+                    <button type="button" onClick={onClose} className="text-gray-500 dark:text-[#A1A1AA] hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-[#222324] hover:bg-gray-50 dark:hover:bg-[#1E1F20] text-sm font-medium py-3 px-6 rounded-xl transition-all active:scale-95 cursor-pointer">
                         Cancel
                     </button>
                 </div>
