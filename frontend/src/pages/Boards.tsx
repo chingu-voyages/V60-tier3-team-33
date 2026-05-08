@@ -17,6 +17,19 @@ function Boards() {
   const status = searchParams.get("status") || "all";
   const favorites = searchParams.get("favorites") || null;
 
+  /** Friendly labels for raw status values */
+  const statusLabels: Record<string, string> = {
+    all: "All",
+    applied: "Applied",
+    screening: "Screening",
+    interviewing: "Interviewed",
+    offer_received: "Offer",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    withdrawn: "Withdrawn",
+  };
+  const displayLabel = (favorites && "Favorites") || statusLabels[status] || cap(status);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
 
@@ -90,11 +103,11 @@ function Boards() {
               </NavLink>{" "}
               /{" "}
             </span>
-            {cap((favorites && "Favorites") || status)}
+            {displayLabel}
           </div>
           <div>
             <span className="pr-3 text-2xl font-bold">
-              {cap((favorites && "Favorites") || status)}
+              {displayLabel}
             </span>
             <span className="text-gray-500">{filteredApps.length}</span>
           </div>
@@ -114,7 +127,7 @@ function Boards() {
           </div>
           <button
             type="button"
-            className="bg-primary cursor-pointer rounded-xl px-5 py-2 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
+            className="cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
             onClick={() => {
               setEditingApp(null);
               setIsAddModalOpen(true);

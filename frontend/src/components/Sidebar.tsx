@@ -55,10 +55,12 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
       {
         all: 0,
         applied: 0,
+        screening: 0,
         interviewing: 0,
         offer_received: 0,
         accepted: 0,
         rejected: 0,
+        withdrawn: 0,
         favorites: 0,
       },
     );
@@ -79,8 +81,8 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
   return (
     <div className="flex h-screen flex-col bg-[#141414]">
       {/* Logo — same SVG as auth pages */}
-      <div className="px-6 pt-8 pb-8">
-        <img src={logo} alt="Applytics" className="h-6 w-auto" />
+      <div className="px-5 pt-5 pb-4">
+        <img src={logo} alt="Applytics" className="h-5 w-auto" />
       </div>
 
       {/* Top divider */}
@@ -131,22 +133,40 @@ function Sidebar({ isDark, setIsDark }: SideBarProps) {
                       <span>{stats.applied}</span>
                     </li>
                   </NavLink>
-                  <NavLink to="/boards?status=interviewed">
+                  <NavLink to="/boards?status=screening">
+                    <li className={boardItemClass}>
+                      Screening
+                      <span>{stats.screening}</span>
+                    </li>
+                  </NavLink>
+                  <NavLink to="/boards?status=interviewing">
                     <li className={boardItemClass}>
                       Interviewed
                       <span>{stats.interviewing}</span>
                     </li>
                   </NavLink>
-                  <NavLink to="/boards?status=offer">
+                  <NavLink to="/boards?status=offer_received">
                     <li className={boardItemClass}>
                       Offer
                       <span>{stats.offer_received}</span>
+                    </li>
+                  </NavLink>
+                  <NavLink to="/boards?status=accepted">
+                    <li className={boardItemClass}>
+                      Accepted
+                      <span>{stats.accepted}</span>
                     </li>
                   </NavLink>
                   <NavLink to="/boards?status=rejected">
                     <li className={boardItemClass}>
                       Rejected
                       <span>{stats.rejected}</span>
+                    </li>
+                  </NavLink>
+                  <NavLink to="/boards?status=withdrawn">
+                    <li className={boardItemClass}>
+                      Withdrawn
+                      <span>{stats.withdrawn}</span>
                     </li>
                   </NavLink>
                   <NavLink to="/boards?favorites=true">

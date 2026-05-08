@@ -7,6 +7,17 @@ import { Star } from "lucide-react";
 import { getStatusStyles } from "../utilities/themeUtils";
 import { api } from "../services/api";
 
+/** Friendly status labels for display */
+const statusDisplayLabel: Record<string, string> = {
+  applied: "Applied",
+  screening: "Screening",
+  interviewing: "Interviewed",
+  offer_received: "Offer Received",
+  accepted: "Accepted",
+  rejected: "Rejected",
+  withdrawn: "Withdrawn",
+};
+
 interface AppListTypes {
   boardsView: boolean;
   applications: Application[];
@@ -49,20 +60,50 @@ function AppList({
   };
 
   return (
-    <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">
-      <table className="w-full min-w-4xl table-fixed">
-        <thead className="tracking-wide text-gray-400 uppercase">
-          <tr className="border-b-[.5px] border-[#b4b4b41a] text-sm">
-            <th className="p-2 text-left">Company</th>
-            <th className="p-2 text-left">Role</th>
-            <th className="p-2 text-left">Date Applied</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Location</th>
+    <div className="bg-white dark:bg-[#1A1A1A] border border-gray-200 dark:border-[#2A2A2A] overflow-x-auto rounded-2xl shadow-sm dark:shadow-none transition-colors [&::-webkit-scrollbar]:h-[4px] [&::-webkit-scrollbar-thumb]:bg-[#3F3F46] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
+      <table className="w-full table-fixed" style={{ minWidth: boardsView ? '1100px' : '750px' }}>
+        <colgroup>
+          <col style={{ width: '18%' }} /> {/* Company */}
+          <col style={{ width: boardsView ? '17%' : '22%' }} /> {/* Role */}
+          <col style={{ width: boardsView ? '12%' : '15%' }} /> {/* Date Applied */}
+          <col style={{ width: boardsView ? '11%' : '14%' }} /> {/* Status */}
+          <col style={{ width: boardsView ? '12%' : '18%' }} /> {/* Location */}
+          {boardsView && (
+            <>
+              <col style={{ width: '9%' }} /> {/* Type */}
+              <col style={{ width: '10%' }} /> {/* Salary */}
+              <col style={{ width: '6%' }} /> {/* Notes */}
+            </>
+          )}
+        </colgroup>
+        <thead>
+          <tr className="border-b border-gray-100 dark:border-[#2A2A2A]">
+            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+              Company
+            </th>
+            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+              Role
+            </th>
+            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+              Date Applied
+            </th>
+            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+              Status
+            </th>
+            <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+              Location
+            </th>
             {boardsView && (
               <>
-                <th className="text-left">Type</th>
-                <th className="text-left">Salary</th>
-                <th className="text-left">NOTES</th>
+                <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+                  Type
+                </th>
+                <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+                  Salary
+                </th>
+                <th className="px-4 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-[#71717A]">
+                  Notes
+                </th>
               </>
             )}
           </tr>
@@ -71,52 +112,68 @@ function AppList({
           {applications.map((app) => (
             <tr
               key={app.id}
-              className="group border-border cursor-pointer border-b transition-colors hover:bg-gray-50 dark:hover:bg-[#27272A]"
+              className="group border-b border-gray-50 dark:border-[#2A2A2A] last:border-0 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-[#1E1F20]"
               onClick={() => {
                 setSelectedApp(app);
                 setIsCardModalOpen(true);
               }}
             >
-              <td className="py-3 font-medium">
-                <div className="flex items-center gap-2">
-                  <div>
-                    <Star
-                      size={15}
-                      strokeWidth="2"
-                      className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "group-hover:text-primary opacity-0 group-hover:opacity-50"}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(app.id, app);
-                      }}
-                    />
-                  </div>
-                  {app.company_name}
+              <td className="px-4 py-5">
+                <div className="flex items-center gap-3">
+                  <Star
+                    size={14}
+                    strokeWidth="2"
+                    className={`shrink-0 cursor-pointer transition-all ${
+                      app.favorite
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-transparent group-hover:text-gray-400 dark:group-hover:text-[#71717A]"
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(app.id, app);
+                    }}
+                  />
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white truncate" title={app.company_name}>
+                    {app.company_name}
+                  </span>
                 </div>
               </td>
-              <td className="p-2 text-gray-400">{app.role}</td>
-              <td className="p-2">{formatDate(app.applied_at, "short")}</td>
-              <td className="p-2">
+              <td className="px-4 py-5 text-sm text-gray-500 dark:text-zinc-300 truncate" title={app.role}>
+                {app.role}
+              </td>
+              <td className="px-4 py-5 text-sm text-gray-400 dark:text-zinc-500 whitespace-nowrap">
+                {formatDate(app.applied_at, "short")}
+              </td>
+              <td className="px-4 py-5">
                 <span
-                  className={`inline-block rounded-3xl border px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
+                  className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
                 >
-                  {app.status}
+                  {statusDisplayLabel[app.status] || app.status}
                 </span>
               </td>
-              <td className="p-2">
-                {app.location}{" "}
-                <p className="pt-1 text-xs">
-                  {app.extras?.jobNature && `(${app.extras.jobNature})`}
-                </p>
+              <td className="px-4 py-5">
+                <div className="text-sm text-gray-500 dark:text-zinc-400 truncate" title={app.location}>
+                  {app.location}
+                </div>
+                {app.extras?.workType && (
+                  <div className="mt-0.5 text-[10px] text-gray-400 dark:text-zinc-600">
+                    ({app.extras.workType})
+                  </div>
+                )}
               </td>
               {boardsView && (
                 <>
-                  <td className="p-2">{app.extras?.workType}</td>
-                  <td className="p-2">
-                    {app.salary_min != null && app.salary_max != null
-                      ? `${formatSalary(app.salary_min)} - ${formatSalary(app.salary_max)}`
-                      : "None"}
+                  <td className="px-4 py-5 text-sm text-gray-500 dark:text-zinc-400 whitespace-nowrap">
+                    {app.extras?.jobNature || "—"}
                   </td>
-                  <td className="p-2">{app.notes}</td>
+                  <td className="px-4 py-5 text-sm text-gray-500 dark:text-zinc-400 whitespace-nowrap">
+                    {app.salary_min != null && app.salary_max != null
+                      ? `${formatSalary(app.salary_min)} – ${formatSalary(app.salary_max)}`
+                      : "—"}
+                  </td>
+                  <td className="px-4 py-5 text-sm text-gray-400 dark:text-zinc-500 truncate">
+                    {app.notes || "—"}
+                  </td>
                 </>
               )}
             </tr>

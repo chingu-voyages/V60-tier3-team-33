@@ -33,10 +33,12 @@ function StatsOverview({ applications }: { applications: Application[] }) {
     {
       all: 0,
       applied: 0,
+      screening: 0,
       interviewing: 0,
       offer_received: 0,
       accepted: 0,
       rejected: 0,
+      withdrawn: 0,
       favorites: 0,
     },
   );
@@ -44,10 +46,12 @@ function StatsOverview({ applications }: { applications: Application[] }) {
   const statusLabels = {
     all: "All",
     applied: "Applied",
+    screening: "Screening",
     interviewing: "Interviewed",
     offer_received: "Offer",
     accepted: "Accepted",
     rejected: "Rejected",
+    withdrawn: "Withdrawn",
     favorites: "Favorites",
   };
 

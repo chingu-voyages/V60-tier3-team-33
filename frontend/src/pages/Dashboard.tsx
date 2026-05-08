@@ -63,10 +63,10 @@ function Dashboard() {
         </div>
         <button
           type="button"
-          className="bg-primary hover:opacity-90 cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold text-black transition-all active:scale-95"
+          className="cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
           onClick={() => setIsAddModalOpen(true)}
         >
-          + Add
+          + Add Application
         </button>
       </div>
 
@@ -82,7 +82,7 @@ function Dashboard() {
       <InsightsOverview insights={insights} analytics={analytics} timeframe="thisMonth" />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Recent Applications</h2>
+        <h2 className="text-xl font-semibold">All Applications</h2>
         <div className="flex items-center relative">
           <div className="absolute left-3 text-gray-400">
             <Search size={18} />
