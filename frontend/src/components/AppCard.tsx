@@ -98,20 +98,24 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                  className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-all hover:opacity-80 active:scale-95 ${getStatusStyles(app.status)}`}
+                  className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-all hover:opacity-80 active:scale-95 ${getStatusStyles(app.status)}`}
                 >
                   {formatStatusTitleCase(app.status)}
                   <ChevronDown size={12} />
                 </button>
 
                 {isStatusDropdownOpen && (
-                  <div className="bg-surface border-border absolute top-full left-0 z-60 mt-2 w-40 rounded-xl border shadow-xl overflow-hidden">
-                    <div className="py-1">
+                  <div className="animate-in fade-in zoom-in-95 absolute top-full left-0 z-60 mt-2 w-48 overflow-hidden rounded-xl border border-gray-200 dark:border-[#2A2A2A] bg-white dark:bg-[#1A1A1A] shadow-xl duration-200">
+                    <div>
                       {STATUS_OPTIONS.map((status) => (
                         <button
                           key={status}
                           onClick={() => handleStatusChange(status)}
-                          className={`hover:bg-black/5 dark:hover:bg-white/5 w-full px-4 py-2 text-left text-[13px] transition-colors ${app.status === status ? "bg-primary/10 font-bold" : ""}`}
+                          className={`w-full cursor-pointer px-4 py-2.5 text-left text-[13px] transition-colors first:rounded-t-xl last:rounded-b-xl hover:bg-[#9B6DFF]/10 hover:text-[#9B6DFF] dark:hover:bg-[#F2FF53]/10 dark:hover:text-[#F2FF53] ${
+                            app.status === status 
+                              ? "bg-[#9B6DFF]/5 font-medium text-[#9B6DFF] dark:bg-[#F2FF53]/5 dark:text-[#F2FF53]" 
+                              : "text-gray-900 dark:text-white"
+                          }`}
                         >
                           {formatStatusTitleCase(status)}
                         </button>

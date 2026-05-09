@@ -26,6 +26,7 @@ function Dashboard() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
   const observer = useRef<IntersectionObserver | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const lastElementRef = useCallback((node: HTMLDivElement | null) => {
     if (isLoading || isLoadingMore) return;
@@ -47,12 +48,59 @@ function Dashboard() {
   };
 
   if (isLoading || !analytics || !insights) {
-    return <div className="p-5 text-gray-500">Loading dashboard data...</div>;
+    return (
+      <div className="p-5 max-w-7xl mx-auto animate-pulse min-h-screen">
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between py-5 mb-2">
+          <div>
+            <div className="h-9 bg-gray-200 dark:bg-[#27272A] w-48 rounded mb-2"></div>
+            <div className="h-4 bg-gray-100 dark:bg-[#18181B] w-32 rounded"></div>
+          </div>
+          <div className="h-10 bg-gray-200 dark:bg-[#27272A] w-40 rounded-xl"></div>
+        </div>
+
+        {/* StatsOverview Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-24 bg-gray-200 dark:bg-[#1A1A1A] rounded-2xl"></div>
+          ))}
+        </div>
+
+        {/* Insights Section Skeleton */}
+        <div className="mt-10 mb-4 flex justify-between items-end">
+          <div className="h-7 bg-gray-200 dark:bg-[#27272A] w-32 rounded"></div>
+          <div className="h-4 bg-gray-100 dark:bg-[#18181B] w-20 rounded"></div>
+        </div>
+        <div className="h-32 bg-gray-200 dark:bg-[#1A1A1A] rounded-2xl mb-8"></div>
+
+        {/* Applications Section Skeleton */}
+        <div className="mt-10 mb-4 flex items-center justify-between">
+          <div className="h-7 bg-gray-200 dark:bg-[#27272A] w-40 rounded"></div>
+          <div className="h-10 bg-gray-100 dark:bg-[#18181B] w-64 rounded-xl"></div>
+        </div>
+
+        {/* Table Skeleton */}
+        <div className="bg-white dark:bg-[#1A1A1A] rounded-xl border border-gray-100 dark:border-[#27272A] overflow-hidden">
+          <div className="h-12 bg-gray-50 dark:bg-[#1E1E20] border-b border-gray-100 dark:border-[#27272A]"></div>
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-16 border-b border-gray-50 dark:border-[#27272A]/50 last:border-0"></div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
-  const sortedApplications = [...applications].sort((a, b) => {
-    return new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime();
-  });
+  const filteredAndSortedApplications = [...applications]
+    .filter(app => {
+      const query = searchQuery.toLowerCase();
+      return (
+        app.company_name.toLowerCase().includes(query) ||
+        app.role.toLowerCase().includes(query)
+      );
+    })
+    .sort((a, b) => {
+      return new Date(b.applied_at).getTime() - new Date(a.applied_at).getTime();
+    });
 
   return (
     <div className="p-5 max-w-7xl mx-auto">
@@ -63,10 +111,10 @@ function Dashboard() {
         </div>
         <button
           type="button"
-          className="bg-primary hover:opacity-90 cursor-pointer rounded-xl px-5 py-2.5 text-sm font-semibold text-black transition-all active:scale-95"
+          className="cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
           onClick={() => setIsAddModalOpen(true)}
         >
-          + Add
+          + Add Application
         </button>
       </div>
 
@@ -82,7 +130,7 @@ function Dashboard() {
       <InsightsOverview insights={insights} analytics={analytics} timeframe="thisMonth" />
 
       <div className="mt-8 mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Recent Applications</h2>
+        <h2 className="text-xl font-semibold">All Applications</h2>
         <div className="flex items-center relative">
           <div className="absolute left-3 text-gray-400">
             <Search size={18} />
@@ -90,13 +138,15 @@ function Dashboard() {
           <input
             className="bg-surface border border-border h-10 rounded-xl pl-10 pr-4 text-sm focus:outline-none focus:border-primary transition-colors"
             placeholder="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
 
       <AppList 
         boardsView={false} 
-        applications={sortedApplications} 
+        applications={filteredAndSortedApplications} 
         setApplications={setApplications}
         onEdit={(app) => {
           setEditingApp(app);

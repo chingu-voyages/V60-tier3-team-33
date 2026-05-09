@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import InsightsOverview from '../components/InsightsOverview';
 import { WeeklyApplicationsChart } from '../components/charts/WeeklyApplicationsChart';
 import { StatusDistributionChart } from '../components/charts/StatusDistributionChart';
@@ -8,19 +9,30 @@ import { api } from '../services/api';
 import type { AnalyticsResponse, OverviewResponse, InsightsResponse } from '../types/metrics';
 
 export const InsightsPage = () => {
-    const [timeframe, setTimeframe] = useState<'thisMonth' | 'allTime'>('thisMonth');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const timeframe = (searchParams.get('timeframe') as 'thisMonth' | 'allTime') || 'thisMonth';
+    
+    const setTimeframe = (newTimeframe: 'thisMonth' | 'allTime') => {
+        setSearchParams({ timeframe: newTimeframe });
+    };
     
     const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null);
     const [overview, setOverview] = useState<OverviewResponse | null>(null);
     const [insights, setInsights] = useState<InsightsResponse | null>(null);
     
-    const [isLoading, setIsLoading] = useState(true);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [isSwitching, setIsSwitching] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchInsightsData = async () => {
             try {
-                setIsLoading(true);
+                if (!analytics) {
+                    setIsInitialLoading(true);
+                } else {
+                    setIsSwitching(true);
+                }
+
                 const [analyticsData, overviewData, insightsData] = await Promise.all([
                     api.getAnalytics(),
                     api.getOverview(timeframe),
@@ -33,14 +45,15 @@ export const InsightsPage = () => {
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'An error occurred fetching insights.');
             } finally {
-                setIsLoading(false);
+                setIsInitialLoading(false);
+                setIsSwitching(false);
             }
         };
 
         fetchInsightsData();
     }, [timeframe]);
 
-    if (isLoading || !analytics || !overview || !insights) {
+    if (isInitialLoading || !analytics || !overview || !insights) {
         return (
              <div className="p-8 font-sans min-h-screen transition-colors">
                 <div className="max-w-7xl mx-auto animate-pulse">
@@ -66,7 +79,7 @@ export const InsightsPage = () => {
         : 'Lifetime Overview';
 
     return (
-        <div className="p-8 font-sans transition-colors">
+        <div className={`p-8 font-sans transition-all duration-300 ${isSwitching ? 'opacity-50 grayscale-[20%]' : 'opacity-100'}`}>
             <div className="max-w-7xl mx-auto">
                 
                 <div className="flex justify-between items-end mb-8">
@@ -75,29 +88,27 @@ export const InsightsPage = () => {
                         <p className="text-gray-500 dark:text-[#71717A] mt-1">{subtitleText}</p>
                     </div>
                     
-                    <div className="flex justify-between items-end mb-8">
-                        <div className="flex bg-surface border border-border rounded-[14px] p-1">
-                            <button 
-                                onClick={() => setTimeframe('thisMonth')}
-                                className={`px-5 py-1.5 rounded-[10px] text-sm font-medium transition-all ${
-                                    timeframe === 'thisMonth' 
-                                    ? 'bg-gray-200 dark:bg-[#323233] text-gray-900 dark:text-white shadow-sm' 
-                                    : 'text-gray-500 dark:text-[#84848A] hover:text-gray-900 dark:hover:text-white'
-                                }`}
-                            >
-                                This Month
-                            </button>
-                            <button 
-                                onClick={() => setTimeframe('allTime')}
-                                className={`px-5 py-1.5 rounded-[10px] text-sm font-medium transition-all ${
-                                    timeframe === 'allTime' 
-                                    ? 'bg-gray-200 dark:bg-[#323233] text-gray-900 dark:text-white shadow-sm' 
-                                    : 'text-gray-500 dark:text-[#84848A] hover:text-gray-900 dark:hover:text-white'
-                                }`}
-                            >
-                                All Time
-                            </button>
-                        </div>
+                    <div className="flex rounded-[16px] border border-gray-200 dark:border-[#27272A] bg-white dark:bg-[#1A1A1A] p-1 shadow-sm">
+                        <button 
+                            onClick={() => setTimeframe('thisMonth')}
+                            className={`cursor-pointer px-6 py-2 rounded-[12px] text-sm font-medium transition-all ${
+                                timeframe === 'thisMonth' 
+                                ? 'bg-gray-100 dark:bg-[#2A2A2A] text-gray-900 dark:text-white border border-gray-200 dark:border-[#3F3F46] shadow-sm' 
+                                : 'text-gray-500 dark:text-[#71717A] hover:text-gray-900 dark:hover:text-white border border-transparent'
+                            }`}
+                        >
+                            This Month
+                        </button>
+                        <button 
+                            onClick={() => setTimeframe('allTime')}
+                            className={`cursor-pointer px-6 py-2 rounded-[12px] text-sm font-medium transition-all ${
+                                timeframe === 'allTime' 
+                                ? 'bg-gray-100 dark:bg-[#2A2A2A] text-gray-900 dark:text-white border border-gray-200 dark:border-[#3F3F46] shadow-sm' 
+                                : 'text-gray-500 dark:text-[#71717A] hover:text-gray-900 dark:hover:text-white border border-transparent'
+                            }`}
+                        >
+                            All Time
+                        </button>
                     </div>
                 </div>
 

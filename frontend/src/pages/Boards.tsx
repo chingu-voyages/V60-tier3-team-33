@@ -17,6 +17,19 @@ function Boards() {
   const status = searchParams.get("status") || "all";
   const favorites = searchParams.get("favorites") || null;
 
+  /** Friendly labels for raw status values */
+  const statusLabels: Record<string, string> = {
+    all: "All",
+    applied: "Applied",
+    screening: "Screening",
+    interviewing: "Interviewed",
+    offer_received: "Offer",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    withdrawn: "Withdrawn",
+  };
+  const displayLabel = (favorites && "Favorites") || statusLabels[status] || cap(status);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingApp, setEditingApp] = useState<Application | null>(null);
 
@@ -64,11 +77,22 @@ function Boards() {
   };
 
   const filteredApps = useMemo(() => {
+    let result = applications;
+    
     if (favorites) {
-      return applications.filter((app) => app.favorite);
+      result = result.filter((app) => app.favorite);
     }
-    return applications;
-  }, [applications, searchParams]);
+    
+    if (search.trim()) {
+      const query = search.toLowerCase();
+      result = result.filter(app => 
+        app.company_name.toLowerCase().includes(query) ||
+        app.role.toLowerCase().includes(query)
+      );
+    }
+    
+    return result;
+  }, [applications, searchParams, search, favorites]);
 
   const handleStatusUpdate = async (id: number, status: ApplicationStatus) => {
     await changeApplicationStatus(id, status);
@@ -77,26 +101,26 @@ function Boards() {
   };
 
   return (
-    <div className="p-5">
-      <div className="mb-5 flex items-center justify-between">
+    <div className="p-8">
+      <div className="mb-8 flex items-start justify-between">
         <div>
-          <div>
-            <span className="text-text-muted">
-              <NavLink
-                to="/boards"
-                className="hover:text-text-main transition-colors"
-              >
-                Boards
-              </NavLink>{" "}
-              /{" "}
-            </span>
-            {cap((favorites && "Favorites") || status)}
-          </div>
-          <div>
-            <span className="pr-3 text-2xl font-bold">
-              {cap((favorites && "Favorites") || status)}
-            </span>
-            <span className="text-gray-500">{filteredApps.length}</span>
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm mb-1">
+            <NavLink
+              to="/boards"
+              className="text-gray-400 hover:text-gray-200 cursor-pointer transition-colors"
+            >
+              Boards
+            </NavLink>
+            <span className="text-gray-600">/</span>
+            <span className="text-white font-medium">{displayLabel}</span>
+          </nav>
+          {/* Title + Count */}
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-[30px] font-bold text-white leading-9 tracking-tight">
+              {displayLabel}
+            </h1>
+            <span className="text-[22px] font-normal text-gray-500">{filteredApps.length}</span>
           </div>
         </div>
 
@@ -114,7 +138,7 @@ function Boards() {
           </div>
           <button
             type="button"
-            className="bg-primary cursor-pointer rounded-xl px-5 py-2 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
+            className="cursor-pointer rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-95"
             onClick={() => {
               setEditingApp(null);
               setIsAddModalOpen(true);
