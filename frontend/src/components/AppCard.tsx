@@ -36,12 +36,9 @@ const STATUS_OPTIONS: ApplicationStatus[] = [
   "withdrawn",
 ];
 
-const formatStatusTitleCase = (status: string) => {
-  return status
-    .replace("_", " ")
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+const formatStatusSentenceCase = (status: string) => {
+  const formatted = status.replace(/_/g, " ");
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1).toLowerCase();
 };
 
 function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onStatusUpdate }: AppCardType) {
@@ -98,9 +95,9 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
-                  className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-all hover:opacity-80 active:scale-95 ${getStatusStyles(app.status)}`}
+                  className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide transition-all hover:opacity-80 active:scale-95 ${getStatusStyles(app.status)}`}
                 >
-                  {formatStatusTitleCase(app.status)}
+                  {formatStatusSentenceCase(app.status)}
                   <ChevronDown size={12} />
                 </button>
 
@@ -113,7 +110,7 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
                           onClick={() => handleStatusChange(status)}
                           className={`hover:bg-black/5 dark:hover:bg-white/5 w-full px-4 py-2 text-left text-[13px] transition-colors ${app.status === status ? "bg-primary/10 font-bold" : ""}`}
                         >
-                          {formatStatusTitleCase(status)}
+                          {formatStatusSentenceCase(status)}
                         </button>
                       ))}
                     </div>
@@ -221,7 +218,7 @@ function AppCard({ app, isOpen, onClose, onEdit, onDelete, toggleFavorite, onSta
           </div>
           <div className="flex flex-col">
             <div className="font-semibold text-[15px] text-text-main tracking-tight mb-0.5">
-              {formatStatusTitleCase(app.status)}
+              {formatStatusSentenceCase(app.status)}
             </div>
             <div className="text-text-muted text-[13px]">
               {formatDate(app.applied_at, "short")}

@@ -16,6 +16,11 @@ interface AppListTypes {
   onStatusUpdate?: (id: number, status: ApplicationStatus) => void;
 }
 
+const formatStatusSentenceCase = (status: string) => {
+  const formatted = status.replace(/_/g, " ");
+  return formatted.charAt(0).toUpperCase() + formatted.slice(1).toLowerCase();
+};
+
 function AppList({
   boardsView,
   applications,
@@ -49,20 +54,20 @@ function AppList({
   };
 
   return (
-    <div className="bg-surface text-text-main border-border m-5 overflow-x-auto rounded-2xl border shadow-sm transition-colors">
+    <div className="bg-surface text-text-main border-border overflow-x-auto rounded-2xl border shadow-sm transition-colors w-full">
       <table className="w-full min-w-4xl table-fixed">
         <thead className="tracking-wide text-gray-400 uppercase">
           <tr className="border-b-[.5px] border-[#b4b4b41a] text-sm">
-            <th className="p-2 text-left">Company</th>
-            <th className="p-2 text-left">Role</th>
-            <th className="p-2 text-left">Date Applied</th>
-            <th className="p-2 text-left">Status</th>
-            <th className="p-2 text-left">Location</th>
+            <th className="py-4 pl-4 pr-2 text-left">Company</th>
+            <th className="py-4 px-2 text-left">Role</th>
+            <th className="py-4 px-2 text-left">Date Applied</th>
+            <th className="py-4 px-2 text-left">Status</th>
+            <th className="py-4 px-2 text-left">Location</th>
             {boardsView && (
               <>
-                <th className="text-left">Type</th>
-                <th className="text-left">Salary</th>
-                <th className="text-left">NOTES</th>
+                <th className="py-4 px-2 text-left">Type</th>
+                <th className="py-4 px-2 text-left">Salary</th>
+                <th className="py-4 px-2 text-left">NOTES</th>
               </>
             )}
           </tr>
@@ -77,46 +82,42 @@ function AppList({
                 setIsCardModalOpen(true);
               }}
             >
-              <td className="py-3 font-medium">
-                <div className="flex items-center gap-2">
-                  <div>
-                    <Star
-                      size={15}
-                      strokeWidth="2"
-                      className={`text-primary ml-3 ${app.favorite ? "fill-primary opacity-50" : "group-hover:text-primary opacity-0 group-hover:opacity-50"}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleFavorite(app.id, app);
-                      }}
-                    />
-                  </div>
-                  {app.company_name}
+              <td className="py-3 pl-4 pr-2 font-medium">
+                <div className="flex items-center gap-3">
+                  <Star
+                    size={15}
+                    strokeWidth="2"
+                    className={`text-primary shrink-0 cursor-pointer ${app.favorite ? "fill-primary opacity-50" : "group-hover:text-primary opacity-0 group-hover:opacity-50"}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(app.id, app);
+                    }}
+                  />
+                  <span className="text-text-main">{app.company_name}</span>
                 </div>
               </td>
-              <td className="p-2 text-gray-400">{app.role}</td>
-              <td className="p-2">{formatDate(app.applied_at, "short")}</td>
+              <td className="p-2 text-text-muted">{app.role}</td>
+              <td className="p-2 text-text-muted">{formatDate(app.applied_at, "short")}</td>
               <td className="p-2">
                 <span
-                  className={`inline-block rounded-3xl border px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
+                  className={`inline-block rounded-3xl px-3 py-1 text-xs font-medium ${getStatusStyles(app.status)}`}
                 >
-                  {app.status}
+                  {formatStatusSentenceCase(app.status)}
                 </span>
               </td>
-              <td className="p-2">
-                {app.location}{" "}
-                <p className="pt-1 text-xs">
-                  {app.extras?.jobNature && `(${app.extras.jobNature})`}
-                </p>
+              <td className="p-2 text-text-muted">
+                {app.location}
+                {app.extras?.jobNature && <span className="ml-1 text-xs">({app.extras.jobNature})</span>}
               </td>
               {boardsView && (
                 <>
-                  <td className="p-2">{app.extras?.workType}</td>
-                  <td className="p-2">
+                  <td className="p-2 text-text-muted">{app.extras?.workType}</td>
+                  <td className="p-2 text-text-muted">
                     {app.salary_min != null && app.salary_max != null
                       ? `${formatSalary(app.salary_min)} - ${formatSalary(app.salary_max)}`
                       : "None"}
                   </td>
-                  <td className="p-2">{app.notes}</td>
+                  <td className="p-2 text-text-muted">{app.notes}</td>
                 </>
               )}
             </tr>
