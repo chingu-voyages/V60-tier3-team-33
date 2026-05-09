@@ -1,4 +1,4 @@
-<img src="./frontend/src/assets/applytics-logo.svg" alt="Applytics" width="250" style="background-color:#111827; padding:16px; border-radius:12px"/>
+<img src="./frontend/src/assets/applytics-logo-readme.png" alt="Applytics Logo" width="250" />
 
 ### Applytics keeps your entire job search organized in one place.
 
