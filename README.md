@@ -1,42 +1,74 @@
-# voyage-tasks
+# ![Applytics](./frontend/src/assets/applytics-logo.svg)
 
-Your project's `readme` is as important to success as your code. For
-this reason you should put as much care into its creation and maintenance
-as you would any other component of the application.
+A full-stack job application tracking platform that helps users organize, monitor, and optimize their job search.
 
-If you are unsure of what should go into the `readme` let this article,
-written by an experienced Chingu, be your starting point -
-[Keys to a well written README](https://tinyurl.com/yk3wubft).
+Project specifications: https://github.com/chingu-voyages/voyage-project-job-tracker
 
-And before we go there's "one more thing"! Once you decide what to include
-in your `readme` feel free to replace the text we've provided here.
 
-> Own it & Make it your Own!
+## Features
+- authentication
+- full CRUD
+- favorites
+- sorting
+- quick status change
+- filter by status
+- view conversion rates an analytics
+- light/dark mode
+- add links
+- view profile/settings options
 
-## Team Documents
+### Future goals
+- add functionality to settings
+- edit user profile
+- implement notifications
 
-You may find these helpful as you work together to organize your project.
 
-- [Team Project Ideas](./docs/team_project_ideas.md)
-- [Team Decision Log](./docs/team_decision_log.md)
+## Tech Stack & Dependences
 
-Meeting Agenda templates (located in the `/docs` directory in this repo):
 
-- Meeting - Voyage Kickoff --> ./docs/meeting-voyage_kickoff.docx
-- Meeting - App Vision & Feature Planning --> ./docs/meeting-vision_and_feature_planning.docx
-- Meeting - Sprint Retrospective, Review, and Planning --> ./docs/meeting-sprint_retrospective_review_and_planning.docx
-- Meeting - Sprint Open Topic Session --> ./docs/meeting-sprint_open_topic_session.docx
+### Frontend
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+- React Router (Routing)
+- React Hook Form & Zod (Forms & Validation)
+- Axios (API calls)
+- Recharts (Data Visualization)
+- Lucide React (Icons)
+
+### Backend
+- Laravel (PHP)
+- MySQL
+
+
+## API Endpoints
+All API endpoints can be found at: https://jobtracker-api.afuwapetunde.com/docs.
+This comprehensive page details all API functionality in full and includes implmentation code.  
+
+![Applytics API website](./docs/api_screenshot.jpg)
+
+## Deployment
+- Frontend on Vercel: https://v60-tier3-team-33.vercel.app/
+- Backend on Railway: https://jobtracker-api.afuwapetunde.com/api
+
+
+### Deploy on local machine
+1. Clone the repo `git clone https://github.com/chingu-voyages/V60-tier3-team-33.git`
+2. Frontend
+    - Install dependences from the root directory: `cd frontend && npm install`
+    - run `npm run dev`
+    - open `http://localhost:5173`
+
+
 
 ## Our Team
 
-Everyone on your team should add their name along with a link to their GitHub
-& optionally their LinkedIn profiles below. Do this in Sprint #1 to validate
-your repo access and to practice PR'ing with your team _before_ you start
-coding!
+Applytics was developed by Team Async Alliance:
 
-- Scrum Master Zuzu #1: [GitHub](https://github.com/zuweeali) / [LinkedIn](https://linkedin.com/in/zuwaira-aliyu-mohammed)
-- Greg Minezzi: [GitHub](https://github.com/minezzig) / [LinkedIn](https://linkedin.com/in/gregminezzi)
-- Ivan Brovko: [GitHub](https://github.com/HoneyVanya) / [LinkedIn](https://linkedin.com/in/ivan-brovko)
-- Afuwape Babatunde #4: [GitHub](https://github.com/Afubasic) / [LinkedIn](https://www.linkedin.com/in/afuwape-babatunde/)
-- Anthony Tibamwenda: [GitHub](https://github.com/AskTiba) / [LinkedIn](https://www.linkedin.com/in/tibamwenda-anthony-64144820b/)
-- Olivia Prusinowski: [GitHub](https://github.com/opruz) / [LinkedIn](http://www.linkedin.com/in/olivia-prusinowski-040268160)
+- Zuzu (Scrum Master): [GitHub](https://github.com/zuweeali) / [LinkedIn](https://linkedin.com/in/zuwaira-aliyu-mohammed)
+- Afuwape Babatunde (Developer): [GitHub](https://github.com/Afubasic) / [LinkedIn](https://www.linkedin.com/in/afuwape-babatunde/)
+- Ivan Brovko (Developer): [GitHub](https://github.com/HoneyVanya) / [LinkedIn](https://linkedin.com/in/ivan-brovko)
+- Greg Minezzi (Developer): [GitHub](https://github.com/minezzig) / [LinkedIn](https://linkedin.com/in/gregminezzi)
+- Olivia Prusinowski (UX/UI Designer): [GitHub](https://github.com/opruz) / [LinkedIn](http://www.linkedin.com/in/olivia-prusinowski-040268160)
+- Anthony Tibamwenda (Developer): [GitHub](https://github.com/AskTiba) / [LinkedIn](https://www.linkedin.com/in/tibamwenda-anthony-64144820b/)
