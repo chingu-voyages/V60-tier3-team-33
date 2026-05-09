@@ -1,4 +1,5 @@
-# ![Applytics](./frontend/src/assets/applytics-logo.svg) 
+<img src="./frontend/src/assets/applytics-logo.svg" alt="Applytics" width="250" style="background-color:#111827; padding:16px; border-radius:12px"/>
+
 ### Applytics keeps your entire job search organized in one place.
 
 Applytics is a full-stack job application tracking platform that helps users organize, monitor, and optimize their job search in one place.
