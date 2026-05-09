@@ -15,10 +15,11 @@ Project specifications: https://github.com/chingu-voyages/voyage-project-job-tra
 - [Board View with Filtered Applications](#board-view-with-filtered-applications)
 - [Insights Dashboard & Analytics](#insights-dashboard--analytics)
 - [Profile & Settings Management](#profile--settings-management)
+- [Light/Dark Mode](#lightdark-mode)
 - [Add Links](#add-links)
 - [Favorite Applications](#favorite-applications)
 - [Sort Applications](#sort-applications)
-- [Light/Dark Mode](#lightdark-mode)
+
 
 
 
@@ -52,14 +53,18 @@ Manage account preferences, user information and settings, and personalized docu
 
 ![settings](./docs/screenshots/settings-screenshot.jpg)
 
+### Light/Dark Mode
+Toggle between light and dark themes for a customizable user experience.
+
+![light-mode](./docs/screenshots/light-mode-screenshot.jpg)
+
 ### Add Links
 Pin relevant links such as job postings, company websites, portfolios, and application resources
 
 ### Favorite Applications
 Mark important job applications as favorites for quick access and prioritization.
 
-### Light/Dark Mode
-Toggle between light and dark themes for a customizable user experience.
+
 
 
 ## Tech Stack & Dependencies
