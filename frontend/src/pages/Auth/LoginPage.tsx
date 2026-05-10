@@ -168,12 +168,12 @@ const LoginPage: React.FC = () => {
       </div>
       <div className="mt-auto text-[#9898A1] text-center text-xs leading-5">
         <div className="">© 2026 Applytics</div>
-        <a href="https://linkedin.com/in/zuwaira-aliyu-mohammed" className="whitespace-nowrap hover:underline">Zuwee Ali </a><span className="text-[#F2FF53]"> | </span>
-        <a href="https://github.com/Afubasic" className="whitespace-nowrap hover:underline"> Afuwape Babatunde </a><span className="text-[#F2FF53]"> | </span>
-        <a href="https://github.com/HoneyVanya" className="whitespace-nowrap hover:underline"> Ivan Brovko </a><span className="text-[#F2FF53]"> | </span>
-        <a href="https://github.com/minezzig" className="whitespace-nowrap hover:underline"> Greg Minezzi </a><span className="text-[#F2FF53]"> | </span>
-        <a href="https://github.com/opruz" className="whitespace-nowrap hover:underline"> Olivia Prusinowski </a><span className="text-[#F2FF53]"> | </span>
-        <a href="https://github.com/AskTiba" className="whitespace-nowrap hover:underline"> Anthony Tibamwenda </a>
+        <a href="https://linkedin.com/in/zuwaira-aliyu-mohammed" target="_blank" className="whitespace-nowrap hover:underline">Zuwee Ali </a><span className="text-[#F2FF53]"> | </span>
+        <a href="https://github.com/Afubasic" target="_blank" className="whitespace-nowrap hover:underline"> Afuwape Babatunde </a><span className="text-[#F2FF53]"> | </span>
+        <a href="https://github.com/HoneyVanya" target="_blank" className="whitespace-nowrap hover:underline"> Ivan Brovko </a><span className="text-[#F2FF53]"> | </span>
+        <a href="https://github.com/minezzig" target="_blank" className="whitespace-nowrap hover:underline"> Greg Minezzi </a><span className="text-[#F2FF53]"> | </span>
+        <a href="https://github.com/opruz" target="_blank" className="whitespace-nowrap hover:underline"> Olivia Prusinowski </a><span className="text-[#F2FF53]"> | </span>
+        <a href="https://github.com/AskTiba" target="_blank" className="whitespace-nowrap hover:underline"> Anthony Tibamwenda </a>
       </div>
     </div>
   );
