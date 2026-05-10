@@ -17,7 +17,7 @@ const AuthLayout: React.FC = () => {
       <div className="flex flex-col md:flex-row w-full bg-[#0E0E0E] md:w-full md:h-full overflow-hidden">
         {/* Left Panel: Auth Forms */}
         <div className="w-full md:w-[45%] lg:w-[40%] xl:w-[35%] flex flex-col items-center outline-none focus:outline-none h-screen md:h-full relative z-30 bg-[#0F0F0F] overflow-y-auto [&::-webkit-scrollbar]:w-[4px] [&::-webkit-scrollbar-thumb]:bg-[#27272A] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
-          <div className="w-full flex flex-col items-center px-6 md:px-8 lg:px-12 pt-10 md:pt-14 pb-10 transition-all">
+          <div className="w-full flex flex-col items-center px-6 md:px-8 lg:px-12 pt-10 md:pt-14 pb-10 transition-all h-full">
             {/* Logo - Anchored Top */}
             <div className="w-full mb-8 md:mb-12 flex-none">
               <div className="flex items-center gap-2">
@@ -27,7 +27,7 @@ const AuthLayout: React.FC = () => {
 
             {/* Form Wrapper - Spacing matches Logo */}
             <div className="w-full flex-1">
-              <div className="w-full">{outlet}</div>
+              <div className="w-full h-full">{outlet}</div>
             </div>
           </div>
         </div>
