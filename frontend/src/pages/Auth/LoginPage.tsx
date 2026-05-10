@@ -174,6 +174,7 @@ const LoginPage: React.FC = () => {
         <a href="https://github.com/minezzig" target="_blank" className="whitespace-nowrap hover:underline"> Greg Minezzi </a><span className="text-[#F2FF53]"> | </span>
         <a href="https://github.com/opruz" target="_blank" className="whitespace-nowrap hover:underline"> Olivia Prusinowski </a><span className="text-[#F2FF53]"> | </span>
         <a href="https://github.com/AskTiba" target="_blank" className="whitespace-nowrap hover:underline"> Anthony Tibamwenda </a>
+        <div>A project for <a href="https://www.chingu.io" className="hover:underline" target="_blank">Chingu, Inc</a></div>
       </div>
     </div>
   );
