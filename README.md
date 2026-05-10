@@ -1,42 +1,119 @@
-# voyage-tasks
+<img src="./frontend/src/assets/applytics-logo-readme.png" alt="Applytics Logo" width="250" />
 
-Your project's `readme` is as important to success as your code. For
-this reason you should put as much care into its creation and maintenance
-as you would any other component of the application.
+### Applytics keeps your entire job search organized in one place.
 
-If you are unsure of what should go into the `readme` let this article,
-written by an experienced Chingu, be your starting point -
-[Keys to a well written README](https://tinyurl.com/yk3wubft).
+Applytics is a full-stack job application tracking platform that helps users organize, monitor, and optimize their job search in one place.
 
-And before we go there's "one more thing"! Once you decide what to include
-in your `readme` feel free to replace the text we've provided here.
+![Applytics dashboard](./docs/screenshots/dashboard-screenshot.jpg)
 
-> Own it & Make it your Own!
+Project specifications: https://github.com/chingu-voyages/voyage-project-job-tracker
 
-## Team Documents
 
-You may find these helpful as you work together to organize your project.
+## Features
+- [Authentication](#authentication)
+- [CRUD functionality](#crud-functionality)
+- [Application Overview (with quick status change)](#application-overview-with-quick-status-change)
+- [Board View with Filtered Applications](#board-view-with-filtered-applications)
+- [Insights Dashboard & Analytics](#insights-dashboard--analytics)
+- [Profile & Settings Management](#profile--settings-management)
+- [Light/Dark Mode](#lightdark-mode)
+- [Add Links](#add-links)
+- [Favorite Applications](#favorite-applications)
+- [Sort Applications](#sort-applications)
 
-- [Team Project Ideas](./docs/team_project_ideas.md)
-- [Team Decision Log](./docs/team_decision_log.md)
 
-Meeting Agenda templates (located in the `/docs` directory in this repo):
 
-- Meeting - Voyage Kickoff --> ./docs/meeting-voyage_kickoff.docx
-- Meeting - App Vision & Feature Planning --> ./docs/meeting-vision_and_feature_planning.docx
-- Meeting - Sprint Retrospective, Review, and Planning --> ./docs/meeting-sprint_retrospective_review_and_planning.docx
-- Meeting - Sprint Open Topic Session --> ./docs/meeting-sprint_open_topic_session.docx
+
+### Authentication
+Secure user authentication system with protected routes, persistent sessions, and personalized job tracking data.  Users can sign-up, login, and change password via an e-mailed link.
+
+![Authentication](./docs/screenshots/login-screenshot.jpg)
+
+### CRUD Functionality
+Create, edit, update, and delete job applications with a user-friendly interface.
+
+![CRUD](./docs/screenshots/add-application-screenshot.jpg)
+
+### Application Overview (with quick status change)
+View detailed application information in modal form with the ability to quickly update application status via drop-down menu.
+
+![App-Card](./docs/screenshots/app-card-screenshot.jpg)
+
+### Board View with Filtered Applications
+Quickly view applicatons by sorting them by status.
+
+![Board-view](./docs/screenshots/boards-screenshot.jpg)
+
+### Insights Dashboard & Analytics
+Track job search progress with conversion metrics, analytics, and visualized application data.
+
+![insights](./docs/screenshots/insights-screenshot.jpg)
+
+### Profile & Settings Management
+Manage account preferences, user information and settings, and personalized document storage. 
+
+![settings](./docs/screenshots/settings-screenshot.jpg)
+
+### Light/Dark Mode
+Toggle between light and dark themes for a customizable user experience.
+
+![light-mode](./docs/screenshots/light-mode-screenshot.jpg)
+
+### Add Links
+Pin relevant links such as job postings, company websites, portfolios, and application resources
+
+### Favorite Applications
+Mark important job applications as favorites for quick access and prioritization.
+
+
+
+
+## Tech Stack & Dependencies
+
+
+### Frontend
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+- React Router (Routing)
+- React Hook Form & Zod (Forms & Validation)
+- Axios (API calls)
+- Recharts (Data Visualization)
+- Lucide React (Icons)
+
+### Backend
+- Laravel (PHP)
+- MySQL
+
+
+## API Endpoints
+All API endpoints can be found at: https://jobtracker-api.afuwapetunde.com/docs.
+This comprehensive page details all API functionality in full and includes implementation code.  
+
+![Applytics API website](./docs/screenshots/api_screenshot.jpg)
+
+## Deployment
+- Frontend on Vercel: https://v60-tier3-team-33.vercel.app/
+- Backend on Railway: https://jobtracker-api.afuwapetunde.com/api
+
+
+### Deploy on local machine
+1. Clone the repo `git clone https://github.com/chingu-voyages/V60-tier3-team-33.git`
+2. Frontend
+    - Install dependences from the root directory: `cd frontend && npm install`
+    - run `npm run dev`
+    - open `http://localhost:5173`
+
+
 
 ## Our Team
 
-Everyone on your team should add their name along with a link to their GitHub
-& optionally their LinkedIn profiles below. Do this in Sprint #1 to validate
-your repo access and to practice PR'ing with your team _before_ you start
-coding!
+Applytics was developed by Team Async Alliance:
 
-- Scrum Master Zuzu #1: [GitHub](https://github.com/zuweeali) / [LinkedIn](https://linkedin.com/in/zuwaira-aliyu-mohammed)
-- Greg Minezzi: [GitHub](https://github.com/minezzig) / [LinkedIn](https://linkedin.com/in/gregminezzi)
-- Ivan Brovko: [GitHub](https://github.com/HoneyVanya) / [LinkedIn](https://linkedin.com/in/ivan-brovko)
-- Afuwape Babatunde #4: [GitHub](https://github.com/Afubasic) / [LinkedIn](https://www.linkedin.com/in/afuwape-babatunde/)
-- Anthony Tibamwenda: [GitHub](https://github.com/AskTiba) / [LinkedIn](https://www.linkedin.com/in/tibamwenda-anthony-64144820b/)
-- Olivia Prusinowski: [GitHub](https://github.com/opruz) / [LinkedIn](http://www.linkedin.com/in/olivia-prusinowski-040268160)
+- Zuwee Ali (Scrum Master): [GitHub](https://github.com/zuweeali) / [LinkedIn](https://linkedin.com/in/zuwaira-aliyu-mohammed)
+- Afuwape Babatunde (Developer): [GitHub](https://github.com/Afubasic) / [LinkedIn](https://www.linkedin.com/in/afuwape-babatunde/)
+- Ivan Brovko (Developer): [GitHub](https://github.com/HoneyVanya) / [LinkedIn](https://linkedin.com/in/ivan-brovko)
+- Greg Minezzi (Developer): [GitHub](https://github.com/minezzig) / [LinkedIn](https://linkedin.com/in/gregminezzi)
+- Olivia Prusinowski (UX/UI Designer): [GitHub](https://github.com/opruz) / [LinkedIn](http://www.linkedin.com/in/olivia-prusinowski-040268160)
+- Anthony Tibamwenda (Developer): [GitHub](https://github.com/AskTiba) / [LinkedIn](https://www.linkedin.com/in/tibamwenda-anthony-64144820b/)
